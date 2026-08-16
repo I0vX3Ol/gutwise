@@ -10,6 +10,13 @@ updates:
     open-pull-requests-limit: 5
     labels:
       - dependencies
+    ignore:
+      # @astrojs/check peer-requires typescript ^5 || ^6. Dependabot proposed
+      # TypeScript 7, which fails `npm ci` outright. Re-enable once Astro's
+      # language tooling supports it.
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
     # Patch and minor bumps are grouped so routine maintenance is one PR to
     # review rather than a dozen. Majors stay separate — they need a real look.
     groups:
