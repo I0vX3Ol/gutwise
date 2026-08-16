@@ -34,6 +34,6 @@
     "@astrojs/check": "^0.9.10",
     "@cloudflare/workers-types": "^5.20260816.1",
     "node-html-parser": "^9.0.1",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   }
 }
