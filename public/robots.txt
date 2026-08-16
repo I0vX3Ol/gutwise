@@ -1,0 +1,14 @@
+# robots.txt for GutWise — https://gutwise.nexudel.com
+# Crawling is open. The only exclusions are pages with no search value.
+
+User-agent: *
+Allow: /
+
+# Conversion destination — noindex'd in the page head as well.
+Disallow: /thank-you/
+
+# Generated social share images. Useful to Facebook/Twitter/LinkedIn scrapers
+# (which ignore robots.txt for OG fetches) but noise in an image index.
+Disallow: /og/
+
+Sitemap: https://gutwise.nexudel.com/sitemap-index.xml

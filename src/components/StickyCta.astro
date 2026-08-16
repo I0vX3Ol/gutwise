@@ -1,0 +1,89 @@
+---
+import { LEAD_MAGNET } from '../consts';
+import Icon from './Icon.astro';
+
+/**
+ * Persistent mobile CTA bar.
+ *
+ * Appears after the reader scrolls past the hero and hides again near the
+ * footer signup, so it never covers the form it is pointing at. Mobile only —
+ * desktop keeps the header CTA in view already.
+ *
+ * It is rendered hidden and revealed by script, so a non-JS visitor never gets
+ * a bar stuck over the content with no way to dismiss it. The dismiss button is
+ * a real button with an accessible name, and the choice persists for the
+ * session.
+ */
+---
+
+<div
+	id="sticky-cta"
+	hidden
+	class="fixed inset-x-0 bottom-0 z-30 border-t border-sage-light/40 bg-sage-deep px-4 py-3 shadow-lg lg:hidden no-print"
+>
+	<div class="flex items-center gap-3">
+		<a href="/#starter-kit" class="btn btn-on-dark flex-1 text-sm">
+			<Icon name="book" size={16} />
+			{LEAD_MAGNET.cta}
+		</a>
+		<button
+			type="button"
+			id="sticky-cta-dismiss"
+			class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-cream"
+			aria-label="Dismiss the Starter Kit banner"
+		>
+			<Icon name="close" size={20} />
+		</button>
+	</div>
+</div>
+
+<script>
+	const bar = document.getElementById('sticky-cta');
+	const dismiss = document.getElementById('sticky-cta-dismiss');
+	const signup = document.getElementById('starter-kit');
+
+	const DISMISS_KEY = 'gutwise:cta-dismissed';
+
+	if (bar && dismiss && sessionStorage.getItem(DISMISS_KEY) !== '1') {
+		let scrolledPast = false;
+		let signupVisible = false;
+
+		const update = () => {
+			bar.hidden = !scrolledPast || signupVisible;
+		};
+
+		// A sentinel one viewport down, watched by IntersectionObserver rather
+		// than a scroll listener. This keeps the main thread free of a scroll
+		// handler entirely, and it stays correct however the scroll position
+		// changes — including restored positions and in-page anchor jumps, which
+		// a scroll-event implementation can miss.
+		const sentinel = document.createElement('div');
+		sentinel.setAttribute('aria-hidden', 'true');
+		sentinel.style.cssText =
+			'position:absolute;top:600px;left:0;width:1px;height:1px;pointer-events:none;';
+		document.body.prepend(sentinel);
+
+		new IntersectionObserver(([entry]) => {
+			// Above the viewport (not merely off to one side) means scrolled past.
+			scrolledPast = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+			update();
+		}).observe(sentinel);
+
+		// Hide the bar whenever the signup form itself is on screen — pointing at
+		// a form the reader is already looking at is just clutter.
+		if (signup) {
+			new IntersectionObserver(
+				([entry]) => {
+					signupVisible = entry.isIntersecting;
+					update();
+				},
+				{ threshold: 0.15 },
+			).observe(signup);
+		}
+
+		dismiss.addEventListener('click', () => {
+			bar.hidden = true;
+			sessionStorage.setItem(DISMISS_KEY, '1');
+		});
+	}
+</script>

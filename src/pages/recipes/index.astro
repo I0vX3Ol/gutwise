@@ -1,0 +1,222 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import RecipeCard from '../../components/RecipeCard.astro';
+import EmailSignup from '../../components/EmailSignup.astro';
+import { PHASES, MEAL_TYPES } from '../../consts';
+import { byRecency, publishedOnly, titleCase } from '../../lib/utils';
+import { breadcrumbSchema } from '../../lib/schema';
+
+const recipes = publishedOnly(await getCollection('recipes')).sort(byRecency);
+
+const crumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Recipes', href: '/recipes/' },
+];
+
+/** Only offer a meal-type filter for types that actually have recipes. */
+const availableMealTypes = MEAL_TYPES.filter((type) =>
+	recipes.some((r) => r.data.mealTypes.includes(type)),
+);
+---
+
+<BaseLayout
+	title="Low-FODMAP Recipes with Tested Portions"
+	description="Browse low-FODMAP recipes filtered by protocol phase and meal type. Every recipe states the serving size that keeps it safe — start cooking tonight."
+	schemaNodes={[breadcrumbSchema(crumbs)]}
+>
+	<PageHeader
+		eyebrow="Recipe index"
+		title="Recipes that tell you the portion"
+		intro="Every recipe here states the serving size that keeps it low FODMAP, flags each ingredient individually, and explains the reasoning. Filter by where you are in the protocol."
+		crumbs={crumbs}
+	/>
+
+	<div class="mx-auto max-w-6xl px-5 py-12">
+		<div class="lg:grid lg:grid-cols-[240px_1fr] lg:gap-10">
+			<!-- Filters. Real form controls so keyboard and screen-reader users get
+			     native semantics; without JS every recipe simply stays visible. -->
+			<form id="recipe-filters" class="mb-8 lg:mb-0">
+				<div class="flex items-center justify-between gap-3">
+					<h2 class="font-display text-lg font-semibold text-sage-deep">Filter</h2>
+					<button type="reset" class="text-sm font-semibold text-trust underline underline-offset-4">
+						Clear all
+					</button>
+				</div>
+
+				<fieldset class="mt-5 border-t border-cream-border pt-4">
+					<legend class="text-sm font-semibold uppercase tracking-wide text-sage">
+						Protocol phase
+					</legend>
+					<ul class="mt-3 space-y-2.5">
+						{
+							PHASES.map((phase) => (
+								<li>
+									<label class="flex cursor-pointer items-start gap-2.5 text-[0.925rem]">
+										<input
+											type="checkbox"
+											name="phase"
+											value={phase.slug}
+											class="mt-1 h-4 w-4 shrink-0 accent-[#4C7361]"
+										/>
+										<span>
+											<span class="font-medium text-ink">{phase.label}</span>
+										</span>
+									</label>
+								</li>
+							))
+						}
+					</ul>
+				</fieldset>
+
+				<fieldset class="mt-6 border-t border-cream-border pt-4">
+					<legend class="text-sm font-semibold uppercase tracking-wide text-sage">
+						Meal type
+					</legend>
+					<ul class="mt-3 space-y-2.5">
+						{
+							availableMealTypes.map((type) => (
+								<li>
+									<label class="flex cursor-pointer items-center gap-2.5 text-[0.925rem]">
+										<input
+											type="checkbox"
+											name="meal"
+											value={type}
+											class="h-4 w-4 shrink-0 accent-[#4C7361]"
+										/>
+										<span class="font-medium text-ink">{titleCase(type)}</span>
+									</label>
+								</li>
+							))
+						}
+					</ul>
+				</fieldset>
+			</form>
+
+			<div>
+				<!-- Result count, announced politely when filters change. -->
+				<p
+					id="recipe-count"
+					role="status"
+					class="mb-5 text-sm font-medium text-ink-muted"
+				>
+					Showing all {recipes.length} recipes
+				</p>
+
+				<ul id="recipe-grid" class="grid gap-6 sm:grid-cols-2">
+					{
+						recipes.map((recipe, i) => (
+							<li
+								data-recipe
+								data-phases={recipe.data.phases.join(' ')}
+								data-meals={recipe.data.mealTypes.join(' ')}
+							>
+								<RecipeCard recipe={recipe} eager={i < 2} />
+							</li>
+						))
+					}
+				</ul>
+
+				<!-- Empty state, revealed only when a filter combination matches nothing. -->
+				<div
+					id="recipe-empty"
+					hidden
+					class="rounded-card border border-cream-border bg-cream-sunken p-8 text-center"
+				>
+					<p class="font-display text-xl font-semibold text-sage-deep">
+						No recipes match those filters
+					</p>
+					<p class="mx-auto mt-2 max-w-md text-ink-muted">
+						Try removing a filter, or browse everything — there are only
+						{recipes.length} recipes so far and every one is elimination-safe.
+					</p>
+					<button type="button" id="recipe-empty-reset" class="btn btn-primary mt-5">
+						Show all recipes
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="mt-16">
+			<EmailSignup id="starter-kit" />
+		</div>
+
+		<!-- Internal linking: recipes -> guides -->
+		<aside class="mt-12 card p-6 sm:p-8" aria-labelledby="new-here">
+			<h2 id="new-here" class="font-display text-2xl font-semibold text-sage-deep">
+				New to the diet?
+			</h2>
+			<p class="mt-2 max-w-2xl text-ink-muted">
+				Recipes are much easier to use once you understand why the portions
+				matter. These three guides cover the whole protocol.
+			</p>
+			<ul class="mt-5 grid gap-3 sm:grid-cols-3">
+				<li>
+					<a href="/guides/what-is-the-low-fodmap-diet/" class="btn btn-secondary w-full text-sm">
+						What is low-FODMAP?
+					</a>
+				</li>
+				<li>
+					<a href="/guides/elimination-phase-explained/" class="btn btn-secondary w-full text-sm">
+						Elimination phase
+					</a>
+				</li>
+				<li>
+					<a href="/guides/reintroduction-protocol/" class="btn btn-secondary w-full text-sm">
+						Reintroduction
+					</a>
+				</li>
+			</ul>
+		</aside>
+	</div>
+</BaseLayout>
+
+<script>
+	const form = document.getElementById('recipe-filters') as HTMLFormElement | null;
+	const grid = document.getElementById('recipe-grid');
+	const count = document.getElementById('recipe-count');
+	const empty = document.getElementById('recipe-empty');
+	const emptyReset = document.getElementById('recipe-empty-reset');
+
+	if (form && grid && count && empty) {
+		const items = Array.from(grid.querySelectorAll<HTMLElement>('[data-recipe]'));
+		const total = items.length;
+
+		const apply = () => {
+			const data = new FormData(form);
+			const phases = data.getAll('phase').map(String);
+			const meals = data.getAll('meal').map(String);
+
+			let visible = 0;
+
+			for (const item of items) {
+				const itemPhases = (item.dataset.phases ?? '').split(' ');
+				const itemMeals = (item.dataset.meals ?? '').split(' ');
+
+				// Within a group filters are OR; across groups they are AND.
+				const phaseOk = phases.length === 0 || phases.some((p) => itemPhases.includes(p));
+				const mealOk = meals.length === 0 || meals.some((m) => itemMeals.includes(m));
+				const show = phaseOk && mealOk;
+
+				item.hidden = !show;
+				if (show) visible++;
+			}
+
+			const filtered = phases.length > 0 || meals.length > 0;
+			count.textContent = filtered
+				? `Showing ${visible} of ${total} recipes`
+				: `Showing all ${total} recipes`;
+
+			empty.hidden = visible > 0;
+			grid.hidden = visible === 0;
+		};
+
+		form.addEventListener('change', apply);
+		form.addEventListener('reset', () => {
+			// Reset fires before the controls actually clear.
+			requestAnimationFrame(apply);
+		});
+		emptyReset?.addEventListener('click', () => form.reset());
+	}
+</script>

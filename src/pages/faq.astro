@@ -1,0 +1,113 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import EmailSignup from '../components/EmailSignup.astro';
+import Icon from '../components/Icon.astro';
+import { SITE } from '../consts';
+import { breadcrumbSchema, faqSchema } from '../lib/schema';
+
+const faqs = (await getCollection('faqs')).sort((a, b) => a.data.order - b.data.order);
+
+const crumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'FAQ', href: '/faq/' },
+];
+
+const CATEGORIES = [
+	{ id: 'basics', label: 'The basics' },
+	{ id: 'phases', label: 'The three phases' },
+	{ id: 'food', label: 'Food and portions' },
+	{ id: 'practical', label: 'Practicalities' },
+	{ id: 'products', label: 'Products and apps' },
+] as const;
+
+const grouped = CATEGORIES.map((category) => ({
+	...category,
+	items: faqs
+		.filter((f) => f.data.category === category.id)
+		.map((f) => ({ question: f.data.question, answer: f.data.answer })),
+})).filter((group) => group.items.length > 0);
+
+// FAQPage schema covers every question on the page, in display order.
+const allItems = faqs.map((f) => ({
+	question: f.data.question,
+	answer: f.data.answer,
+}));
+---
+
+<BaseLayout
+	title="Low-FODMAP FAQ: Your Questions Answered"
+	description={`Straight answers to the ${faqs.length} questions people ask most about the low-FODMAP diet — phases, portions, products and eating out. Read them all.`}
+	schemaNodes={[breadcrumbSchema(crumbs), faqSchema(allItems)]}
+>
+	<PageHeader
+		eyebrow="Frequently asked questions"
+		title="Questions people ask first"
+		intro={`${faqs.length} straight answers, grouped by topic. If yours is not here, ask us directly — we answer every message.`}
+		crumbs={crumbs}
+	/>
+
+	<div class="mx-auto max-w-6xl px-5 py-12">
+		<div class="lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-12 lg:items-start">
+			<!-- Jump navigation -->
+			<nav aria-labelledby="faq-nav" class="mb-10 lg:sticky lg:top-24 lg:mb-0">
+				<h2 id="faq-nav" class="font-display text-base font-semibold text-sage-deep">
+					Jump to
+				</h2>
+				<ul class="mt-3 space-y-2 border-l-2 border-cream-border pl-4">
+					{
+						grouped.map((group) => (
+							<li>
+								<a
+									href={`#${group.id}`}
+									class="block text-[0.925rem] leading-snug text-ink-muted no-underline hover:text-trust"
+								>
+									{group.label}{' '}
+									<span class="text-xs text-ink-muted">({group.items.length})</span>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</nav>
+
+			<div class="space-y-12">
+				{
+					grouped.map((group) => (
+						<section aria-labelledby={group.id}>
+							<h2
+								id={group.id}
+								class="scroll-mt-24 font-display text-2xl font-semibold text-sage-deep"
+							>
+								{group.label}
+							</h2>
+							<FaqAccordion items={group.items} class="mt-3" />
+						</section>
+					))
+				}
+
+				<!-- Contact fallback with the response-time promise repeated -->
+				<section aria-labelledby="faq-contact" class="card p-6 sm:p-8">
+					<h2 id="faq-contact" class="font-display text-2xl font-semibold text-sage-deep">
+						Still stuck?
+					</h2>
+					<p class="mt-2 max-w-xl text-ink-muted">
+						Send us the question directly. {SITE.responseTimePromise} We cannot give
+						medical advice, but we can point you at the right guidance or the
+						right kind of clinician.
+					</p>
+					<p class="mt-5">
+						<a href="/contact/" class="btn btn-primary">
+							<Icon name="mail" size={18} />
+							Ask a question
+						</a>
+					</p>
+				</section>
+
+				<EmailSignup id="starter-kit" />
+			</div>
+		</div>
+	</div>
+</BaseLayout>

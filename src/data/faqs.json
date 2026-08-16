@@ -1,0 +1,86 @@
+[
+  {
+    "id": "what-does-fodmap-stand-for",
+    "category": "basics",
+    "order": 1,
+    "question": "What does FODMAP actually stand for?",
+    "answer": "FODMAP is an acronym for Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols. They are short-chain carbohydrates that are poorly absorbed in the small intestine. Because they are osmotically active they draw water into the bowel, and because gut bacteria ferment them rapidly they produce gas. In a sensitive gut that combination causes the bloating, pain, wind and altered bowel habit that people with IBS know well. The carbohydrates are not harmful in themselves — most are prebiotics that feed beneficial bacteria — which is exactly why the diet is designed to be temporary rather than permanent."
+  },
+  {
+    "id": "how-long-elimination-phase",
+    "category": "phases",
+    "order": 2,
+    "question": "How long should the elimination phase last?",
+    "answer": "Two to six weeks, and no longer. Monash University's guidance is to stay strict only until your symptoms reach a stable, improved baseline — for most people that happens between weeks two and four. If you have seen no change at all after six weeks, the elimination phase has answered its question: FODMAPs are probably not your main driver, and staying restricted has no further diagnostic value. Extending elimination indefinitely is the single most common mistake, and it narrows your diet and your gut microbiome for no additional benefit."
+  },
+  {
+    "id": "is-low-fodmap-forever",
+    "category": "phases",
+    "order": 3,
+    "question": "Do I have to eat this way forever?",
+    "answer": "No, and you should not. The low-FODMAP diet is a three-phase diagnostic protocol, not a lifestyle. Elimination settles your symptoms, reintroduction identifies which specific FODMAP groups you personally react to and at what dose, and maintenance rebuilds the broadest possible diet that stays comfortable. Most people finish the process tolerating several FODMAP groups freely and needing to limit only one or two. Long-term blanket restriction reduces the diversity of your gut bacteria, so the goal is always to add food back, not to keep cutting it out."
+  },
+  {
+    "id": "do-i-need-a-dietitian",
+    "category": "practical",
+    "order": 4,
+    "question": "Do I need a dietitian, or can I do this alone?",
+    "answer": "You can run the elimination phase from good written guidance, but reintroduction is where people most often get stuck, and a FODMAP-trained dietitian markedly improves the odds of finishing with a broad diet. A dietitian also catches the things self-guided readers miss: nutritional gaps, disordered-eating risk, and symptoms that were never IBS in the first place. Get a formal diagnosis before you start — coeliac disease, inflammatory bowel disease and several other conditions produce overlapping symptoms and need entirely different treatment. Monash and FODMAP Friendly both publish directories of trained clinicians."
+  },
+  {
+    "id": "garlic-onion-substitutes",
+    "category": "food",
+    "order": 5,
+    "question": "What can I use instead of garlic and onion?",
+    "answer": "Garlic-infused oil is the key substitute, and it works because the fructans that cause trouble are water-soluble but not oil-soluble — the flavour transfers to the oil while the FODMAPs stay behind in the solids. Use commercially prepared infused oil rather than home-infusing, which carries a botulism risk if stored. Beyond that, the green tops of spring onions and leeks are low FODMAP while the white bulbs are not, and asafoetida powder gives a convincing allium note at a quarter teaspoon. Chives, ginger, and fresh herbs cover most of the remaining gap."
+  },
+  {
+    "id": "portion-size-matters",
+    "category": "food",
+    "order": 6,
+    "question": "Why does portion size change whether a food is safe?",
+    "answer": "FODMAP content is a dose, not a property. Almost no food is universally forbidden — most become a problem only above a threshold. A quarter of an avocado is low FODMAP; half is high. Forty grams of sweet potato is fine; a large baked one is not. FODMAPs also stack, so three separate portion-safe foods eaten in one sitting can add up to a high-FODMAP meal. This is why every GutWise recipe states the serving size that keeps it low FODMAP, and why we label ingredients as portion-dependent rather than simply safe or unsafe."
+  },
+  {
+    "id": "reintroduction-how",
+    "category": "phases",
+    "order": 7,
+    "question": "How do I run a reintroduction challenge properly?",
+    "answer": "Test one FODMAP group at a time, over three days, while keeping the rest of your diet strictly low FODMAP so the signal stays clean. Use a single pure test food that contains only the group you are challenging — mango for excess fructose, milk for lactose, bread for fructans. Take a small dose on day one, a moderate dose on day two and a large dose on day three, stopping early if symptoms appear. Then wash out for two to three days before the next group, so a delayed reaction is not misread as a response to the following challenge. Record symptoms daily; memory is unreliable at this timescale."
+  },
+  {
+    "id": "still-symptoms-after-elimination",
+    "category": "phases",
+    "order": 8,
+    "question": "What if my symptoms do not improve at all?",
+    "answer": "Roughly a quarter of people do not respond to the low-FODMAP diet, and that is useful information rather than a failure. First check that the elimination was actually complete — garlic and onion hide in stock, marinades, gravies and most processed sauces, and a single overlooked source can mask a genuine response. If elimination was clean and six weeks produced nothing, stop and go back to your clinician. Small intestinal bacterial overgrowth, bile acid malabsorption, coeliac disease, endometriosis and pelvic floor dysfunction all mimic IBS and none of them respond to FODMAP restriction."
+  },
+  {
+    "id": "gluten-free-same-thing",
+    "category": "food",
+    "order": 9,
+    "question": "Is low FODMAP the same as gluten free?",
+    "answer": "No, though they overlap enough to cause constant confusion. Gluten is a protein; FODMAPs are carbohydrates. Wheat is restricted on a low-FODMAP diet because of its fructan content, not its gluten, and many people who believed they were gluten sensitive turn out to be reacting to fructans instead. The practical consequence is that gluten-free products are often convenient during elimination, but the label is not a reliable guide — plenty of gluten-free breads are built on high-FODMAP ingredients such as apple fibre, inulin, or honey, while ordinary sourdough spelt bread is usually well tolerated."
+  },
+  {
+    "id": "eating-out",
+    "category": "practical",
+    "order": 10,
+    "question": "How do I eat at a restaurant during elimination?",
+    "answer": "Choose the cuisine before you choose the dish. Grilled protein with rice or potatoes and a plain green vegetable exists on almost every menu and is naturally low FODMAP. Ask for the dish without sauce and with oil and salt instead, since sauces are where garlic and onion almost always live. Japanese, Greek and steakhouse menus tend to be easiest; Indian, Thai and most Italian are hardest. Call ahead when you can, and eat something small beforehand so you are not making decisions while hungry, which is when the diet slips."
+  },
+  {
+    "id": "monash-app-worth-it",
+    "category": "products",
+    "order": 11,
+    "question": "Is the Monash University FODMAP app worth paying for?",
+    "answer": "Yes — it is the one purchase we recommend without hesitation. Monash developed the diet and runs the laboratory that actually measures FODMAP content in food, so the app is the primary source that every chart, blog post and printable list is ultimately copied from, usually with errors introduced along the way. It gives you tested serving thresholds with a clear traffic-light system, and it is updated as new foods are analysed. A one-off purchase costs less than a single dietitian appointment and will settle far more day-to-day questions than any free list."
+  },
+  {
+    "id": "certified-products-necessary",
+    "category": "products",
+    "order": 12,
+    "question": "Do I need to buy specially certified low-FODMAP products?",
+    "answer": "Mostly no. The overwhelming majority of an elimination-phase diet is ordinary whole food — meat, eggs, rice, oats, firm tofu, carrots, spinach, potatoes, strawberries and lactose-free dairy are all inexpensive and widely available. Certification from Monash or FODMAP Friendly is genuinely useful for the few categories where hidden ingredients make label-reading unreliable: stocks and broths, sauces, protein powders, snack bars and bread. Outside those categories, certified products mainly buy convenience at a premium, and your budget is better spent on the Monash app and a dietitian appointment."
+  }
+]

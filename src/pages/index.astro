@@ -1,0 +1,262 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RecipeCard from '../components/RecipeCard.astro';
+import ContentCard from '../components/ContentCard.astro';
+import EmailSignup from '../components/EmailSignup.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import Icon from '../components/Icon.astro';
+import { PHASES, LEAD_MAGNET } from '../consts';
+import { byRecency, publishedOnly } from '../lib/utils';
+import { faqSchema } from '../lib/schema';
+
+const recipes = publishedOnly(await getCollection('recipes'));
+const guides = publishedOnly(await getCollection('guides'));
+const stories = publishedOnly(await getCollection('stories'));
+// The FAQ collection is data-only and has no draft flag.
+const allFaqs = await getCollection('faqs');
+
+const featuredRecipes = recipes
+	.filter((r) => r.data.featured)
+	.sort(byRecency)
+	.slice(0, 3);
+
+const orderedGuides = guides.sort((a, b) => a.data.order - b.data.order).slice(0, 3);
+const featuredStories = stories.sort(byRecency).slice(0, 2);
+
+// A short teaser set on the home page; the full list lives on /faq/.
+const homeFaqs = allFaqs
+	.sort((a, b) => a.data.order - b.data.order)
+	.slice(0, 4)
+	.map((f) => ({ question: f.data.question, answer: f.data.answer }));
+
+const phaseIcons = ['leaf', 'scale', 'check'] as const;
+const phaseGuides = [
+	'/guides/elimination-phase-explained/',
+	'/guides/reintroduction-protocol/',
+	'/guides/what-is-the-low-fodmap-diet/',
+];
+---
+
+<BaseLayout
+	title="GutWise — Low-FODMAP Recipes and Guides for IBS"
+	description="Calm, evidence-based low-FODMAP recipes, phase-by-phase guides and honest product picks for managing IBS. Start with the free Elimination Starter Kit."
+	appendBrand={false}
+	schemaNodes={[faqSchema(homeFaqs)]}
+>
+	<!-- Hero: value proposition and primary CTA, both above the fold -->
+	<section class="border-b border-cream-border bg-cream-sunken">
+		<div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:py-20 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+			<div>
+				<p class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-sage-deep">
+					<Icon name="leaf" size={14} />
+					Aligned with the Monash protocol
+				</p>
+
+				<h1 class="mt-5 font-display text-4xl font-semibold leading-tight text-sage-deep sm:text-5xl md:text-6xl">
+					Low-FODMAP, without the panic
+				</h1>
+
+				<p class="mt-5 max-w-xl text-lg leading-relaxed text-ink-muted">
+					A calm, practical guide to eating well with IBS. Recipes with tested
+					portion limits, honest explanations of each protocol phase, and a clear
+					path back to the broadest diet your gut allows.
+				</p>
+
+				<div class="mt-8 flex flex-wrap gap-3">
+					<a href="#starter-kit" class="btn btn-primary">
+						{LEAD_MAGNET.cta}
+					</a>
+					<a href="/guides/what-is-the-low-fodmap-diet/" class="btn btn-secondary">
+						Start with the basics
+					</a>
+				</div>
+
+				<p class="mt-5 flex items-center gap-2 text-sm text-ink-muted">
+					<Icon name="check" size={16} class="text-sage" />
+					Free 14-page PDF · No spam · Unsubscribe in one click
+				</p>
+			</div>
+
+			<!-- "Where are you?" entry point — the fastest route to the right page -->
+			<div class="card p-6 sm:p-7">
+				<h2 class="font-display text-xl font-semibold text-sage-deep">
+					Where are you in the process?
+				</h2>
+				<p class="mt-1.5 text-sm text-ink-muted">
+					The diet has three phases, and each one asks a different question.
+				</p>
+
+				<ul class="mt-5 space-y-3">
+					{
+						PHASES.map((phase, i) => (
+							<li>
+								<a
+									href={phaseGuides[i]}
+									class="flex items-start gap-3 rounded-card border border-cream-border p-4 no-underline transition-colors hover:bg-sage-wash"
+								>
+									<span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sage-wash text-sage-deep">
+										<Icon name={phaseIcons[i]} size={16} />
+									</span>
+									<span>
+										<span class="block font-semibold text-sage-deep">
+											{phase.order}. {phase.label}
+										</span>
+										<span class="mt-0.5 block text-sm leading-relaxed text-ink-muted">
+											{phase.blurb}
+										</span>
+									</span>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<!-- Featured recipes -->
+	<section aria-labelledby="recipes-heading" class="mx-auto max-w-6xl px-5 py-16">
+		<div class="flex flex-wrap items-end justify-between gap-4">
+			<div>
+				<h2 id="recipes-heading" class="font-display text-3xl font-semibold text-sage-deep">
+					Recipes that state the portion
+				</h2>
+				<p class="mt-2 max-w-2xl text-ink-muted">
+					Every recipe lists the serving size that keeps it low FODMAP, because
+					FODMAP content is a dose rather than a property.
+				</p>
+			</div>
+			<a href="/recipes/" class="btn btn-secondary text-sm">
+				All recipes
+				<Icon name="arrow-right" size={16} />
+			</a>
+		</div>
+
+		<div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+			{featuredRecipes.map((recipe, i) => <RecipeCard recipe={recipe} eager={i === 0} />)}
+		</div>
+	</section>
+
+	<!-- Guides -->
+	<section aria-labelledby="guides-heading" class="border-y border-cream-border bg-cream-sunken">
+		<div class="mx-auto max-w-6xl px-5 py-16">
+			<div class="flex flex-wrap items-end justify-between gap-4">
+				<div>
+					<h2 id="guides-heading" class="font-display text-3xl font-semibold text-sage-deep">
+						Understand the protocol
+					</h2>
+					<p class="mt-2 max-w-2xl text-ink-muted">
+						The diet is a three-phase diagnostic process, not a permanent list of
+						banned foods. These guides cover it end to end.
+					</p>
+				</div>
+				<a href="/guides/" class="btn btn-secondary text-sm">
+					All guides
+					<Icon name="arrow-right" size={16} />
+				</a>
+			</div>
+
+			<div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				{
+					orderedGuides.map((guide) => (
+						<ContentCard
+							href={`/guides/${guide.id}/`}
+							title={guide.data.title}
+							summary={guide.data.summary}
+							image={guide.data.image}
+							imageAlt={guide.data.imageAlt}
+							eyebrow="Guide"
+							meta={[`${guide.data.readingMinutes} min read`]}
+						/>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<!-- Lead magnet -->
+	<section class="mx-auto max-w-6xl px-5 py-16">
+		<EmailSignup variant="dark" id="starter-kit" />
+	</section>
+
+	<!-- Success stories -->
+	<section aria-labelledby="stories-heading" class="mx-auto max-w-6xl px-5 pb-16">
+		<div class="flex flex-wrap items-end justify-between gap-4">
+			<div>
+				<h2 id="stories-heading" class="font-display text-3xl font-semibold text-sage-deep">
+					What finishing actually looks like
+				</h2>
+				<p class="mt-2 max-w-2xl text-ink-muted">
+					Reader stories, including the parts that went wrong. Most people end up
+					limiting far fewer foods than they expect.
+				</p>
+			</div>
+			<a href="/success-stories/" class="btn btn-secondary text-sm">
+				All stories
+				<Icon name="arrow-right" size={16} />
+			</a>
+		</div>
+
+		<div class="mt-8 grid gap-6 sm:grid-cols-2">
+			{
+				featuredStories.map((story) => (
+					<ContentCard
+						href={`/success-stories/${story.id}/`}
+						title={story.data.title}
+						summary={story.data.summary}
+						image={story.data.image}
+						imageAlt={story.data.imageAlt}
+						eyebrow="Success story"
+						meta={[story.data.personName, story.data.timeframe]}
+					/>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- FAQ teaser, marked up as FAQPage schema -->
+	<section aria-labelledby="faq-heading" class="border-t border-cream-border bg-cream-sunken">
+		<div class="mx-auto max-w-3xl px-5 py-16">
+			<h2 id="faq-heading" class="font-display text-3xl font-semibold text-sage-deep">
+				Common questions
+			</h2>
+			<p class="mt-2 text-ink-muted">
+				The four we are asked most often. There are {allFaqs.length} more on the{' '}
+				<a href="/faq/" class="text-trust underline decoration-1 underline-offset-4">
+					full FAQ page
+				</a>
+				.
+			</p>
+
+			<FaqAccordion items={homeFaqs} class="mt-6" />
+
+			<p class="mt-8">
+				<a href="/faq/" class="btn btn-secondary">
+					Read all {allFaqs.length} questions
+					<Icon name="arrow-right" size={16} />
+				</a>
+			</p>
+		</div>
+	</section>
+
+	<!-- Product picks -->
+	<section class="mx-auto max-w-6xl px-5 py-16">
+		<div class="card flex flex-col gap-6 p-8 sm:flex-row sm:items-center sm:justify-between">
+			<div>
+				<h2 class="font-display text-2xl font-semibold text-sage-deep">
+					What is actually worth buying
+				</h2>
+				<p class="mt-2 max-w-xl text-ink-muted">
+					Most low-FODMAP shopping lists are padded with expensive things you do
+					not need. Ours is seven items, with honest notes on where the money is
+					wasted.
+				</p>
+			</div>
+			<a href="/product-recommendations/" class="btn btn-primary shrink-0">
+				See the pantry list
+				<Icon name="arrow-right" size={16} />
+			</a>
+		</div>
+	</section>
+</BaseLayout>

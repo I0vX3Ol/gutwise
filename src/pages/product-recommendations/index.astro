@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
+import EmailSignup from '../../components/EmailSignup.astro';
+import Icon from '../../components/Icon.astro';
+import { byRecency, publishedOnly, formatDate } from '../../lib/utils';
+import { breadcrumbSchema } from '../../lib/schema';
+
+const roundups = publishedOnly(await getCollection('products')).sort(byRecency);
+
+const crumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Product Picks', href: '/product-recommendations/' },
+];
+---
+
+<BaseLayout
+	title="Low-FODMAP Product Picks, Honestly Ranked"
+	description="Independently chosen low-FODMAP products — what genuinely helps during elimination and what is an expensive waste. Read our buying guides."
+	schemaNodes={[breadcrumbSchema(crumbs)]}
+>
+	<PageHeader
+		eyebrow="Product picks"
+		title="What is actually worth buying"
+		intro="Most low-FODMAP shopping lists are padded with expensive specialty products you do not need. These guides are deliberately short, and say plainly where the money is wasted."
+		crumbs={crumbs}
+	/>
+
+	<div class="mx-auto max-w-6xl px-5 py-12">
+		<!-- FTC: disclosure sits above the fold and before any affiliate link -->
+		<AffiliateDisclosure class="mb-10" />
+
+		<div class="grid gap-6 sm:grid-cols-2">
+			{
+				roundups.map((roundup, i) => (
+					<ContentCard
+						href={`/product-recommendations/${roundup.id}/`}
+						title={roundup.data.title}
+						summary={roundup.data.summary}
+						image={roundup.data.image}
+						imageAlt={roundup.data.imageAlt}
+						eyebrow="Buying guide"
+						meta={[
+							`${roundup.data.picks.length} picks`,
+							`Reviewed ${formatDate(roundup.data.lastReviewed)}`,
+						]}
+						eager={i === 0}
+						level={2}
+					/>
+				))
+			}
+		</div>
+
+		<!-- How we choose: the trust layer that differentiates from thin affiliate content -->
+		<section aria-labelledby="how-we-choose" class="mt-16 card p-6 sm:p-8">
+			<h2 id="how-we-choose" class="font-display text-2xl font-semibold text-sage-deep">
+				How we choose what to recommend
+			</h2>
+			<ul class="mt-5 grid gap-5 sm:grid-cols-3">
+				{
+					[
+						{
+							title: 'Certification first',
+							body: 'In categories where hidden ingredients make labels unreliable — stock, sauces, bars, bread — we only recommend products tested by Monash or FODMAP Friendly.',
+						},
+						{
+							title: 'Commission never ranks',
+							body: 'Placement and order are set before we check whether a product has an affiliate programme. Several of our top picks pay us nothing at all.',
+						},
+						{
+							title: 'We say when to skip it',
+							body: 'Most of an elimination diet is ordinary supermarket food. Where a specialty product is a waste of money, we say so rather than quietly omitting it.',
+						},
+					].map((item) => (
+						<li>
+							<h3 class="flex items-center gap-2 font-display text-lg font-semibold text-sage-deep">
+								<Icon name="check" size={18} class="text-sage" />
+								{item.title}
+							</h3>
+							<p class="mt-2 text-[0.925rem] leading-relaxed text-ink-muted">{item.body}</p>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<div class="mt-14">
+			<EmailSignup id="starter-kit" />
+		</div>
+	</div>
+</BaseLayout>

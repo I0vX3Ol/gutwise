@@ -1,0 +1,87 @@
+---
+/**
+ * Analytics: GA4 (consent-gated) + Cloudflare Web Analytics (cookieless).
+ *
+ * Both IDs come from environment variables, so nothing is hardcoded and the
+ * whole block disappears cleanly when the variables are unset — which is what
+ * happens on preview branches and local dev.
+ *
+ * GA4 boots with Google Consent Mode v2 defaulting every storage type to
+ * "denied". Nothing is written to cookies until the visitor actively accepts in
+ * the banner, which is what makes the GDPR posture defensible rather than
+ * decorative. Cloudflare Web Analytics sets no cookies and collects no personal
+ * data, so it loads without consent (and is documented that way in the policy).
+ */
+const ga4Id = import.meta.env.PUBLIC_GA4_ID;
+const cfToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
+---
+
+{ga4Id && <meta name="gutwise:ga4" content={ga4Id} />}
+
+{
+	ga4Id && (
+		<script>
+			// gtag.js is an untyped global that takes variadic arguments, so the
+			// shims it needs are declared here rather than in a global .d.ts —
+			// this is the only file that touches them.
+			declare global {
+				interface Window {
+					dataLayer: unknown[];
+					gtag: (...args: unknown[]) => void;
+				}
+			}
+
+			// Consent Mode must be configured before gtag.js loads, so the queue is
+			// primed here and the tag is injected afterwards.
+			const el = document.querySelector('meta[name="gutwise:ga4"]');
+			const id = el && el.getAttribute('content');
+
+			if (id) {
+				window.dataLayer = window.dataLayer || [];
+
+				// gtag.js reads the raw `arguments` object off dataLayer, so this
+				// must stay a classic function pushing `arguments` — pushing a rest
+				// array instead is not equivalent for every gtag.js code path.
+				function gtag(..._args: unknown[]) {
+					// eslint-disable-next-line prefer-rest-params
+					window.dataLayer.push(arguments);
+				}
+				window.gtag = gtag;
+
+				const granted = localStorage.getItem('gutwise:consent') === 'granted';
+
+				gtag('consent', 'default', {
+					ad_storage: 'denied',
+					ad_user_data: 'denied',
+					ad_personalization: 'denied',
+					analytics_storage: granted ? 'granted' : 'denied',
+					functionality_storage: 'granted',
+					security_storage: 'granted',
+				});
+
+				gtag('js', new Date());
+				gtag('config', id, {
+					anonymize_ip: true,
+					// The banner, not the pageview, decides whether anything persists.
+					send_page_view: true,
+				});
+
+				const s = document.createElement('script');
+				s.async = true;
+				s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+				document.head.appendChild(s);
+			}
+		</script>
+	)
+}
+
+{
+	cfToken && (
+		<script
+			is:inline
+			defer
+			src="https://static.cloudflareinsights.com/beacon.min.js"
+			data-cf-beacon={JSON.stringify({ token: cfToken })}
+		/>
+	)
+}

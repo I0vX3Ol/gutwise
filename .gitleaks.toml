@@ -1,0 +1,25 @@
+# gitleaks configuration for GutWise.
+# Extends the maintained default ruleset rather than replacing it.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Paths and values that are documentation, not secrets"
+
+paths = [
+  # The environment template contains empty placeholders by design.
+  '''\.env\.example$''',
+  # Lockfile integrity hashes look like high-entropy strings to a scanner.
+  '''package-lock\.json$''',
+  # Generated placeholder art and fonts.
+  '''^public/images/''',
+]
+
+regexes = [
+  # Placeholder affiliate tag used in the example content.
+  '''tag=gutwise-20''',
+  # Documented, non-secret Cloudflare Turnstile test keys.
+  '''1x00000000000000000000AA''',
+  '''2x0000000000000000000000000000000AA''',
+]

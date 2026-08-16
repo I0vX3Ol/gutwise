@@ -1,0 +1,10 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "//": "functions/ targets the Cloudflare Workers runtime and has its own tsconfig.",
+  "exclude": ["dist", "node_modules", "functions"],
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "allowJs": true
+  }
+}

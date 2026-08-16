@@ -1,0 +1,47 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+    # Patch and minor bumps are grouped so routine maintenance is one PR to
+    # review rather than a dozen. Majors stay separate — they need a real look.
+    groups:
+      astro:
+        patterns:
+          - 'astro'
+          - '@astrojs/*'
+        update-types:
+          - minor
+          - patch
+      tailwind:
+        patterns:
+          - 'tailwindcss'
+          - '@tailwindcss/*'
+        update-types:
+          - minor
+          - patch
+      build-tooling:
+        patterns:
+          - 'satori'
+          - '@resvg/*'
+          - '@fontsource*'
+          - 'typescript'
+          - 'node-html-parser'
+          - '@cloudflare/*'
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: monthly
+    labels:
+      - dependencies

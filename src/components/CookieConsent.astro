@@ -1,0 +1,91 @@
+---
+/**
+ * GDPR/UK-GDPR cookie consent banner.
+ *
+ * Analytics storage defaults to *denied* via Google Consent Mode (see
+ * Analytics.astro) and is only granted when the visitor actively accepts here.
+ * Reject is presented with equal visual weight to Accept, which is what the
+ * EDPB guidance actually requires — a greyed-out reject option is a dark
+ * pattern and is not valid consent.
+ *
+ * Cloudflare Web Analytics is cookieless and collects no personal data, so it
+ * is not gated; that is stated in the privacy policy rather than buried.
+ */
+const hasAnalytics = Boolean(import.meta.env.PUBLIC_GA4_ID);
+---
+
+{
+	hasAnalytics && (
+		<div
+			id="cookie-banner"
+			hidden
+			role="dialog"
+			aria-modal="false"
+			aria-labelledby="cookie-banner-heading"
+			aria-describedby="cookie-banner-body"
+			class="fixed inset-x-0 bottom-0 z-50 border-t-2 border-sage bg-cream px-5 py-5 shadow-2xl no-print"
+		>
+			<div class="mx-auto flex max-w-4xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+				<div>
+					<h2 id="cookie-banner-heading" class="font-display text-lg font-semibold text-sage-deep">
+						Cookies on GutWise
+					</h2>
+					<p id="cookie-banner-body" class="mt-1 max-w-2xl text-sm leading-relaxed text-ink-muted">
+						We use analytics cookies only if you say yes. They help us see which
+						guides people actually find useful. Decline and nothing is stored —
+						the site works exactly the same either way.{' '}
+						<a
+							href="/privacy-policy/"
+							class="text-trust underline decoration-1 underline-offset-2"
+						>
+							Read our privacy policy
+						</a>
+						.
+					</p>
+				</div>
+
+				<div class="flex shrink-0 gap-3">
+					{/* Equal visual weight — declining must be as easy as accepting. */}
+					<button type="button" id="cookie-decline" class="btn btn-secondary flex-1 text-sm sm:flex-none">
+						Decline
+					</button>
+					<button type="button" id="cookie-accept" class="btn btn-primary flex-1 text-sm sm:flex-none">
+						Accept
+					</button>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+{
+	hasAnalytics && (
+		<script>
+			const banner = document.getElementById('cookie-banner');
+			const accept = document.getElementById('cookie-accept');
+			const decline = document.getElementById('cookie-decline');
+
+			if (banner && accept && decline) {
+				const KEY = 'gutwise:consent';
+				const stored = localStorage.getItem(KEY);
+
+				// Only ask if they have not already answered.
+				if (stored !== 'granted' && stored !== 'denied') {
+					banner.hidden = false;
+				}
+
+				const resolve = (value: 'granted' | 'denied') => {
+					localStorage.setItem(KEY, value);
+					banner.hidden = true;
+
+					// Tell Consent Mode about the change without a page reload.
+					const gtag = (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag;
+					gtag?.('consent', 'update', { analytics_storage: value });
+				};
+
+				accept.addEventListener('click', () => resolve('granted'));
+				decline.addEventListener('click', () => resolve('denied'));
+			}
+		</script>
+	)
+}

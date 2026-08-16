@@ -1,0 +1,122 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import EmailSignup from '../../components/EmailSignup.astro';
+import Icon from '../../components/Icon.astro';
+import { PHASES } from '../../consts';
+import { publishedOnly, phaseLabel } from '../../lib/utils';
+import { breadcrumbSchema } from '../../lib/schema';
+
+const guides = publishedOnly(await getCollection('guides')).sort(
+	(a, b) => a.data.order - b.data.order,
+);
+
+const crumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Guides', href: '/guides/' },
+];
+---
+
+<BaseLayout
+	title="Low-FODMAP Guides: The Protocol Explained"
+	description="Clear, evidence-based guides to every phase of the low-FODMAP diet — elimination, reintroduction and beyond. Read them in order and start today."
+	schemaNodes={[breadcrumbSchema(crumbs)]}
+>
+	<PageHeader
+		eyebrow="Guides"
+		title="The protocol, explained properly"
+		intro="The low-FODMAP diet is a three-phase diagnostic process, not a permanent list of banned foods. These guides walk through it in the order you will actually need them."
+		crumbs={crumbs}
+	/>
+
+	<div class="mx-auto max-w-6xl px-5 py-12">
+		<!-- Ordered path: the guides are sequential, so present them as a path -->
+		<ol class="grid gap-6 lg:grid-cols-3">
+			{
+				guides.map((guide, i) => (
+					<li class="relative">
+						<span class="absolute -top-3 left-5 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-sage-deep font-display text-sm font-semibold text-cream">
+							{i + 1}
+						</span>
+						<ContentCard
+							href={`/guides/${guide.id}/`}
+							title={guide.data.title}
+							summary={guide.data.summary}
+							image={guide.data.image}
+							imageAlt={guide.data.imageAlt}
+							eyebrow={guide.data.phase ? phaseLabel(guide.data.phase) : 'Start here'}
+							meta={[`${guide.data.readingMinutes} min read`]}
+							eager={i === 0}
+							level={2}
+						/>
+					</li>
+				))
+			}
+		</ol>
+
+		<!-- Phase reference table -->
+		<section aria-labelledby="phases" class="mt-16">
+			<h2 id="phases" class="font-display text-2xl font-semibold text-sage-deep">
+				The three phases at a glance
+			</h2>
+			<div class="mt-6 overflow-x-auto">
+				<table class="w-full min-w-[38rem] border-collapse text-left">
+					<caption class="sr-only-focusable">
+						Summary of the three low-FODMAP protocol phases, their duration and purpose
+					</caption>
+					<thead>
+						<tr class="border-b-2 border-sage-light">
+							<th scope="col" class="py-3 pr-4 font-display text-base text-sage-deep">Phase</th>
+							<th scope="col" class="py-3 pr-4 font-display text-base text-sage-deep">Duration</th>
+							<th scope="col" class="py-3 font-display text-base text-sage-deep">What it answers</th>
+						</tr>
+					</thead>
+					<tbody>
+						{
+							[
+								['Elimination', '2–6 weeks', 'Do FODMAPs drive my symptoms at all?'],
+								['Reintroduction', '6–10 weeks', 'Which specific groups, and at what dose?'],
+								['Maintenance', 'Ongoing', 'What is the broadest diet my gut allows?'],
+							].map(([name, duration, answers], i) => (
+								<tr class="border-b border-cream-border">
+									<th scope="row" class="py-3.5 pr-4 font-semibold text-sage-deep">
+										{i + 1}. {name}
+									</th>
+									<td class="py-3.5 pr-4 text-ink-muted">{duration}</td>
+									<td class="py-3.5 text-ink-muted">{answers}</td>
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+			</div>
+			<p class="mt-4 text-sm text-ink-muted">
+				{PHASES.length} phases, roughly three to four months in total. The goal is
+				always to finish, not to stay in phase one.
+			</p>
+		</section>
+
+		<!-- Internal linking: guides -> recipes -->
+		<aside class="card mt-14 flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+			<div>
+				<h2 class="font-display text-2xl font-semibold text-sage-deep">
+					Ready to cook?
+				</h2>
+				<p class="mt-2 max-w-xl text-ink-muted">
+					Every recipe on GutWise states the serving size that keeps it low
+					FODMAP, and flags each ingredient individually.
+				</p>
+			</div>
+			<a href="/recipes/" class="btn btn-primary shrink-0">
+				Browse recipes
+				<Icon name="arrow-right" size={16} />
+			</a>
+		</aside>
+
+		<div class="mt-12">
+			<EmailSignup id="starter-kit" />
+		</div>
+	</div>
+</BaseLayout>

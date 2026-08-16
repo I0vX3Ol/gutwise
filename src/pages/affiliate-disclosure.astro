@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { SITE } from '../consts';
+import { breadcrumbSchema } from '../lib/schema';
+import { formatDate, isoDate } from '../lib/utils';
+
+const crumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Affiliate Disclosure', href: '/affiliate-disclosure/' },
+];
+
+const lastUpdated = new Date('2026-06-20');
+---
+
+<BaseLayout
+	title="Affiliate Disclosure"
+	description="Exactly how GutWise makes money, which affiliate programmes we belong to, and the rules we follow so commission never shapes a recommendation. Read more."
+	schemaNodes={[breadcrumbSchema(crumbs)]}
+>
+	<PageHeader
+		eyebrow="Legal"
+		title="How GutWise makes money"
+		intro="Stated in full, because a recommendation you cannot audit is worth very little."
+		crumbs={crumbs}
+	/>
+
+	<div class="mx-auto max-w-3xl px-5 py-12">
+		<p class="text-sm text-ink-muted">
+			Last updated{' '}
+			<time datetime={isoDate(lastUpdated)}>{formatDate(lastUpdated)}</time>
+		</p>
+
+		<div class="prose prose-gutwise mt-8">
+			<h2>The short version</h2>
+			<p>
+				{SITE.name} is reader-supported. Some links on this site are affiliate
+				links, which means that if you click one and buy something, we may earn a
+				small commission. <strong>It costs you nothing extra</strong> — the price
+				is the same as it would have been.
+			</p>
+
+			<h2>Our rules</h2>
+			<p>These are the commitments we hold ourselves to.</p>
+
+			<h3>Commission never determines placement</h3>
+			<p>
+				We decide what to recommend and in what order before checking whether
+				anything pays a commission. The clearest evidence is our most-recommended
+				product overall — the Monash University FODMAP app — which has no
+				affiliate programme and earns us nothing at all. It is still first on the
+				list, because it is the right answer.
+			</p>
+
+			<h3>We tell you when not to buy</h3>
+			<p>
+				Most of a low-FODMAP diet is ordinary supermarket food. Where a specialty
+				product is an unnecessary premium, we say so on the page, even though
+				recommending it would pay better. Our pantry guide exists mainly to argue
+				you out of buying thirty things.
+			</p>
+
+			<h3>Disclosure appears before the links</h3>
+			<p>
+				Every page carrying affiliate links shows a disclosure above the fold and
+				before the first link, in line with the US Federal Trade Commission's
+				requirement that disclosures be clear and conspicuous. A disclosure buried
+				in a footer does not meet that standard, and we do not rely on one.
+			</p>
+
+			<h3>We do not accept paid placement</h3>
+			<p>
+				No brand can buy a position on this site, and we do not publish sponsored
+				posts dressed up as editorial. If that ever changes, any such content will
+				be labelled unmistakably as advertising.
+			</p>
+
+			<h2>Programmes we participate in</h2>
+			<ul>
+				<li>
+					<strong>Amazon Associates.</strong> {SITE.name} is a participant in the
+					Amazon Services LLC Associates Program, an affiliate advertising program
+					designed to provide a means for sites to earn advertising fees by
+					advertising and linking to Amazon.com. Amazon and the Amazon logo are
+					trademarks of Amazon.com, Inc. or its affiliates.
+				</li>
+				<li>
+					<strong>Specialty low-FODMAP brands.</strong> We take part in affiliate
+					programmes run by certified low-FODMAP food brands where we already
+					recommend the product on its merits.
+				</li>
+				<li>
+					<strong>Display advertising.</strong> Once a page meets the traffic
+					threshold required to qualify, we may show display advertising. Ad
+					placements are never editorial recommendations.
+				</li>
+			</ul>
+
+			<h2>How affiliate links are marked</h2>
+			<p>
+				Affiliate links carry <code>rel="nofollow sponsored"</code> attributes, so
+				they are machine-identifiable as commercial links as well as disclosed to
+				you in plain language.
+			</p>
+
+			<h2>What we earn and what we know about you</h2>
+			<p>
+				Retailers report commissions to us in aggregate. We are told that a number
+				of purchases were attributed to us; we are not told who made them or what
+				else was in the basket. Tracking is done by the retailer's own cookie
+				under their privacy policy, not ours. See our{' '}
+				<a href="/privacy-policy/">privacy policy</a> for how that interacts with
+				the rest of the site.
+			</p>
+
+			<h2>Questions</h2>
+			<p>
+				If you think a recommendation on this site looks commercially motivated,
+				tell us. Email{' '}
+				<a href={`mailto:${SITE.email}`}>{SITE.email}</a> and we will explain the
+				reasoning or change the page. {SITE.responseTimePromise}
+			</p>
+		</div>
+	</div>
+</BaseLayout>

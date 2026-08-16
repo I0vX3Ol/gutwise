@@ -1,0 +1,79 @@
+---
+import { FOOTER_LINKS, SITE, MEDICAL_DISCLAIMER } from '../consts';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 bg-sage-deep text-cream no-print">
+	<div class="mx-auto max-w-6xl px-5 py-14">
+		<div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+			<div>
+				<div class="flex items-center gap-2.5">
+					<span
+						class="flex h-9 w-9 items-center justify-center rounded-full bg-cream text-sage-deep"
+					>
+						<Icon name="leaf" size={20} />
+					</span>
+					<span class="font-display text-2xl font-semibold text-cream">
+						{SITE.name}
+					</span>
+				</div>
+				<p class="mt-4 max-w-xs text-[0.95rem] leading-relaxed text-cream/90">
+					{SITE.tagline} for people living with IBS. Published from {SITE.founded}.
+				</p>
+			</div>
+
+			{
+				Object.entries(FOOTER_LINKS).map(([heading, links]) => (
+					<nav aria-labelledby={`footer-${heading.toLowerCase()}`}>
+						<h2
+							id={`footer-${heading.toLowerCase()}`}
+							class="font-display text-lg font-semibold text-cream"
+						>
+							{heading}
+						</h2>
+						<ul class="mt-4 space-y-2.5">
+							{links.map((link) => (
+								<li>
+									<a
+										href={link.href}
+										class="text-[0.95rem] text-trust-on-dark underline decoration-1 underline-offset-4 hover:text-cream"
+									>
+										{link.label}
+									</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+				))
+			}
+		</div>
+
+		<!-- Medical disclaimer: required on every page giving dietary guidance. -->
+		<div class="mt-12 rounded-card border border-sage-light/40 p-5">
+			<h2 class="font-display text-base font-semibold text-cream">
+				Important health information
+			</h2>
+			<p class="mt-2 text-sm leading-relaxed text-cream/90">
+				{MEDICAL_DISCLAIMER}
+			</p>
+		</div>
+
+		<div
+			class="mt-8 flex flex-col gap-4 border-t border-sage-light/40 pt-6 text-sm text-cream/90 sm:flex-row sm:items-center sm:justify-between"
+		>
+			<p>&copy; {year} {SITE.name}. All rights reserved.</p>
+			<p>
+				Questions?{' '}
+				<a
+					href="/contact/"
+					class="text-trust-on-dark underline decoration-1 underline-offset-4 hover:text-cream"
+				>
+					Contact us
+				</a>{' '}
+				— {SITE.responseTimePromise}
+			</p>
+		</div>
+	</div>
+</footer>

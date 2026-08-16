@@ -1,0 +1,280 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Icon from '../components/Icon.astro';
+import Callout from '../components/Callout.astro';
+import { SITE } from '../consts';
+import { breadcrumbSchema, contactPageSchema } from '../lib/schema';
+
+const crumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Contact', href: '/contact/' },
+];
+
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+
+const TOPICS = [
+	{ value: 'question', label: 'A question about the diet' },
+	{ value: 'correction', label: 'A correction to something we published' },
+	{ value: 'story', label: 'I would like to share my story' },
+	{ value: 'partnership', label: 'Partnership or press' },
+	{ value: 'other', label: 'Something else' },
+];
+---
+
+<BaseLayout
+	title="Contact GutWise"
+	description="Questions, corrections or your own low-FODMAP story — send them here. We read every message and respond within 1 business day. Get in touch today."
+	schemaNodes={[breadcrumbSchema(crumbs), contactPageSchema('/contact/')]}
+>
+	<PageHeader
+		eyebrow="Contact"
+		title="Get in touch"
+		intro="Questions, corrections, or your own story. We read everything that comes in."
+		crumbs={crumbs}
+	/>
+
+	<div class="mx-auto max-w-6xl px-5 py-12">
+		<div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+			<div>
+				<!-- Response-time promise, stated prominently rather than buried -->
+				<p
+					class="flex items-center gap-2.5 rounded-card border border-sage-light/60 bg-sage-wash px-4 py-3 font-semibold text-sage-deep"
+				>
+					<Icon name="clock" size={18} />
+					{SITE.responseTimePromise}
+				</p>
+
+				<form
+					id="contact-form"
+					class="mt-8"
+					method="post"
+					action="/api/contact"
+					novalidate
+				>
+					<div class="space-y-5">
+						<div>
+							<label for="name" class="block text-sm font-semibold text-sage-deep">
+								Your name
+								<span class="font-normal text-ink-muted">(required)</span>
+							</label>
+							<input
+								type="text"
+								id="name"
+								name="name"
+								required
+								autocomplete="name"
+								maxlength="100"
+								aria-describedby="name-error"
+								class="mt-2 min-h-11 w-full rounded-lg border-2 border-sage bg-white px-4 py-2.5 text-ink"
+							/>
+							<p id="name-error" role="alert" class="mt-1.5 text-sm font-medium text-clay empty:hidden"></p>
+						</div>
+
+						<div>
+							<label for="email" class="block text-sm font-semibold text-sage-deep">
+								Email address
+								<span class="font-normal text-ink-muted">(required)</span>
+							</label>
+							<input
+								type="email"
+								id="email"
+								name="email"
+								required
+								autocomplete="email"
+								inputmode="email"
+								maxlength="200"
+								aria-describedby="email-error email-hint"
+								class="mt-2 min-h-11 w-full rounded-lg border-2 border-sage bg-white px-4 py-2.5 text-ink"
+							/>
+							<p id="email-hint" class="mt-1.5 text-xs text-ink-muted">
+								Only used to reply to you. Never added to a mailing list.
+							</p>
+							<p id="email-error" role="alert" class="mt-1.5 text-sm font-medium text-clay empty:hidden"></p>
+						</div>
+
+						<div>
+							<label for="topic" class="block text-sm font-semibold text-sage-deep">
+								What is this about?
+							</label>
+							<select
+								id="topic"
+								name="topic"
+								class="mt-2 min-h-11 w-full rounded-lg border-2 border-sage bg-white px-4 py-2.5 text-ink"
+							>
+								{TOPICS.map((topic) => <option value={topic.value}>{topic.label}</option>)}
+							</select>
+						</div>
+
+						<div>
+							<label for="message" class="block text-sm font-semibold text-sage-deep">
+								Your message
+								<span class="font-normal text-ink-muted">(required)</span>
+							</label>
+							<textarea
+								id="message"
+								name="message"
+								required
+								rows="6"
+								maxlength="5000"
+								aria-describedby="message-error message-hint"
+								class="mt-2 w-full rounded-lg border-2 border-sage bg-white px-4 py-2.5 text-ink"
+							></textarea>
+							<p id="message-hint" class="mt-1.5 text-xs text-ink-muted">
+								Up to 5,000 characters.
+							</p>
+							<p id="message-error" role="alert" class="mt-1.5 text-sm font-medium text-clay empty:hidden"></p>
+						</div>
+
+						{/* Honeypot: hidden from everyone, including screen readers. Bots
+						    that fill every field are rejected server-side. */}
+						<div class="hidden" aria-hidden="true">
+							<label for="website">Leave this field empty</label>
+							<input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+						</div>
+
+						{turnstileKey && (
+							<div class="cf-turnstile" data-sitekey={turnstileKey} data-action="contact" />
+						)}
+
+						<div>
+							<button type="submit" class="btn btn-primary">
+								<Icon name="mail" size={18} />
+								Send message
+							</button>
+						</div>
+
+						<p
+							id="form-status"
+							role="status"
+							class="text-sm font-medium text-sage-deep empty:hidden"
+						></p>
+
+						<p class="text-xs leading-relaxed text-ink-muted">
+							By sending this message you agree to our{' '}
+							<a href="/privacy-policy/" class="text-trust underline decoration-1 underline-offset-2">
+								privacy policy
+							</a>
+							. We store your message only as long as needed to answer it.
+						</p>
+					</div>
+				</form>
+			</div>
+
+			<aside class="space-y-6">
+				<Callout variant="caution" title="We cannot give medical advice">
+					<p>
+						We are not clinicians and cannot tell you whether a symptom is
+						serious, diagnose you, or advise on medication. For anything
+						medical, please speak to your doctor or a FODMAP-trained dietitian.
+					</p>
+				</Callout>
+
+				<section class="card p-5" aria-labelledby="prefer-email">
+					<h2 id="prefer-email" class="font-display text-lg font-semibold text-sage-deep">
+						Prefer plain email?
+					</h2>
+					<p class="mt-2 text-[0.925rem] text-ink-muted">Write to us directly at:</p>
+					<p class="mt-2">
+						<a
+							href={`mailto:${SITE.email}`}
+							class="break-all font-medium text-trust underline decoration-1 underline-offset-4"
+						>
+							{SITE.email}
+						</a>
+					</p>
+				</section>
+
+				<section class="card p-5" aria-labelledby="before-you-write">
+					<h2 id="before-you-write" class="font-display text-lg font-semibold text-sage-deep">
+						Before you write
+					</h2>
+					<p class="mt-2 text-[0.925rem] leading-relaxed text-ink-muted">
+						A lot of questions are already answered on the FAQ page — portions,
+						phases, eating out, and whether the Monash app is worth buying.
+					</p>
+					<p class="mt-4">
+						<a href="/faq/" class="btn btn-secondary w-full text-sm">
+							Read the FAQ
+							<Icon name="arrow-right" size={16} />
+						</a>
+					</p>
+				</section>
+			</aside>
+		</div>
+	</div>
+</BaseLayout>
+
+{
+	turnstileKey && (
+		<script is:inline async defer src="https://challenges.cloudflare.com/turnstile/v0/api.js" />
+	)
+}
+
+<script>
+	// Client-side validation for fast feedback only. Every field is re-validated
+	// and whitelisted server-side in functions/api/contact.ts — the browser is
+	// never trusted.
+	const form = document.getElementById('contact-form') as HTMLFormElement | null;
+	const status = document.getElementById('form-status');
+
+	if (form && status) {
+		const fields = [
+			{ id: 'name', message: 'Please tell us your name.' },
+			{ id: 'email', message: 'Please enter an email address so we can reply.' },
+			{ id: 'message', message: 'Please write your message.' },
+		];
+
+		const showError = (id: string, message: string) => {
+			const input = document.getElementById(id);
+			const error = document.getElementById(`${id}-error`);
+			if (!input || !error) return;
+			error.textContent = message;
+			input.setAttribute('aria-invalid', 'true');
+		};
+
+		const clearError = (id: string) => {
+			const input = document.getElementById(id);
+			const error = document.getElementById(`${id}-error`);
+			if (!input || !error) return;
+			error.textContent = '';
+			input.removeAttribute('aria-invalid');
+		};
+
+		for (const field of fields) {
+			document.getElementById(field.id)?.addEventListener('input', () => clearError(field.id));
+		}
+
+		form.addEventListener('submit', (event) => {
+			let firstInvalid: string | null = null;
+
+			for (const field of fields) {
+				const input = document.getElementById(field.id) as HTMLInputElement | null;
+				if (!input) continue;
+
+				const value = input.value.trim();
+				let invalid = value.length === 0;
+
+				if (!invalid && field.id === 'email') {
+					invalid = !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+				}
+
+				if (invalid) {
+					showError(field.id, field.message);
+					firstInvalid ??= field.id;
+				} else {
+					clearError(field.id);
+				}
+			}
+
+			if (firstInvalid) {
+				event.preventDefault();
+				status.textContent = 'Please fix the highlighted fields and try again.';
+				document.getElementById(firstInvalid)?.focus();
+				return;
+			}
+
+			status.textContent = 'Sending your message…';
+		});
+	}
+</script>

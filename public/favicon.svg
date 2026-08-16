@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="GutWise">
+  <rect width="512" height="512" rx="112" fill="#2F4A3C"/>
+  <path d="M232 400A150 150 0 0 1 82 250c0-129 150-193 343-193 0 193-86 343-193 343Z" fill="none" stroke="#FAF7F2" stroke-width="30" stroke-linejoin="round"/>
+  <path d="M82 422c64-129 129-193 257-257" fill="none" stroke="#7FA88F" stroke-width="30" stroke-linecap="round"/>
+</svg>

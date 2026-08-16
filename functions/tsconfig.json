@@ -1,0 +1,15 @@
+{
+  "//": "Pages Functions run on the Workers runtime, not in a browser. They get their own tsconfig so Workers globals (PagesFunction, FormData, fetch) resolve correctly without polluting the Astro app's DOM typings.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["@cloudflare/workers-types"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true
+  },
+  "include": ["**/*.ts"]
+}

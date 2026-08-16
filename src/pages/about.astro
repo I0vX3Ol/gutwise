@@ -1,0 +1,155 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import EmailSignup from '../components/EmailSignup.astro';
+import Icon from '../components/Icon.astro';
+import Callout from '../components/Callout.astro';
+import { SITE, MEDICAL_DISCLAIMER } from '../consts';
+import { breadcrumbSchema } from '../lib/schema';
+
+const crumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'About', href: '/about/' },
+];
+
+const principles = [
+	{
+		icon: 'book',
+		title: 'We cite the primary source',
+		body: 'FODMAP thresholds come from laboratory measurement, and almost every list online is a copy of a copy of the Monash data with errors introduced along the way. Where we state a portion limit, it traces back to the people who ran the test.',
+	},
+	{
+		icon: 'scale',
+		title: 'We publish portions, not verdicts',
+		body: 'Almost no food is universally forbidden — most have a threshold. Saying "avocado is high FODMAP" is unhelpful and slightly false. Saying "a quarter of an avocado is fine, half is not" is what you can actually cook with.',
+	},
+	{
+		icon: 'check',
+		title: 'We push you to finish',
+		body: 'The elimination phase is scaffolding and it is meant to come down. Every guide here points forward to reintroduction, because a permanently restricted diet is a worse outcome than the symptoms it was meant to solve.',
+	},
+	{
+		icon: 'alert',
+		title: 'We say when to see a doctor',
+		body: 'Roughly a quarter of people do not respond to this diet, and several conditions mimic IBS. We would rather send you back to a clinician than keep you reading.',
+	},
+] as const;
+---
+
+<BaseLayout
+	title="About GutWise and How We Work"
+	description="Why GutWise exists, the editorial standards behind every recipe and guide, and exactly how the site is funded. Read our approach and get in touch."
+	schemaNodes={[breadcrumbSchema(crumbs)]}
+>
+	<PageHeader
+		eyebrow="About"
+		title="Why GutWise exists"
+		intro="Because the moment after an IBS diagnosis is usually spent looking at a contradictory printable list of forbidden foods, and that is a bad place to start."
+		crumbs={crumbs}
+	/>
+
+	<div class="mx-auto max-w-4xl px-5 py-12">
+		<div class="prose prose-gutwise">
+			<p>
+				Most people arrive at the low-FODMAP diet the same way: a doctor mentions
+				it in the last ninety seconds of an appointment, and the rest is left to
+				a search engine. What the search returns is a mixture of genuinely good
+				clinical material and a large volume of thin content built to rank —
+				lists that contradict each other, portion sizes quoted without sources,
+				and an unmistakable undertone that food is now dangerous.
+			</p>
+
+			<p>
+				That last part matters more than it sounds. This is an audience already
+				anxious about eating. Presenting the diet as a minefield makes people
+				more restricted, not better informed, and the most common failure mode we
+				see is not someone who cheats — it is someone who eliminates successfully
+				and then never stops.
+			</p>
+
+			<h2>What we do differently</h2>
+
+			<p>
+				GutWise is built around one idea: <strong>FODMAP content is a dose, not a
+				property</strong>. Every recipe states the serving size that keeps it low
+				FODMAP. Every ingredient is labelled individually. Every guide points
+				forward to the next phase, because the diet is a diagnostic process with
+				an ending.
+			</p>
+		</div>
+
+		<!-- Editorial principles -->
+		<section aria-labelledby="principles" class="mt-12">
+			<h2 id="principles" class="font-display text-2xl font-semibold text-sage-deep">
+				Our editorial standards
+			</h2>
+			<ul class="mt-6 grid gap-5 sm:grid-cols-2">
+				{
+					principles.map((p) => (
+						<li class="card p-5">
+							<h3 class="flex items-start gap-2.5 font-display text-lg font-semibold text-sage-deep">
+								<span class="mt-0.5 shrink-0 text-sage">
+									<Icon name={p.icon} size={18} />
+								</span>
+								{p.title}
+							</h3>
+							<p class="mt-2 text-[0.925rem] leading-relaxed text-ink-muted">{p.body}</p>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<!-- Funding transparency -->
+		<section aria-labelledby="funding" class="mt-12">
+			<h2 id="funding" class="font-display text-2xl font-semibold text-sage-deep">
+				How the site is funded
+			</h2>
+			<div class="prose prose-gutwise mt-4">
+				<p>
+					GutWise is reader-supported through affiliate links. When you buy
+					something through a link here, we may earn a small commission at no
+					extra cost to you. We also display advertising once a page reaches the
+					traffic threshold required to qualify.
+				</p>
+				<p>
+					Two commitments about that. Commission never determines placement or
+					ranking — several of our top recommendations pay us nothing, including
+					the single product we recommend most often. And we say plainly when a
+					specialty product is a waste of money, which is most of the time.
+					The{' '}
+					<a href="/affiliate-disclosure/">full affiliate disclosure</a> sets out
+					every programme we participate in.
+				</p>
+			</div>
+		</section>
+
+		<Callout variant="caution" title="What we are not" class="mt-12">
+			<p>{MEDICAL_DISCLAIMER}</p>
+			<p class="mt-3">
+				We are not dietitians, and nothing here is a substitute for personalised
+				care. Where a question needs a clinician, we say so rather than guessing.
+			</p>
+		</Callout>
+
+		<section aria-labelledby="contact-cta" class="card mt-12 p-6 sm:p-8">
+			<h2 id="contact-cta" class="font-display text-2xl font-semibold text-sage-deep">
+				Talk to us
+			</h2>
+			<p class="mt-2 max-w-xl text-ink-muted">
+				Corrections, questions, or your own story — all welcome.
+				{' '}{SITE.responseTimePromise}
+			</p>
+			<p class="mt-5">
+				<a href="/contact/" class="btn btn-primary">
+					<Icon name="mail" size={18} />
+					Get in touch
+				</a>
+			</p>
+		</section>
+
+		<div class="mt-12">
+			<EmailSignup id="starter-kit" />
+		</div>
+	</div>
+</BaseLayout>

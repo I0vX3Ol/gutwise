@@ -1,0 +1,142 @@
+---
+import { NAV_LINKS, SITE, LEAD_MAGNET } from '../consts';
+import Icon from './Icon.astro';
+
+const path = Astro.url.pathname;
+
+/** A nav item is current if the page sits anywhere beneath it. */
+const isCurrent = (href: string) =>
+	href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<header
+	class="sticky top-0 z-40 border-b border-cream-border bg-cream/95 backdrop-blur-sm no-print"
+>
+	<div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
+		<a
+			href="/"
+			class="flex shrink-0 items-center gap-2.5 rounded-md text-sage-deep no-underline"
+			aria-label={`${SITE.name} — home`}
+		>
+			<span
+				class="flex h-9 w-9 items-center justify-center rounded-full bg-sage-deep text-cream"
+			>
+				<Icon name="leaf" size={20} />
+			</span>
+			<span class="font-display text-2xl font-semibold tracking-tight">
+				{SITE.name}
+			</span>
+		</a>
+
+		<!-- Desktop navigation -->
+		<nav aria-label="Main" class="hidden lg:block">
+			<ul class="flex items-center gap-1">
+				{
+					NAV_LINKS.map((link) => (
+						<li>
+							<a
+								href={link.href}
+								aria-current={isCurrent(link.href) ? 'page' : undefined}
+								class:list={[
+									'rounded-md px-3 py-2 text-[0.95rem] font-medium no-underline transition-colors',
+									isCurrent(link.href)
+										? 'bg-sage-wash text-sage-deep'
+										: 'text-ink-muted hover:bg-sage-wash hover:text-sage-deep',
+								]}
+							>
+								{link.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+
+		<div class="flex items-center gap-2">
+			<a href="/#starter-kit" class="btn btn-primary hidden text-sm lg:inline-flex">
+				{LEAD_MAGNET.cta}
+			</a>
+
+			<!-- Mobile menu trigger -->
+			<button
+				type="button"
+				id="menu-toggle"
+				class="flex h-11 w-11 items-center justify-center rounded-md border-2 border-sage text-sage-deep lg:hidden"
+				aria-expanded="false"
+				aria-controls="mobile-menu"
+				aria-label="Open main menu"
+			>
+				<Icon name="menu" size={22} class="menu-open-icon" />
+				<Icon name="close" size={22} class="menu-close-icon hidden" />
+			</button>
+		</div>
+	</div>
+
+	<!-- Mobile navigation panel -->
+	<nav
+		id="mobile-menu"
+		aria-label="Main menu"
+		class="hidden border-t border-cream-border bg-cream lg:hidden"
+	>
+		<ul class="mx-auto max-w-6xl px-5 py-3">
+			{
+				NAV_LINKS.map((link) => (
+					<li class="border-b border-cream-border last:border-0">
+						<a
+							href={link.href}
+							aria-current={isCurrent(link.href) ? 'page' : undefined}
+							class:list={[
+								'block rounded-md px-2 py-3.5 font-medium no-underline',
+								isCurrent(link.href) ? 'text-sage-deep' : 'text-ink-muted',
+							]}
+						>
+							{link.label}
+						</a>
+					</li>
+				))
+			}
+			<li class="pt-4 pb-2">
+				<a href="/#starter-kit" class="btn btn-primary w-full">{LEAD_MAGNET.cta}</a>
+			</li>
+		</ul>
+	</nav>
+</header>
+
+<script>
+	// Progressive enhancement: without JS the panel stays closed and the footer
+	// navigation covers the same links, so nothing becomes unreachable.
+	const toggle = document.getElementById('menu-toggle');
+	const menu = document.getElementById('mobile-menu');
+
+	if (toggle && menu) {
+		const openIcon = toggle.querySelector('.menu-open-icon');
+		const closeIcon = toggle.querySelector('.menu-close-icon');
+
+		const setOpen = (open: boolean) => {
+			toggle.setAttribute('aria-expanded', String(open));
+			toggle.setAttribute('aria-label', open ? 'Close main menu' : 'Open main menu');
+			menu.classList.toggle('hidden', !open);
+			openIcon?.classList.toggle('hidden', open);
+			closeIcon?.classList.toggle('hidden', !open);
+		};
+
+		toggle.addEventListener('click', () => {
+			setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+		});
+
+		// Escape closes the panel and returns focus to the trigger, so keyboard
+		// users are never left stranded inside a collapsed region.
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+				setOpen(false);
+				toggle.focus();
+			}
+		});
+
+		// Reset when resizing up to desktop, otherwise the panel's `hidden` class
+		// can persist inconsistently across breakpoints.
+		window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => {
+			if (e.matches) setOpen(false);
+		});
+	}
+</script>

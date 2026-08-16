@@ -1,0 +1,71 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StickyCta from '../components/StickyCta.astro';
+import CookieConsent from '../components/CookieConsent.astro';
+import { SITE } from '../consts';
+import { graph, organizationSchema, websiteSchema } from '../lib/schema';
+
+interface Props {
+	title: string;
+	description: string;
+	appendBrand?: boolean;
+	noindex?: boolean;
+	/** Page-specific schema nodes, merged into the sitewide @graph. */
+	schemaNodes?: object[];
+	ogType?: 'website' | 'article';
+	publishedTime?: Date;
+	modifiedTime?: Date;
+	/** Suppresses the mobile CTA bar on pages where it would be redundant. */
+	hideStickyCta?: boolean;
+}
+
+const {
+	title,
+	description,
+	appendBrand = true,
+	noindex = false,
+	schemaNodes = [],
+	ogType = 'website',
+	publishedTime,
+	modifiedTime,
+	hideStickyCta = false,
+} = Astro.props;
+
+// Organization and WebSite are emitted on every page so the entity graph is
+// consistent sitewide; page-specific nodes reference them by @id.
+const schema = graph([organizationSchema(), websiteSchema(), ...schemaNodes]);
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+	<head>
+		<BaseHead
+			title={title}
+			description={description}
+			appendBrand={appendBrand}
+			noindex={noindex}
+			schema={schema}
+			ogType={ogType}
+			publishedTime={publishedTime}
+			modifiedTime={modifiedTime}
+		/>
+	</head>
+
+	<body class="flex min-h-screen flex-col">
+		<!-- First focusable element on the page. -->
+		<a href="#main" class="skip-link">Skip to main content</a>
+
+		<Header />
+
+		<main id="main" tabindex="-1" class="flex-1">
+			<slot />
+		</main>
+
+		<Footer />
+
+		{!hideStickyCta && <StickyCta />}
+		<CookieConsent />
+	</body>
+</html>

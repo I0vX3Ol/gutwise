@@ -1,0 +1,195 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { SITE } from '../consts';
+import { breadcrumbSchema } from '../lib/schema';
+import { formatDate, isoDate } from '../lib/utils';
+
+const crumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Privacy Policy', href: '/privacy-policy/' },
+];
+
+const lastUpdated = new Date('2026-06-20');
+---
+
+<BaseLayout
+	title="Privacy Policy"
+	description="What data GutWise collects, why, how long we keep it and how to have it deleted. Written in plain English — read our full privacy policy."
+	schemaNodes={[breadcrumbSchema(crumbs)]}
+>
+	<PageHeader
+		eyebrow="Legal"
+		title="Privacy policy"
+		intro="Written to be read. If anything here is unclear, ask us and we will explain it — and fix the wording."
+		crumbs={crumbs}
+	/>
+
+	<div class="mx-auto max-w-3xl px-5 py-12">
+		<p class="text-sm text-ink-muted">
+			Last updated{' '}
+			<time datetime={isoDate(lastUpdated)}>{formatDate(lastUpdated)}</time>
+		</p>
+
+		<div class="prose prose-gutwise mt-8">
+			<h2>The short version</h2>
+			<p>
+				We do not have user accounts and we do not run a database of visitors. The
+				only personal information we ever hold is an email address you typed in
+				yourself, plus whatever you wrote in a message to us. Analytics cookies
+				are off until you accept them. We never sell anything to anyone.
+			</p>
+
+			<h2>Who we are</h2>
+			<p>
+				{SITE.name} publishes educational content about the low-FODMAP diet at{' '}
+				<a href={SITE.url}>{SITE.url.replace('https://', '')}</a>. For any privacy
+				question, or to exercise the rights described below, contact{' '}
+				<a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+			</p>
+
+			<h2>What we collect</h2>
+
+			<h3>1. Your email address, if you give it to us</h3>
+			<p>
+				When you request the Starter Kit, your email address goes directly to our
+				email service provider. It is stored on their systems, not ours — this
+				site has no database. We use it to send the download and occasional
+				related content, and every email carries a one-click unsubscribe link.
+				<strong> Lawful basis: consent</strong>, which you can withdraw at any
+				time.
+			</p>
+
+			<h3>2. Anything you send through the contact form</h3>
+			<p>
+				Your name, email address, chosen topic and message. These are validated
+				and forwarded to our email inbox; nothing is written to a database. We
+				keep the message as long as needed to deal with it and then delete it.
+				<strong> Lawful basis: legitimate interest</strong> in answering people
+				who contact us.
+			</p>
+
+			<h3>3. Analytics, only if you accept</h3>
+			<p>
+				We use two analytics tools, and they behave differently:
+			</p>
+			<ul>
+				<li>
+					<strong>Google Analytics 4</strong> — sets cookies and is{' '}
+					<strong>disabled until you press Accept</strong> on the cookie banner.
+					We run it with IP anonymisation and with Google Consent Mode defaulting
+					every storage type to denied. Decline, and nothing is stored on your
+					device. <strong>Lawful basis: consent.</strong>
+				</li>
+				<li>
+					<strong>Cloudflare Web Analytics</strong> — sets no cookies, uses no
+					client-side state and does not fingerprint or track you across sites.
+					It counts page views in aggregate. Because it processes no personal
+					data, it runs without a consent prompt.{' '}
+					<strong>Lawful basis: legitimate interest.</strong>
+				</li>
+			</ul>
+
+			<h3>4. Server logs</h3>
+			<p>
+				Our host, Cloudflare, processes standard request data (IP address, user
+				agent, requested URL) to serve the site and to protect it from attack and
+				abuse. This is ordinary infrastructure logging and we do not use it to
+				build any profile of you. <strong>Lawful basis: legitimate interest</strong>{' '}
+				in site security and availability.
+			</p>
+
+			<h2>What we do not do</h2>
+			<ul>
+				<li>We do not sell, rent or share your personal data with anyone.</li>
+				<li>We do not run advertising cookies or retargeting pixels.</li>
+				<li>We have no user accounts, so there are no passwords to leak.</li>
+				<li>
+					We do not ask for, want, or knowingly store any health information about
+					you. Please do not send us medical details — we cannot act on them, and
+					we would rather not hold them.
+				</li>
+			</ul>
+
+			<h2>Cookies and similar technologies</h2>
+			<p>
+				Only two categories exist on this site. <strong>Analytics cookies</strong>{' '}
+				are set by Google Analytics after you accept, and typically last up to two
+				years. <strong>Local storage</strong> holds two small values: your cookie
+				choice, so we stop asking, and whether you dismissed the mobile banner.
+				Neither is sent to any server.
+			</p>
+			<p>
+				To change your mind after choosing, clear this site's data in your
+				browser settings and the banner will appear again.
+			</p>
+
+			<h2>Affiliate links</h2>
+			<p>
+				Some outbound links are affiliate links. Following one may allow the
+				retailer — most often Amazon — to set their own cookie to attribute a
+				purchase to us. That happens on their site and under their privacy policy,
+				not ours. We receive only aggregate commission reports and never learn who
+				bought what. Our{' '}
+				<a href="/affiliate-disclosure/">affiliate disclosure</a> lists every
+				programme we are part of.
+			</p>
+
+			<h2>Third parties we rely on</h2>
+			<ul>
+				<li><strong>Cloudflare</strong> — hosting, CDN, bot protection and cookieless analytics.</li>
+				<li><strong>Google Analytics</strong> — consent-gated audience measurement.</li>
+				<li><strong>Our email provider</strong> — stores subscriber addresses and sends the Starter Kit.</li>
+				<li><strong>Amazon Associates and other affiliate programmes</strong> — purchase attribution on their own sites.</li>
+			</ul>
+
+			<h2>Your rights</h2>
+			<p>
+				If you are in the UK, EU, or a jurisdiction with comparable law, you have
+				the right to access the personal data we hold about you, to have it
+				corrected or erased, to restrict or object to how we use it, to receive a
+				portable copy, and to withdraw consent at any time.
+			</p>
+			<p>
+				In practice this is simple, because we hold very little. Email{' '}
+				<a href={`mailto:${SITE.email}`}>{SITE.email}</a> and we will action the
+				request within 30 days. Unsubscribing from an email removes you from the
+				list immediately without needing to ask us.
+			</p>
+			<p>
+				If you are in the EU or UK, you also have the right to complain to your
+				national data protection authority.
+			</p>
+
+			<h2>Children</h2>
+			<p>
+				This site is intended for adults. We do not knowingly collect personal
+				information from anyone under 16. If you believe a child has given us
+				their details, contact us and we will delete them.
+			</p>
+
+			<h2>Data transfers and security</h2>
+			<p>
+				Our providers may process data outside your country, including in the
+				United States, under standard contractual clauses or equivalent
+				safeguards. The site is served over HTTPS with HSTS enforced, and because
+				we operate no database and store no credentials, the surface available to
+				an attacker is deliberately minimal.
+			</p>
+
+			<h2>Changes to this policy</h2>
+			<p>
+				If we change anything material we will update the date at the top of this
+				page. Continuing to use the site after a change means you accept the
+				revised policy.
+			</p>
+
+			<h2>Medical disclaimer</h2>
+			<p>
+				{SITE.name} publishes educational information, not medical advice. See our{' '}
+				<a href="/about/">about page</a> for our editorial standards, and always
+				consult a qualified healthcare professional before changing your diet.
+			</p>
+		</div>
+	</div>
+</BaseLayout>

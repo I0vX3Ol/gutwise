@@ -1,0 +1,312 @@
+/* Self-hosted fonts. No external font CDN, so the CSP can stay strict and
+   there is no third-party request on the critical path. */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource-variable/fraunces/wght.css';
+
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/* ---------------------------------------------------------------------------
+   Design tokens
+   Every colour used as text or as a UI boundary is asserted against WCAG 2.1
+   AA in scripts/check-contrast.mjs, which runs in CI. If you change a value
+   here, change it there too — the build fails otherwise.
+
+   Note on the brand brief: the specified trust blue (#5B7C99) measures 4.10:1
+   on cream and the mid sages (#7FA88F / #5C8A72) measure 2.49:1 and 3.68:1.
+   Those fail AA for text, so the lighter tints are retained for decorative
+   fills only and the text-bearing tokens are the darkened variants below.
+--------------------------------------------------------------------------- */
+@theme {
+	/* Surfaces — warm cream, never clinical white */
+	--color-cream: #faf7f2;
+	--color-cream-sunken: #f2ede4;
+	--color-cream-border: #e3dbcd;
+
+	/* Ink — warm near-black, softer than pure #000 for an anxious reader */
+	--color-ink: #241f1a;
+	--color-ink-muted: #514a42;
+
+	/* Brand sage — healing / digestion / "natural and safe" */
+	--color-sage-deep: #2f4a3c; /* headings, inverted surfaces, focus ring */
+	--color-sage-dark: #3c5c4b;
+	--color-sage: #4c7361; /* lightest sage that passes AA as body text */
+	--color-sage-mid: #5c8a72; /* decorative only — fails AA as text */
+	--color-sage-light: #7fa88f; /* decorative only — fails AA as text */
+	--color-sage-wash: #e8f0ea;
+
+	/* Trust blue — links and credibility affordances (citations, badges) */
+	--color-trust: #3c5a73;
+	--color-trust-on-dark: #a8c6de;
+	--color-trust-wash: #e7eef4;
+
+	/* Utility. Deliberately amber and clay, never alarm red — a red "contains
+	   gluten" tag spikes anxiety in an already food-anxious audience. */
+	--color-amber: #7a5312;
+	--color-amber-wash: #fbf0dc;
+	--color-clay: #8a4b3c;
+	--color-clay-wash: #f7e9e5;
+
+	/* Type */
+	--font-sans:
+		'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--font-display:
+		'Fraunces Variable', 'Fraunces', ui-serif, Georgia, Cambria, serif;
+
+	/* Rhythm */
+	--radius-card: 0.875rem;
+	--spacing-gutter: 1.25rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Base layer
+--------------------------------------------------------------------------- */
+@layer base {
+	html {
+		scroll-behavior: smooth;
+		/* Stops the sticky header covering an anchor target. */
+		scroll-padding-top: 5.5rem;
+		-webkit-text-size-adjust: 100%;
+	}
+
+	body {
+		background-color: var(--color-cream);
+		color: var(--color-ink);
+		font-family: var(--font-sans);
+		font-size: 1.0625rem;
+		line-height: 1.7;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4 {
+		font-family: var(--font-display);
+		font-weight: 600;
+		color: var(--color-sage-deep);
+		line-height: 1.2;
+		/* Fraunces' optical-size axis at a soft setting keeps headings warm
+		   rather than clinical. */
+		font-variation-settings: 'SOFT' 30, 'WONK' 0;
+		text-wrap: balance;
+	}
+
+	p,
+	li {
+		text-wrap: pretty;
+	}
+
+	/* Visible focus on every interactive element — keyboard parity is
+	   non-negotiable, so this is set globally rather than per-component. */
+	:focus-visible {
+		outline: 3px solid var(--color-sage-deep);
+		outline-offset: 2px;
+		border-radius: 2px;
+	}
+
+	/* Only suppress the ring for mouse users, never for keyboard users. */
+	:focus:not(:focus-visible) {
+		outline: none;
+	}
+
+	/* Inputs inherit the page font instead of the UA default. */
+	input,
+	textarea,
+	select,
+	button {
+		font: inherit;
+		color: inherit;
+	}
+
+	/* Give images a sane default so a missing width/height cannot cause CLS. */
+	img,
+	svg,
+	video {
+		max-width: 100%;
+		height: auto;
+	}
+
+	[hidden] {
+		display: none !important;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+   Components
+--------------------------------------------------------------------------- */
+@layer components {
+	/* Skip link: visually hidden until focused, then pinned top-left. */
+	.skip-link {
+		position: absolute;
+		left: -9999px;
+		top: 0;
+		z-index: 100;
+		padding: 0.75rem 1.25rem;
+		background-color: var(--color-sage-deep);
+		color: var(--color-cream);
+		font-weight: 600;
+		border-radius: 0 0 0.5rem 0;
+		text-decoration: none;
+	}
+
+	.skip-link:focus {
+		left: 0;
+	}
+
+	/* Screen-reader-only, but revealed when focused (used by in-page helpers). */
+	.sr-only-focusable:not(:focus):not(:focus-within) {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border-width: 0;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: 0.75rem 1.5rem;
+		border-radius: 9999px;
+		font-weight: 600;
+		line-height: 1.3;
+		text-align: center;
+		text-decoration: none;
+		cursor: pointer;
+		transition:
+			background-color 150ms ease,
+			color 150ms ease,
+			border-color 150ms ease,
+			transform 150ms ease;
+		/* Meets the 44x44 CSS px target-size recommendation on touch. */
+		min-height: 2.75rem;
+	}
+
+	.btn-primary {
+		background-color: var(--color-sage);
+		color: #ffffff;
+		border: 2px solid var(--color-sage);
+	}
+
+	.btn-primary:hover {
+		background-color: var(--color-sage-deep);
+		border-color: var(--color-sage-deep);
+	}
+
+	.btn-secondary {
+		background-color: transparent;
+		color: var(--color-sage-deep);
+		border: 2px solid var(--color-sage);
+	}
+
+	.btn-secondary:hover {
+		background-color: var(--color-sage-wash);
+	}
+
+	.btn-on-dark {
+		background-color: var(--color-cream);
+		color: var(--color-sage-deep);
+		border: 2px solid var(--color-cream);
+	}
+
+	.btn-on-dark:hover {
+		background-color: #ffffff;
+		border-color: #ffffff;
+	}
+
+	.card {
+		background-color: #ffffff;
+		border: 1px solid var(--color-cream-border);
+		border-radius: var(--radius-card);
+	}
+
+	/* Prose defaults for markdown-driven guide and recipe bodies. */
+	.prose-gutwise {
+		--tw-prose-body: var(--color-ink);
+		--tw-prose-headings: var(--color-sage-deep);
+		--tw-prose-lead: var(--color-ink-muted);
+		--tw-prose-links: var(--color-trust);
+		--tw-prose-bold: var(--color-ink);
+		--tw-prose-counters: var(--color-ink-muted);
+		--tw-prose-bullets: var(--color-sage-mid);
+		--tw-prose-hr: var(--color-cream-border);
+		--tw-prose-quotes: var(--color-sage-deep);
+		--tw-prose-quote-borders: var(--color-sage-light);
+		--tw-prose-captions: var(--color-ink-muted);
+		--tw-prose-code: var(--color-sage-deep);
+		--tw-prose-th-borders: var(--color-cream-border);
+		--tw-prose-td-borders: var(--color-cream-border);
+		max-width: 68ch;
+	}
+
+	.prose-gutwise :where(a):not(:where(.not-prose *)) {
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+	}
+
+	.prose-gutwise :where(h2):not(:where(.not-prose *)) {
+		margin-top: 2.5em;
+		scroll-margin-top: 6rem;
+	}
+
+	.prose-gutwise :where(h3):not(:where(.not-prose *)) {
+		scroll-margin-top: 6rem;
+	}
+
+	/* Wide markdown tables must scroll inside their own box, never the page. */
+	.prose-gutwise :where(table):not(:where(.not-prose *)) {
+		display: block;
+		overflow-x: auto;
+		max-width: 100%;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+   Motion
+   Honour the OS-level reduced-motion preference everywhere, including the
+   smooth scroll set on <html> above.
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+   Print — readers print recipe cards and the reintroduction tracker.
+--------------------------------------------------------------------------- */
+@media print {
+	.no-print {
+		display: none !important;
+	}
+
+	body {
+		background: #ffffff;
+		color: #000000;
+		font-size: 11pt;
+	}
+
+	a[href^='http']::after {
+		content: ' (' attr(href) ')';
+		font-size: 0.85em;
+		word-break: break-all;
+	}
+}

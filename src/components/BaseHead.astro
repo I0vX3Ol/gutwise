@@ -1,0 +1,115 @@
+---
+import { SITE } from '../consts';
+import { ogPathFor } from '../lib/og';
+import Analytics from './Analytics.astro';
+import '../styles/global.css';
+
+interface Props {
+	/** The SEO title, without the brand suffix. Aim for 40–50 characters. */
+	title: string;
+	/** Unique meta description, ~150–160 characters, ending in a CTA. */
+	description: string;
+	/** Set false on the home page, where the brand leads the title. */
+	appendBrand?: boolean;
+	/** Keeps conversion destinations and error pages out of the index. */
+	noindex?: boolean;
+	/** A schema.org @graph object, already assembled by the page. */
+	schema?: object;
+	ogType?: 'website' | 'article';
+	publishedTime?: Date;
+	modifiedTime?: Date;
+}
+
+const {
+	title,
+	description,
+	appendBrand = true,
+	noindex = false,
+	schema,
+	ogType = 'website',
+	publishedTime,
+	modifiedTime,
+} = Astro.props;
+
+const fullTitle = appendBrand ? `${title} | ${SITE.shortName}` : title;
+
+// Canonical always points at the trailing-slash form, matching the build
+// output, so we never advertise a URL that 301s.
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+
+// Every page gets its own generated OG image rather than one shared file.
+const ogImage = new URL(ogPathFor(Astro.url.pathname), SITE.url).href;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+{
+	noindex ? (
+		<meta name="robots" content="noindex, follow" />
+	) : (
+		<meta
+			name="robots"
+			content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+		/>
+	)
+}
+
+<!-- Open Graph -->
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${title} — ${SITE.name}`} />
+<meta property="og:locale" content={SITE.locale} />
+{
+	publishedTime && (
+		<meta
+			property="article:published_time"
+			content={publishedTime.toISOString()}
+		/>
+	)
+}
+{
+	modifiedTime && (
+		<meta
+			property="article:modified_time"
+			content={modifiedTime.toISOString()}
+		/>
+	)
+}
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={`${title} — ${SITE.name}`} />
+
+<!-- Icons and theme -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#2F4A3C" />
+<meta name="color-scheme" content="light" />
+
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+{schema && (
+	<script
+		type="application/ld+json"
+		is:inline
+		set:html={JSON.stringify(schema)}
+	/>
+)}
+
+<Analytics />

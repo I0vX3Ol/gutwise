@@ -1,0 +1,221 @@
+---
+import { LEAD_MAGNET, SITE } from '../consts';
+import Icon from './Icon.astro';
+
+/**
+ * Lead-magnet capture.
+ *
+ * Posts directly to the ConvertKit/Mailchimp endpoint set in
+ * PUBLIC_NEWSLETTER_ACTION — no custom backend, no database, nothing stored on
+ * our side. When the variable is unset the form degrades to a mailto: link so
+ * the page is never broken in dev or on a fresh deploy.
+ *
+ * Accessibility: the label is real (not a placeholder), the error message is
+ * wired via aria-describedby, and the error state is announced through
+ * role="alert" rather than signalled by colour alone.
+ */
+interface Props {
+	variant?: 'panel' | 'inline' | 'dark';
+	id?: string;
+	heading?: string;
+	class?: string;
+}
+
+const {
+	variant = 'panel',
+	id = 'starter-kit',
+	heading = LEAD_MAGNET.title,
+	class: className = '',
+} = Astro.props;
+
+const action = import.meta.env.PUBLIC_NEWSLETTER_ACTION;
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+const isDark = variant === 'dark';
+const formId = `${id}-form`;
+---
+
+<section
+	id={id}
+	aria-labelledby={`${id}-heading`}
+	class:list={[
+		'rounded-card px-6 py-8 sm:px-8 sm:py-10',
+		isDark ? 'bg-sage-deep text-cream' : 'border border-cream-border bg-sage-wash',
+		className,
+	]}
+>
+	<div class="mx-auto max-w-2xl text-center">
+		<span
+			class:list={[
+				'inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide',
+				isDark ? 'bg-cream/15 text-cream' : 'bg-white text-sage-deep',
+			]}
+		>
+			<Icon name="book" size={14} />
+			Free download
+		</span>
+
+		<h2
+			id={`${id}-heading`}
+			class:list={[
+				'mt-4 font-display text-2xl font-semibold sm:text-3xl',
+				isDark ? 'text-cream' : 'text-sage-deep',
+			]}
+		>
+			{heading}
+		</h2>
+
+		<p
+			class:list={[
+				'mx-auto mt-3 max-w-xl text-[0.975rem] leading-relaxed',
+				isDark ? 'text-cream/90' : 'text-ink-muted',
+			]}
+		>
+			{LEAD_MAGNET.blurb}
+		</p>
+
+		{
+			action ? (
+				<form
+					id={formId}
+					class="mx-auto mt-7 max-w-md text-left"
+					action={action}
+					method="post"
+					data-newsletter
+					novalidate
+				>
+					<label
+						for={`${id}-email`}
+						class:list={[
+							'block text-sm font-semibold',
+							isDark ? 'text-cream' : 'text-sage-deep',
+						]}
+					>
+						Your email address
+					</label>
+
+					<div class="mt-2 flex flex-col gap-3 sm:flex-row">
+						<input
+							type="email"
+							id={`${id}-email`}
+							name="email_address"
+							required
+							autocomplete="email"
+							inputmode="email"
+							placeholder="you@example.com"
+							aria-describedby={`${id}-error ${id}-privacy`}
+							class="min-h-11 flex-1 rounded-full border-2 border-sage bg-white px-4 py-2.5 text-ink placeholder:text-ink-muted/70"
+						/>
+						<button type="submit" class:list={['btn', isDark ? 'btn-on-dark' : 'btn-primary']}>
+							{LEAD_MAGNET.cta}
+						</button>
+					</div>
+
+					{/* Bot protection. Renders only when the site key is configured. */}
+					{turnstileKey && (
+						<div
+							class="cf-turnstile mt-4"
+							data-sitekey={turnstileKey}
+							data-theme={isDark ? 'dark' : 'light'}
+							data-action="newsletter"
+						/>
+					)}
+
+					{/* Error region: empty until JS fills it, announced when it changes. */}
+					<p
+						id={`${id}-error`}
+						role="alert"
+						class:list={[
+							'mt-3 flex items-start gap-1.5 text-sm font-medium empty:hidden',
+							isDark ? 'text-cream' : 'text-clay',
+						]}
+					/>
+
+					<p
+						id={`${id}-privacy`}
+						class:list={[
+							'mt-3 text-xs leading-relaxed',
+							isDark ? 'text-cream/80' : 'text-ink-muted',
+						]}
+					>
+						No spam, and one-click unsubscribe on every email. We never sell your
+						address. See our{' '}
+						<a
+							href="/privacy-policy/"
+							class:list={[
+								'underline decoration-1 underline-offset-2',
+								isDark ? 'text-trust-on-dark' : 'text-trust',
+							]}
+						>
+							privacy policy
+						</a>
+						.
+					</p>
+				</form>
+			) : (
+				/* Fallback when no provider is configured yet — never a dead form. */
+				<p class="mt-7">
+					<a
+						href={`mailto:${SITE.email}?subject=${encodeURIComponent('Send me the Low-FODMAP Starter Kit')}`}
+						class:list={['btn', isDark ? 'btn-on-dark' : 'btn-primary']}
+					>
+						<Icon name="mail" size={18} />
+						Email us for the Starter Kit
+					</a>
+				</p>
+			)
+		}
+	</div>
+</section>
+
+{
+	turnstileKey && (
+		<script
+			is:inline
+			async
+			defer
+			src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+		/>
+	)
+}
+
+<script>
+	// Client-side validation is a convenience only. The real gate is the
+	// provider endpoint plus Turnstile; nothing here is trusted as security.
+	for (const form of document.querySelectorAll<HTMLFormElement>('[data-newsletter]')) {
+		const input = form.querySelector<HTMLInputElement>('input[type="email"]');
+		const error = form.querySelector<HTMLElement>('[role="alert"]');
+		if (!input || !error) continue;
+
+		const fail = (message: string) => {
+			error.textContent = message;
+			input.setAttribute('aria-invalid', 'true');
+			input.focus();
+		};
+
+		form.addEventListener('submit', (event) => {
+			const value = input.value.trim();
+
+			if (!value) {
+				event.preventDefault();
+				fail('Please enter your email address so we know where to send the kit.');
+				return;
+			}
+
+			if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+				event.preventDefault();
+				fail('That email address does not look complete — please check it.');
+				return;
+			}
+
+			error.textContent = '';
+			input.removeAttribute('aria-invalid');
+		});
+
+		input.addEventListener('input', () => {
+			if (input.getAttribute('aria-invalid') === 'true') {
+				error.textContent = '';
+				input.removeAttribute('aria-invalid');
+			}
+		});
+	}
+</script>

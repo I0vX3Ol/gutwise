@@ -1,0 +1,120 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RecipeCard from '../components/RecipeCard.astro';
+import Icon from '../components/Icon.astro';
+import { LEAD_MAGNET, SITE } from '../consts';
+import { byRecency, publishedOnly } from '../lib/utils';
+
+/**
+ * Conversion destination for both the newsletter signup and the contact form.
+ * Deliberately noindex: it has no search value and would otherwise dilute the
+ * site's index, but it is the page conversion goals fire on in GA4.
+ */
+const recipes = publishedOnly(await getCollection('recipes'))
+	.filter((r) => r.data.featured)
+	.sort(byRecency)
+	.slice(0, 3);
+
+const nextSteps = [
+	{
+		icon: 'mail',
+		title: 'Check your inbox',
+		body: 'The download link is on its way now. If it has not arrived in five minutes, look in your spam or promotions folder — and add our address to your contacts so the rest gets through.',
+	},
+	{
+		icon: 'book',
+		title: 'Read the orientation guide',
+		body: 'The Starter Kit covers the practical side. The guide explains why the portions matter, which is what makes the whole thing easier to follow.',
+		href: '/guides/what-is-the-low-fodmap-diet/',
+		linkText: 'What is the low-FODMAP diet?',
+	},
+	{
+		icon: 'leaf',
+		title: 'Cook something tonight',
+		body: 'The fastest way to feel less restricted is to eat one genuinely good meal. Start with the sheet-pan chicken — one pan, forty-five minutes.',
+		href: '/recipes/',
+		linkText: 'Browse the recipes',
+	},
+] as const;
+---
+
+<BaseLayout
+	title="Thank You — Your Starter Kit Is on Its Way"
+	description="Your Low-FODMAP Elimination Phase Starter Kit is on its way to your inbox. Here is what to do next while you wait for it to arrive."
+	noindex={true}
+	hideStickyCta={true}
+>
+	<section class="border-b border-cream-border bg-cream-sunken">
+		<div class="mx-auto max-w-3xl px-5 py-16 text-center sm:py-20">
+			<span
+				class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-sage-deep text-cream"
+			>
+				<Icon name="check" size={32} />
+			</span>
+
+			<h1 class="mt-6 font-display text-3xl font-semibold text-sage-deep sm:text-4xl md:text-5xl">
+				Thank you — it is on its way
+			</h1>
+
+			<p class="mt-4 text-lg leading-relaxed text-ink-muted">
+				Your copy of the <strong class="text-sage-deep">{LEAD_MAGNET.title}</strong>{' '}
+				is heading to your inbox now. If you sent us a message instead, we have
+				it — {SITE.responseTimePromise.toLowerCase()}
+			</p>
+		</div>
+	</section>
+
+	<div class="mx-auto max-w-4xl px-5 py-14">
+		<h2 class="font-display text-2xl font-semibold text-sage-deep">
+			What to do next
+		</h2>
+
+		<ol class="mt-6 space-y-5">
+			{
+				nextSteps.map((step, i) => (
+					<li class="card flex gap-4 p-5">
+						<span
+							aria-hidden="true"
+							class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sage-wash text-sage-deep"
+						>
+							<Icon name={step.icon} size={20} />
+						</span>
+						<div>
+							<h3 class="font-display text-lg font-semibold text-sage-deep">
+								{i + 1}. {step.title}
+							</h3>
+							<p class="mt-1.5 leading-relaxed text-ink-muted">{step.body}</p>
+							{'href' in step && (
+								<p class="mt-3">
+									<a
+										href={step.href}
+										class="inline-flex items-center gap-1.5 font-semibold text-trust underline decoration-1 underline-offset-4"
+									>
+										{step.linkText}
+										<Icon name="arrow-right" size={16} />
+									</a>
+								</p>
+							)}
+						</div>
+					</li>
+				))
+			}
+		</ol>
+
+		<section aria-labelledby="start-cooking" class="mt-14">
+			<h2 id="start-cooking" class="font-display text-2xl font-semibold text-sage-deep">
+				Start with one of these
+			</h2>
+			<div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				{recipes.map((recipe, i) => <RecipeCard recipe={recipe} eager={i === 0} />)}
+			</div>
+		</section>
+
+		<p class="mt-12 text-center">
+			<a href="/" class="btn btn-secondary">
+				Back to the homepage
+			</a>
+		</p>
+	</div>
+</BaseLayout>

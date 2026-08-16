@@ -1,0 +1,74 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import { formatDuration, phaseLabel, sortPhases } from '../lib/utils';
+
+interface Props {
+	recipe: CollectionEntry<'recipes'>;
+	/** Skips lazy-loading for cards above the fold. */
+	eager?: boolean;
+	/** See ContentCard — keeps the heading outline free of skipped levels. */
+	level?: 2 | 3 | 4;
+}
+
+const { recipe, eager = false, level = 3 } = Astro.props;
+const Heading = `h${level}` as 'h2' | 'h3' | 'h4';
+const { data } = recipe;
+const total = data.prepMinutes + data.cookMinutes;
+const href = `/recipes/${recipe.id}/`;
+---
+
+<article
+	class="card group flex h-full flex-col overflow-hidden transition-shadow hover:shadow-md"
+>
+	<img
+		src={data.image}
+		alt={data.imageAlt}
+		width="640"
+		height="400"
+		loading={eager ? 'eager' : 'lazy'}
+		decoding="async"
+		class="aspect-[8/5] w-full bg-cream-sunken object-cover"
+	/>
+
+	<div class="flex flex-1 flex-col p-5">
+		<div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs font-medium text-ink-muted">
+			<span class="inline-flex items-center gap-1.5">
+				<Icon name="clock" size={14} />
+				{formatDuration(total)}
+			</span>
+			<span class="inline-flex items-center gap-1.5">
+				<Icon name="users" size={14} />
+				Serves {data.servings}
+			</span>
+		</div>
+
+		<Heading class="mt-2.5 font-display text-xl font-semibold text-sage-deep">
+			{/* Stretched link: the whole card is the target, but the accessible
+			    name stays the recipe title rather than a vague "read more". */}
+			<a href={href} class="no-underline after:absolute after:inset-0">
+				{data.title}
+			</a>
+		</Heading>
+
+		<p class="mt-2 flex-1 text-[0.925rem] leading-relaxed text-ink-muted">
+			{data.summary}
+		</p>
+
+		<ul class="mt-4 flex flex-wrap gap-1.5">
+			{
+				sortPhases(data.phases).map((phase) => (
+					<li class="rounded-full bg-sage-wash px-2.5 py-1 text-xs font-semibold text-sage-deep">
+						{phaseLabel(phase)}
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</article>
+
+<style>
+	article {
+		position: relative;
+	}
+</style>

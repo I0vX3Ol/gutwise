@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import EmailSignup from '../../components/EmailSignup.astro';
+import Icon from '../../components/Icon.astro';
+import { byRecency, publishedOnly, phaseLabel } from '../../lib/utils';
+import { breadcrumbSchema } from '../../lib/schema';
+
+const stories = publishedOnly(await getCollection('stories')).sort(byRecency);
+
+const crumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Success Stories', href: '/success-stories/' },
+];
+---
+
+<BaseLayout
+	title="Low-FODMAP Success Stories from Readers"
+	description="Real reader outcomes from the low-FODMAP protocol — including the setbacks and what fixed them. See what finishing the process actually looks like."
+	schemaNodes={[breadcrumbSchema(crumbs)]}
+>
+	<PageHeader
+		eyebrow="Success stories"
+		title="What finishing actually looks like"
+		intro="Not testimonials — accounts of how the protocol went, including the parts that went wrong. Most people end up limiting far fewer foods than they feared at the start."
+		crumbs={crumbs}
+	/>
+
+	<div class="mx-auto max-w-6xl px-5 py-12">
+		<div class="grid gap-6 sm:grid-cols-2">
+			{
+				stories.map((story, i) => (
+					<ContentCard
+						href={`/success-stories/${story.id}/`}
+						title={story.data.title}
+						summary={story.data.summary}
+						image={story.data.image}
+						imageAlt={story.data.imageAlt}
+						eyebrow={`${story.data.personName} · ${story.data.location}`}
+						meta={[story.data.timeframe, `Now in ${phaseLabel(story.data.phase).toLowerCase()}`]}
+						eager={i < 2}
+						level={2}
+					/>
+				))
+			}
+		</div>
+
+		<section aria-labelledby="honesty" class="mt-14 card p-6 sm:p-8">
+			<h2 id="honesty" class="font-display text-2xl font-semibold text-sage-deep">
+				A note on these stories
+			</h2>
+			<div class="mt-4 grid gap-5 text-[0.95rem] leading-relaxed text-ink-muted sm:grid-cols-2">
+				<p>
+					These are accounts from readers who agreed to have their experience
+					written up, using first names only. We include the setbacks because
+					they are the useful part — one of the stories here is entirely about a
+					month lost to a stock cube.
+				</p>
+				<p>
+					Individual results vary enormously, and roughly a quarter of people
+					with IBS do not respond to the diet at all. Nothing on this page
+					should be read as a promise about your own outcome, or as a substitute
+					for advice from your own clinician.
+				</p>
+			</div>
+			<p class="mt-6">
+				<a href="/contact/" class="btn btn-secondary text-sm">
+					Share your own story
+					<Icon name="arrow-right" size={16} />
+				</a>
+			</p>
+		</section>
+
+		<div class="mt-14">
+			<EmailSignup id="starter-kit" />
+		</div>
+	</div>
+</BaseLayout>

@@ -1,0 +1,69 @@
+---
+import { FODMAP_LEVELS, type FodmapLevel } from '../consts';
+import Icon from './Icon.astro';
+
+/**
+ * FODMAP safety indicator.
+ *
+ * Deliberately renders an icon AND a text label alongside the colour. WCAG
+ * 1.4.1 forbids conveying information by colour alone, and for this audience in
+ * particular it would be actively harmful: nobody managing food anxiety should
+ * have to work out from a coloured dot whether a dish is safe.
+ *
+ * The palette also avoids alarm red — high-FODMAP uses a muted clay and
+ * portion-dependent uses a soft amber, which reads as caution rather than
+ * danger.
+ */
+interface Props {
+	level: FodmapLevel;
+	/** `full` adds the explanatory sentence; `compact` is icon + label only. */
+	variant?: 'compact' | 'full';
+	class?: string;
+}
+
+const { level, variant = 'compact', class: className = '' } = Astro.props;
+const meta = FODMAP_LEVELS[level];
+
+const styles: Record<FodmapLevel, string> = {
+	safe: 'bg-sage-wash text-sage-deep border-sage-light/60',
+	moderate: 'bg-amber-wash text-amber border-amber/30',
+	high: 'bg-clay-wash text-clay border-clay/30',
+};
+
+const icons: Record<FodmapLevel, 'check' | 'scale' | 'alert'> = {
+	safe: 'check',
+	moderate: 'scale',
+	high: 'alert',
+};
+---
+
+{
+	variant === 'compact' ? (
+		<span
+			class:list={[
+				'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold',
+				styles[level],
+				className,
+			]}
+		>
+			<Icon name={icons[level]} size={14} />
+			{meta.label}
+		</span>
+	) : (
+		<div
+			class:list={[
+				'flex items-start gap-3 rounded-card border p-4',
+				styles[level],
+				className,
+			]}
+		>
+			<span class="mt-0.5 shrink-0">
+				<Icon name={icons[level]} size={20} />
+			</span>
+			<div>
+				<p class="font-semibold">{meta.label}</p>
+				<p class="mt-1 text-sm leading-relaxed">{meta.description}</p>
+			</div>
+		</div>
+	)
+}

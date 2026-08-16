@@ -1,0 +1,123 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { byRecency, publishedOnly } from '../lib/utils';
+import { NAV_LINKS } from '../consts';
+
+/**
+ * Custom, on-brand 404.
+ *
+ * The search box posts to Google with a site: filter rather than shipping a
+ * client-side index — the site is small, and this keeps the page weightless
+ * while still being genuinely useful. Popular destinations are listed below it
+ * so the page is never a dead end.
+ */
+const recipes = publishedOnly(await getCollection('recipes'))
+	.filter((r) => r.data.featured)
+	.sort(byRecency)
+	.slice(0, 4);
+---
+
+<BaseLayout
+	title="Page Not Found"
+	description="That page has moved or never existed. Search GutWise, or jump straight to our most popular low-FODMAP recipes and phase guides."
+	noindex={true}
+	hideStickyCta={true}
+>
+	<div class="mx-auto max-w-3xl px-5 py-16 sm:py-24">
+		<div class="text-center">
+			<p class="font-display text-6xl font-semibold text-sage-light">404</p>
+
+			<h1 class="mt-4 font-display text-3xl font-semibold text-sage-deep sm:text-4xl">
+				That page has moved or never existed
+			</h1>
+
+			<p class="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-ink-muted">
+				Nothing has gone wrong with your diet — just with our link. Search below,
+				or pick up from one of the pages people use most.
+			</p>
+		</div>
+
+		<!-- Search -->
+		<form
+			action="https://www.google.com/search"
+			method="get"
+			role="search"
+			class="mx-auto mt-9 flex max-w-lg flex-col gap-3 sm:flex-row"
+		>
+			<label for="site-search" class="sr-only-focusable">Search GutWise</label>
+			<input
+				type="search"
+				id="site-search"
+				name="q"
+				placeholder="Search recipes and guides…"
+				class="min-h-11 flex-1 rounded-full border-2 border-sage bg-white px-4 py-2.5 text-ink placeholder:text-ink-muted/70"
+			/>
+			{/* Restricts results to this site without needing our own search index. */}
+			<input type="hidden" name="as_sitesearch" value="gutwise.nexudel.com" />
+			<button type="submit" class="btn btn-primary">
+				<Icon name="search" size={18} />
+				Search
+			</button>
+		</form>
+
+		<!-- Section links -->
+		<nav aria-labelledby="popular-sections" class="mt-14">
+			<h2 id="popular-sections" class="font-display text-xl font-semibold text-sage-deep">
+				Main sections
+			</h2>
+			<ul class="mt-4 grid gap-3 sm:grid-cols-2">
+				{
+					NAV_LINKS.map((link) => (
+						<li>
+							<a
+								href={link.href}
+								class="flex items-center justify-between gap-3 rounded-card border border-cream-border bg-white px-4 py-3.5 font-medium text-sage-deep no-underline transition-colors hover:bg-sage-wash"
+							>
+								{link.label}
+								<Icon name="arrow-right" size={16} class="text-sage" />
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+
+		<!-- Popular recipes -->
+		<section aria-labelledby="popular-recipes" class="mt-12">
+			<h2 id="popular-recipes" class="font-display text-xl font-semibold text-sage-deep">
+				Popular recipes
+			</h2>
+			<ul class="mt-4 divide-y divide-cream-border border-y border-cream-border">
+				{
+					recipes.map((recipe) => (
+						<li>
+							<a
+								href={`/recipes/${recipe.id}/`}
+								class="flex items-center justify-between gap-4 py-3.5 no-underline"
+							>
+								<span>
+									<span class="block font-medium text-sage-deep">{recipe.data.title}</span>
+									<span class="mt-0.5 block text-sm text-ink-muted">
+										Serves {recipe.data.servings} ·{' '}
+										{recipe.data.prepMinutes + recipe.data.cookMinutes} min
+									</span>
+								</span>
+								<Icon name="arrow-right" size={18} class="shrink-0 text-sage" />
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<p class="mt-12 text-center text-ink-muted">
+			Still cannot find it?{' '}
+			<a href="/contact/" class="font-semibold text-trust underline decoration-1 underline-offset-4">
+				Tell us what you were looking for
+			</a>{' '}
+			and we will point you at it.
+		</p>
+	</div>
+</BaseLayout>

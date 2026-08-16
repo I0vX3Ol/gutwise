@@ -1,0 +1,43 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Emphasis block for guidance that must not be missed.
+ *
+ * Tone is set carefully: `caution` uses amber rather than red. The audience is
+ * frequently anxious about food safety, and an alarm-coloured panel raises
+ * stress without adding information.
+ */
+interface Props {
+	variant?: 'note' | 'tip' | 'caution';
+	title: string;
+	/**
+	 * Heading level for the callout title. Defaults to 2 so a callout placed
+	 * directly after the page <h1> does not skip a level — pass 3 when it sits
+	 * inside an existing <h2> section.
+	 */
+	level?: 2 | 3 | 4;
+	class?: string;
+}
+
+const { variant = 'note', title, level = 2, class: className = '' } = Astro.props;
+const Heading = `h${level}` as 'h2' | 'h3' | 'h4';
+
+const styles = {
+	note: 'border-sage-light/60 bg-sage-wash text-sage-deep',
+	tip: 'border-trust/25 bg-trust-wash text-sage-deep',
+	caution: 'border-amber/30 bg-amber-wash text-amber',
+} as const;
+
+const icons = { note: 'leaf', tip: 'check', caution: 'alert' } as const;
+---
+
+<aside class:list={['rounded-card border p-5', styles[variant], className]}>
+	<Heading class="flex items-center gap-2 font-display text-lg font-semibold">
+		<Icon name={icons[variant]} size={18} />
+		{title}
+	</Heading>
+	<div class="mt-2 text-[0.95rem] leading-relaxed text-ink">
+		<slot />
+	</div>
+</aside>

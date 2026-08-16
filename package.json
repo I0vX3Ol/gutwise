@@ -1,0 +1,39 @@
+{
+  "name": "gutwise",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GutWise — calm, evidence-based low-FODMAP recipes and guides for people living with IBS.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/generate-headers.mjs",
+    "images": "node scripts/generate-placeholders.mjs",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "check:site": "node scripts/verify-site.mjs",
+    "verify": "npm run build && npm run check:contrast && npm run check:site",
+    "audit:deps": "npm audit --omit=dev --audit-level=high"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
+    "@resvg/resvg-js": "^2.6.2",
+    "@tailwindcss/typography": "^0.5.20",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.2.2",
+    "satori": "^0.29.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@cloudflare/workers-types": "^5.20260816.1",
+    "node-html-parser": "^9.0.1",
+    "typescript": "^5.9.3"
+  }
+}
