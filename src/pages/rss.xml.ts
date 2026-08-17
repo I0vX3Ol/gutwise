@@ -5,7 +5,7 @@ import { SITE } from '../consts';
 import { byRecency, publishedOnly } from '../lib/utils';
 
 /**
- * Combined feed across recipes, guides, roundups and stories.
+ * Combined feed across recipes, guides and product roundups.
  *
  * One feed rather than four: the site publishes at a low enough volume that
  * splitting it would leave every feed looking abandoned, and readers who want a
@@ -14,11 +14,10 @@ import { byRecency, publishedOnly } from '../lib/utils';
 export const GET: APIRoute = async (context) => {
 	const site = context.site ?? new URL(SITE.url);
 
-	const [recipes, guides, products, stories] = await Promise.all([
+	const [recipes, guides, products] = await Promise.all([
 		getCollection('recipes'),
 		getCollection('guides'),
 		getCollection('products'),
-		getCollection('stories'),
 	]);
 
 	const items = [
@@ -36,11 +35,6 @@ export const GET: APIRoute = async (context) => {
 			entry,
 			link: `/product-recommendations/${entry.id}/`,
 			category: 'Product picks',
-		})),
-		...publishedOnly(stories).map((entry) => ({
-			entry,
-			link: `/success-stories/${entry.id}/`,
-			category: 'Success stories',
 		})),
 	].sort((a, b) => byRecency(a.entry, b.entry));
 

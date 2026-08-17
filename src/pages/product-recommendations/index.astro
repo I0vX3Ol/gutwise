@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import ContentCard from '../../components/ContentCard.astro';
-import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
+import FundingNote from '../../components/FundingNote.astro';
 import EmailSignup from '../../components/EmailSignup.astro';
 import Icon from '../../components/Icon.astro';
 import { byRecency, publishedOnly, formatDate } from '../../lib/utils';
@@ -30,8 +30,8 @@ const crumbs = [
 	/>
 
 	<div class="mx-auto max-w-6xl px-5 py-12">
-		<!-- FTC: disclosure sits above the fold and before any affiliate link -->
-		<AffiliateDisclosure class="mb-10" />
+		<!-- Funding transparency, above the fold and before any outbound link -->
+		<FundingNote class="mb-10" />
 
 		<div class="grid gap-6 sm:grid-cols-2">
 			{
@@ -67,8 +67,8 @@ const crumbs = [
 							body: 'In categories where hidden ingredients make labels unreliable — stock, sauces, bars, bread — we only recommend products tested by Monash or FODMAP Friendly.',
 						},
 						{
-							title: 'Commission never ranks',
-							body: 'Placement and order are set before we check whether a product has an affiliate programme. Several of our top picks pay us nothing at all.',
+							title: 'Nothing here is paid',
+							body: 'We run no affiliate links, take no sponsorship and accept no free product. Nothing on this page earns us a commission, so the ordering reflects what we think is useful and nothing else.',
 						},
 						{
 							title: 'We say when to skip it',

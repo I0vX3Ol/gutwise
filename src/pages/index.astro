@@ -12,7 +12,6 @@ import { faqSchema } from '../lib/schema';
 
 const recipes = publishedOnly(await getCollection('recipes'));
 const guides = publishedOnly(await getCollection('guides'));
-const stories = publishedOnly(await getCollection('stories'));
 // The FAQ collection is data-only and has no draft flag.
 const allFaqs = await getCollection('faqs');
 
@@ -22,7 +21,6 @@ const featuredRecipes = recipes
 	.slice(0, 3);
 
 const orderedGuides = guides.sort((a, b) => a.data.order - b.data.order).slice(0, 3);
-const featuredStories = stories.sort(byRecency).slice(0, 2);
 
 // A short teaser set on the home page; the full list lives on /faq/.
 const homeFaqs = allFaqs
@@ -178,41 +176,6 @@ const phaseGuides = [
 	<!-- Lead magnet -->
 	<section class="mx-auto max-w-6xl px-5 py-16">
 		<EmailSignup variant="dark" id="starter-kit" />
-	</section>
-
-	<!-- Success stories -->
-	<section aria-labelledby="stories-heading" class="mx-auto max-w-6xl px-5 pb-16">
-		<div class="flex flex-wrap items-end justify-between gap-4">
-			<div>
-				<h2 id="stories-heading" class="font-display text-3xl font-semibold text-sage-deep">
-					What finishing actually looks like
-				</h2>
-				<p class="mt-2 max-w-2xl text-ink-muted">
-					Reader stories, including the parts that went wrong. Most people end up
-					limiting far fewer foods than they expect.
-				</p>
-			</div>
-			<a href="/success-stories/" class="btn btn-secondary text-sm">
-				All stories
-				<Icon name="arrow-right" size={16} />
-			</a>
-		</div>
-
-		<div class="mt-8 grid gap-6 sm:grid-cols-2">
-			{
-				featuredStories.map((story) => (
-					<ContentCard
-						href={`/success-stories/${story.id}/`}
-						title={story.data.title}
-						summary={story.data.summary}
-						image={story.data.image}
-						imageAlt={story.data.imageAlt}
-						eyebrow="Success story"
-						meta={[story.data.personName, story.data.timeframe]}
-					/>
-				))
-			}
-		</div>
 	</section>
 
 	<!-- FAQ teaser, marked up as FAQPage schema -->

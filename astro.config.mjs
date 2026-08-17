@@ -44,7 +44,7 @@ export default defineConfig({
 					return { ...item, priority: 0.8 };
 				if (
 					item.url.includes('/privacy-policy/') ||
-					item.url.includes('/affiliate-disclosure/')
+					item.url.includes('/funding/')
 				)
 					return { ...item, priority: 0.2 };
 				return { ...item, priority: 0.6 };

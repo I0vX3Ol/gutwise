@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { SITE } from '../consts';
+import { breadcrumbSchema } from '../lib/schema';
+import { formatDate, isoDate } from '../lib/utils';
+
+const crumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'How We Are Funded', href: '/funding/' },
+];
+
+const lastUpdated = new Date('2026-06-20');
+---
+
+<BaseLayout
+	title="How GutWise Is Funded"
+	description="GutWise runs no affiliate links, no sponsorship and no ads. Here is exactly how the site is paid for and what would have to change. Read the full detail."
+	schemaNodes={[breadcrumbSchema(crumbs)]}
+>
+	<PageHeader
+		eyebrow="Transparency"
+		title="How GutWise is funded"
+		intro="Stated in full, because a health recommendation you cannot audit is worth very little."
+		crumbs={crumbs}
+	/>
+
+	<div class="mx-auto max-w-3xl px-5 py-12">
+		<p class="text-sm text-ink-muted">
+			Last updated{' '}
+			<time datetime={isoDate(lastUpdated)}>{formatDate(lastUpdated)}</time>
+		</p>
+
+		<div class="prose prose-gutwise mt-8">
+			<h2>The short version</h2>
+			<p>
+				<strong>GutWise currently earns no money.</strong> There are no affiliate
+				links anywhere on this site, no sponsored posts, no paid placements and
+				no display advertising. Nothing you click earns us a commission, and no
+				brand has paid to appear.
+			</p>
+			<p>
+				That is not a boast, it is just the current state of things, and it is
+				worth knowing when you read a page that recommends products.
+			</p>
+
+			<h2>What that means for the product pages</h2>
+			<p>
+				Our{' '}
+				<a href="/product-recommendations/">product recommendations</a> link
+				directly to the maker or to an ordinary retailer. We receive nothing
+				either way, which means the ordering reflects what we think is actually
+				useful and nothing else.
+			</p>
+			<p>
+				It also means we have no reason to pad the list. Most of what you need
+				during the elimination phase is ordinary supermarket food — rice,
+				potatoes, carrots, eggs, oats, lactose-free milk — and several entries on
+				that page exist specifically to tell you not to spend extra. A page
+				funded by commission has a quiet incentive not to say that.
+			</p>
+
+			<h2>What we do not do</h2>
+			<ul>
+				<li>We do not sell your email address or any other data. See our <a href="/privacy-policy/">privacy policy</a>.</li>
+				<li>We do not accept payment for a placement, a ranking or a review.</li>
+				<li>We do not publish sponsored content dressed up as editorial.</li>
+				<li>We do not accept free products in exchange for coverage.</li>
+			</ul>
+
+			<h2>If this changes</h2>
+			<p>
+				Content sites are usually funded by affiliate commission or advertising
+				eventually, and it is possible GutWise will be too. If that happens, three
+				things will happen with it:
+			</p>
+			<ul>
+				<li>
+					This page will be rewritten to name every programme we join, before any
+					paid link goes live.
+				</li>
+				<li>
+					Every page carrying a paid link will disclose it above the fold and
+					<em>before</em> the first link — the US Federal Trade Commission's
+					standard is that a disclosure be clear and conspicuous, and a note
+					buried in a footer does not meet it.
+				</li>
+				<li>
+					Paid links will be machine-identifiable with{' '}
+					<code>rel="nofollow sponsored"</code>, so the commercial relationship
+					is legible to software as well as to you.
+				</li>
+			</ul>
+			<p>
+				What will not change is the ordering rule: commission would never
+				determine what we recommend or in what order. The clearest test of that
+				is the product we recommend most often — the Monash University FODMAP app
+				— which has no affiliate programme at all and would still be first.
+			</p>
+
+			<h2>The email list</h2>
+			<p>
+				The one thing we ask for is your email address, in exchange for the
+				Starter Kit. That list is not rented, sold or shared, and every message
+				carries a one-click unsubscribe. It exists so we can tell people when
+				there is something new worth reading, and for no other purpose.
+			</p>
+
+			<h2>Questions</h2>
+			<p>
+				If something on this site reads as commercially motivated, tell us and we
+				will explain the reasoning or change the page. Email{' '}
+				<a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+				{' '}{SITE.responseTimePromise}
+			</p>
+		</div>
+	</div>
+</BaseLayout>

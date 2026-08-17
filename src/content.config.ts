@@ -120,7 +120,6 @@ const products = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/products' }),
 	schema: z.object({
 		...seo,
-		/** Every pick carries its own affiliate URL and rationale. */
 		picks: z
 			.array(
 				z.object({
@@ -130,8 +129,18 @@ const products = defineCollection({
 					why: z.string().min(40),
 					watchOut: z.string().optional(),
 					priceBand: z.enum(['$', '$$', '$$$']),
-					retailer: z.string(),
-					affiliateUrl: z.string().url(),
+					/** Where to get it, e.g. "Any supermarket" or "fodyfoods.com". */
+					where: z.string(),
+					/**
+					 * Optional link to the maker. Deliberately optional: several picks
+					 * are ordinary supermarket staples where sending someone to a
+					 * specific product page would be worse advice than "buy any".
+					 *
+					 * No affiliate links — see /funding/. If that ever changes, these
+					 * must be marked rel="nofollow sponsored" and disclosed above the
+					 * fold before the first paid link.
+					 */
+					url: z.string().url().optional(),
 					/** e.g. "Monash certified", "FODMAP Friendly certified". */
 					certification: z.string().optional(),
 					fodmap: fodmapLevel.default('safe'),
@@ -141,27 +150,6 @@ const products = defineCollection({
 		lastReviewed: z.coerce.date(),
 		featured: z.boolean().default(false),
 		faqs: z.array(faqItem).default([]),
-		relatedGuides: z.array(z.string()).default([]),
-	}),
-});
-
-const stories = defineCollection({
-	loader: glob({ pattern: '**/*.md', base: './src/content/stories' }),
-	schema: z.object({
-		...seo,
-		/** First name only — these are reader stories, not case files. */
-		personName: z.string(),
-		location: z.string(),
-		/** How long they had been symptomatic before starting. */
-		background: z.string().min(30),
-		timeframe: z.string(),
-		phase: phaseEnum,
-		/** Pull-quote rendered large at the top of the story. */
-		quote: z.string().min(40).max(320),
-		outcomes: z.array(z.string()).min(2),
-		/** Triggers identified during reintroduction. */
-		triggersFound: z.array(z.string()).default([]),
-		featured: z.boolean().default(false),
 		relatedGuides: z.array(z.string()).default([]),
 	}),
 });
@@ -181,4 +169,4 @@ const faqs = defineCollection({
 	}),
 });
 
-export const collections = { recipes, guides, products, stories, faqs };
+export const collections = { recipes, guides, products, faqs };

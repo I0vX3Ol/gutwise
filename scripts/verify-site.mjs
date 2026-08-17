@@ -43,6 +43,9 @@ const files = htmlFiles(dist);
 const titles = new Map();
 const descriptions = new Map();
 
+/** Every internal href found, so they can be resolved once at the end. */
+const internalLinks = [];
+
 // Pages intentionally excluded from the index; these skip canonical/index rules.
 const NOINDEX_PAGES = ['/thank-you/', '/404.html'];
 
@@ -208,6 +211,16 @@ for (const file of files) {
 		}
 	}
 
+	// --------------------------------------------------------- Internal links
+	// Collected here, resolved after the loop. Deleting a route and leaving a
+	// link behind is the single easiest way to ship a 404 to a real reader.
+	for (const a of doc.querySelectorAll('a[href]')) {
+		const href = a.getAttribute('href');
+		if (!href) continue;
+		if (/^(https?:|mailto:|tel:|#|data:)/.test(href)) continue;
+		internalLinks.push({ from: rel, href });
+	}
+
 	// ------------------------------------------------------------- Duplicate IDs
 	const seen = new Set();
 	for (const el of doc.querySelectorAll('[id]')) {
@@ -235,7 +248,7 @@ for (const file of files) {
 			if (!types.includes('WebSite')) fail(rel, 'JSON-LD missing WebSite');
 
 			const needsBreadcrumb =
-				/^\/(recipes|guides|product-recommendations|success-stories|faq|about|contact|privacy-policy|affiliate-disclosure)\//.test(
+				/^\/(recipes|guides|product-recommendations|faq|about|contact|privacy-policy|funding)\//.test(
 					rel,
 				);
 			if (needsBreadcrumb && !types.includes('BreadcrumbList')) {
@@ -252,7 +265,7 @@ for (const file of files) {
 	}
 
 	// ------------------------------------------------------------ Breadcrumb UI
-	if (/^\/(recipes|guides|product-recommendations|success-stories)\/[^/]+\/$/.test(rel)) {
+	if (/^\/(recipes|guides|product-recommendations)\/[^/]+\/$/.test(rel)) {
 		if (!doc.querySelector('nav[aria-label="Breadcrumb"]')) {
 			fail(rel, 'detail page has no visible breadcrumb navigation');
 		}
@@ -327,7 +340,6 @@ const REQUIRED_PAGES = [
 	'recipes/index.html',
 	'guides/index.html',
 	'product-recommendations/index.html',
-	'success-stories/index.html',
 ];
 for (const page of REQUIRED_PAGES) {
 	if (!existsSync(join(dist, page))) fail('/', `required page missing: ${page}`);
@@ -345,11 +357,37 @@ const CONTENT_MINIMUMS = [
 	['recipes', 6],
 	['guides', 3],
 	['product-recommendations', 1],
-	['success-stories', 2],
 ];
 for (const [dir, min] of CONTENT_MINIMUMS) {
 	const found = count(dir);
 	if (found < min) fail('/', `expected at least ${min} ${dir}, found ${found}`);
+}
+
+// ------------------------------------------------------------ Internal links
+// Every internal href must resolve to something actually in dist/ — a built
+// page, an asset, or a Pages Function route.
+const FUNCTION_ROUTES = ['/api/contact', '/api/subscribe'];
+
+const seenBadLinks = new Set();
+for (const { from, href } of internalLinks) {
+	const clean = href.split('#')[0].split('?')[0];
+	if (clean === '' || clean === '/') continue;
+	if (FUNCTION_ROUTES.includes(clean)) continue;
+
+	const target = clean.replace(/^\//, '');
+	const candidates = [
+		join(dist, target),
+		join(dist, target, 'index.html'),
+		join(dist, `${target}.html`),
+	];
+
+	if (!candidates.some((c) => existsSync(c))) {
+		const key = `${from} -> ${href}`;
+		if (!seenBadLinks.has(key)) {
+			seenBadLinks.add(key);
+			fail(from, `dead internal link: ${href}`);
+		}
+	}
 }
 
 // ------------------------------------------------------- Placeholder content
@@ -398,9 +436,10 @@ if (placeholders.length > 0) {
 		console.log(`      ${file}`);
 	}
 	console.log(
-		'    Success stories are illustrative samples, not real readers, and the\n' +
-			'    affiliate links are untagged examples. Publishing either as genuine\n' +
-			'    would be dishonest and breaches the FTC endorsement guides.\n' +
+		'    Anything flagged here is illustrative sample content, not verified\n' +
+			'    fact. Publishing it as genuine would be dishonest — and for reader\n' +
+			'    testimonials or paid links specifically, it breaches the FTC\n' +
+			'    endorsement guides.\n' +
 			'    Replace the content, then remove `placeholder: true` from the frontmatter.\n',
 	);
 }

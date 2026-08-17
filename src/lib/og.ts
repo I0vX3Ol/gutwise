@@ -54,12 +54,6 @@ const STATIC_ENTRIES: OgEntry[] = [
 		kicker: 'Independently chosen, honestly ranked',
 	},
 	{
-		slug: 'success-stories',
-		eyebrow: 'Success stories',
-		title: 'What finishing the protocol actually looks like',
-		kicker: 'Real reader outcomes, including the setbacks',
-	},
-	{
 		slug: 'faq',
 		eyebrow: 'Frequently asked questions',
 		title: 'Straight answers to the questions people ask first',
@@ -84,10 +78,10 @@ const STATIC_ENTRIES: OgEntry[] = [
 		kicker: 'What we collect, why, and how to remove it',
 	},
 	{
-		slug: 'affiliate-disclosure',
-		eyebrow: 'Disclosure',
-		title: 'How GutWise makes money',
-		kicker: 'Affiliate relationships, stated in full',
+		slug: 'funding',
+		eyebrow: 'Transparency',
+		title: 'How GutWise is funded',
+		kicker: 'No affiliate links, no sponsorship, no ads',
 	},
 	{
 		slug: 'thank-you',
@@ -105,11 +99,10 @@ const STATIC_ENTRIES: OgEntry[] = [
 
 /** Every OG image the build should produce. */
 export async function ogEntries(): Promise<OgEntry[]> {
-	const [recipes, guides, products, stories] = await Promise.all([
+	const [recipes, guides, products] = await Promise.all([
 		getCollection('recipes'),
 		getCollection('guides'),
 		getCollection('products'),
-		getCollection('stories'),
 	]);
 
 	const recipeEntries = publishedOnly(recipes)
@@ -139,20 +132,10 @@ export async function ogEntries(): Promise<OgEntry[]> {
 			kicker: `${p.data.picks.length} recommendations, independently chosen`,
 		}));
 
-	const storyEntries = publishedOnly(stories)
-		.sort(byRecency)
-		.map((s) => ({
-			slug: `success-stories/${s.id}`,
-			eyebrow: 'Success story',
-			title: s.data.title,
-			kicker: `${s.data.personName} · ${s.data.timeframe}`,
-		}));
-
 	return [
 		...STATIC_ENTRIES,
 		...recipeEntries,
 		...guideEntries,
 		...productEntries,
-		...storyEntries,
 	];
 }

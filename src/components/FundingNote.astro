@@ -1,0 +1,42 @@
+---
+import { FUNDING_NOTE } from '../consts';
+import Icon from './Icon.astro';
+
+/**
+ * Funding transparency, shown above the fold and before the first outbound
+ * product link.
+ *
+ * GutWise takes no commission today, so this states that plainly. If affiliate
+ * links are ever introduced, this component is the right place for the FTC
+ * disclosure — the requirement is that it be clear, conspicuous, and *before*
+ * the first paid link, which a footer mention does not satisfy.
+ */
+interface Props {
+	class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<aside
+	aria-label="How we are funded"
+	class:list={[
+		'flex items-start gap-3 rounded-card border border-cream-border bg-cream-sunken p-4',
+		className,
+	]}
+>
+	<span class="mt-0.5 shrink-0 text-sage">
+		<Icon name="check" size={18} />
+	</span>
+	<p class="text-sm leading-relaxed text-ink-muted">
+		<strong class="font-semibold text-sage-deep">No commission:</strong>{' '}
+		{FUNDING_NOTE}{' '}
+		<a
+			href="/funding/"
+			class="text-trust underline decoration-1 underline-offset-2"
+		>
+			How we are funded
+		</a>
+		.
+	</p>
+</aside>

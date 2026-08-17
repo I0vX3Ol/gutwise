@@ -24,7 +24,6 @@ export const NAV_LINKS = [
 	{ href: '/recipes/', label: 'Recipes' },
 	{ href: '/guides/', label: 'Guides' },
 	{ href: '/product-recommendations/', label: 'Product Picks' },
-	{ href: '/success-stories/', label: 'Success Stories' },
 	{ href: '/faq/', label: 'FAQ' },
 ] as const;
 
@@ -33,7 +32,7 @@ export const FOOTER_LINKS = {
 		{ href: '/recipes/', label: 'All recipes' },
 		{ href: '/guides/', label: 'Guides' },
 		{ href: '/product-recommendations/', label: 'Product picks' },
-		{ href: '/success-stories/', label: 'Success stories' },
+		{ href: '/rss.xml', label: 'Subscribe by RSS' },
 	],
 	Start: [
 		{ href: '/guides/what-is-the-low-fodmap-diet/', label: 'What is low-FODMAP?' },
@@ -45,7 +44,7 @@ export const FOOTER_LINKS = {
 		{ href: '/about/', label: 'About GutWise' },
 		{ href: '/contact/', label: 'Contact' },
 		{ href: '/privacy-policy/', label: 'Privacy policy' },
-		{ href: '/affiliate-disclosure/', label: 'Affiliate disclosure' },
+		{ href: '/funding/', label: 'How we are funded' },
 	],
 } as const;
 
@@ -66,11 +65,16 @@ export const LEAD_MAGNET = {
 } as const;
 
 /**
- * FTC-compliant affiliate disclosure. Must appear above the fold on any page
- * containing affiliate links, not only in the footer.
+ * Funding statement, shown above the fold on any page that recommends products.
+ *
+ * GutWise currently runs no affiliate programme, no sponsorship and no ads, so
+ * this says exactly that. If that ever changes, the FTC endorsement guides
+ * require a clear and conspicuous disclosure before the first paid link — a
+ * footer mention does not meet that standard — and this text must be rewritten
+ * to describe the real arrangement rather than softened.
  */
-export const AFFILIATE_DISCLOSURE =
-	'GutWise is reader-supported. When you buy through links on this page we may earn a small commission, at no extra cost to you. We only recommend products we would use during our own elimination phase — commission never determines placement.';
+export const FUNDING_NOTE =
+	'GutWise earns nothing from the products on this page. There are no affiliate links, no sponsored placements and no paid rankings — every link goes straight to the maker or to an ordinary retailer, and we get no commission if you buy. Several of the items below are supermarket staples we tell you not to spend extra on.';
 
 /**
  * Medical disclaimer. Required on every page giving dietary guidance.

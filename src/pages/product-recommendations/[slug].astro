@@ -4,7 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
+import FundingNote from '../../components/FundingNote.astro';
 import FodmapTag from '../../components/FodmapTag.astro';
 import FaqAccordion from '../../components/FaqAccordion.astro';
 import ContentCard from '../../components/ContentCard.astro';
@@ -85,8 +85,8 @@ const priceLabel: Record<string, string> = {
 		</div>
 
 		<div class="mx-auto max-w-4xl px-5 py-12">
-			<!-- FTC: above the fold, before the first affiliate link -->
-			<AffiliateDisclosure class="mb-10" />
+			<!-- Funding transparency, above the fold and before the first outbound link -->
+			<FundingNote class="mb-10" />
 
 			<div class="prose prose-gutwise">
 				<Content />
@@ -145,17 +145,27 @@ const priceLabel: Record<string, string> = {
 										</p>
 									)}
 
-									<p class="mt-5">
-										<a
-											href={pick.affiliateUrl}
-											rel="nofollow sponsored noopener noreferrer"
-											target="_blank"
-											class="btn btn-primary text-sm"
-										>
-											Check price at {pick.retailer}
-											<Icon name="external" size={15} />
-											<span class="sr-only-focusable"> (opens in a new tab)</span>
-										</a>
+									{/* Not every pick gets a link. Sending someone to a specific
+									    product page for lactose-free milk or plain oats would be
+									    worse advice than "buy any". No `sponsored` rel because
+									    nothing here is paid — see /funding/. */}
+									<p class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+										{pick.url ? (
+											<a
+												href={pick.url}
+												rel="nofollow noopener noreferrer"
+												target="_blank"
+												class="btn btn-primary text-sm"
+											>
+												Visit {pick.brand}
+												<Icon name="external" size={15} />
+												<span class="sr-only-focusable"> (opens in a new tab)</span>
+											</a>
+										) : null}
+										<span class="text-sm text-ink-muted">
+											<span class="font-semibold text-sage-deep">Where:</span>{' '}
+											{pick.where}
+										</span>
 									</p>
 								</div>
 							</li>

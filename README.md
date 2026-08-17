@@ -6,22 +6,16 @@ Calm, evidence-based recipes and phase guides for people managing IBS — with t
 
 ---
 
-## ⚠ Read this before deploying publicly
+## Before deploying publicly
 
-Three things in this repository are **illustrative samples, not real content**, and must be replaced before the site is published:
+Nothing in this repository is fabricated. There are no invented testimonials and no affiliate links — see [Monetisation](#monetisation) for why, and what would have to happen to add either.
 
-| File | What's wrong with shipping it |
-| --- | --- |
-| `src/content/stories/maria-reintroduction-story.md` | Invented reader testimonial. Publishing it as a genuine account is dishonest and breaches the [FTC Endorsement Guides](https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking). |
-| `src/content/stories/james-hidden-fodmaps-story.md` | Same. |
-| `src/content/products/low-fodmap-pantry-starter-kit.md` | Affiliate URLs are placeholder Amazon **search** links carrying an unregistered tag (`gutwise-20`). Product claims have not been independently verified. |
-
-Each is marked `placeholder: true` in its frontmatter, and `npm run check:site` prints them on **every build** until you clear the flag. Replace the content, then delete the `placeholder: true` line.
-
-Two further points before launch:
+Two things still need a human before launch:
 
 - **Imagery.** Every image in `public/images/` is a generated abstract SVG placeholder. The `imageAlt` text in the content describes the *intended photograph*, so it will be correct once real photos replace the placeholders — but it does not describe the placeholders themselves. See [Replacing the imagery](#replacing-the-imagery).
 - **Medical content.** The recipes and guides reflect widely published Monash-aligned guidance, but nothing here has been reviewed by a registered dietitian. Have a qualified professional review the content before publishing health information at scale.
+
+There is still a guard rail for sample content: any content file marked `placeholder: true` in its frontmatter is printed by `npm run check:site` on **every build** until the flag is cleared. Nothing currently carries it.
 
 ---
 
@@ -35,6 +29,7 @@ Two further points before launch:
 | Hosting | Cloudflare Pages | Static assets at the edge, plus two Pages Functions for the forms |
 | Forms | Cloudflare Pages Functions + Turnstile | No database, no backend to maintain |
 | Email | ConvertKit / Mailchimp, via `/api/subscribe` | Validated and forwarded; nothing stored on our side |
+| Monetisation | None | No affiliate links, no sponsorship, no ads — see below |
 | Lead magnet | Generated PDF (`pdfkit`) | Built from source, so the file and the copy cannot drift |
 | Social images | `satori` + `@resvg/resvg-js` at build time | A custom OG image per page, generated deterministically |
 | Analytics | GA4 (consent-gated) + Cloudflare Web Analytics | Cookieless baseline; GA4 only after opt-in |
@@ -156,6 +151,36 @@ they just asked for is a needless drop-off point.
 
 ---
 
+## Monetisation
+
+**There is none.** No affiliate links, no sponsorship, no paid placements, no
+display ads. The product recommendations link straight to the maker or say
+"any supermarket", and several picks deliberately have no link at all — sending
+someone to a specific product page for lactose-free milk or plain oats is worse
+advice than "buy any".
+
+This is stated on `/funding/`, summarised above the fold on every product page
+by `FundingNote.astro`, and reflected in the privacy policy and about page. The
+one thing the site asks for is an email address, in exchange for the Starter Kit.
+
+If you add affiliate links later, three things are required, not optional:
+
+1. **Disclose above the fold, before the first paid link.** The FTC standard is
+   "clear and conspicuous"; a footer mention does not meet it. `FundingNote.astro`
+   is where that text belongs — rewrite it to describe the real arrangement.
+2. **Mark the links** `rel="nofollow sponsored"` in
+   `src/pages/product-recommendations/[slug].astro`. They are currently
+   `rel="nofollow"` only, because nothing is paid.
+3. **Rewrite `/funding/`, the about page and the privacy policy** to name every
+   programme, and update `FUNDING_NOTE` in `src/consts.ts`.
+
+Until all three are done, leaving the current copy in place while running paid
+links would be a false statement on a health site. The copy says "we earn
+nothing" in several places — that has to stop being true in the code and the
+text at the same moment.
+
+---
+
 ## Security
 
 The threat surface is deliberately small: no accounts, no database, no sessions, no cookies except consent-gated analytics.
@@ -238,8 +263,7 @@ The lighter sages are retained for decoration; anything bearing text uses the da
 src/content/
 ├── recipes/     6 recipes    — portion limits, per-ingredient FODMAP flags
 ├── guides/      3 guides     — one per protocol phase, with per-guide FAQs
-├── products/    1 roundup    — affiliate picks with rationale
-└── stories/     2 stories    — reader outcomes
+└── products/    1 roundup    — product picks with rationale, no paid links
 src/data/faqs.json            12 site-wide FAQ entries
 ```
 
@@ -259,7 +283,7 @@ Add `seoTitle` when the headline is longer than about 50 characters, since the `
 
 `public/images/` holds generated SVG placeholders. To swap in real photography:
 
-1. Drop the files into `public/images/recipes/` (or `guides/`, `products/`, `stories/`)
+1. Drop the files into `public/images/recipes/` (or `guides/`, `products/`)
 2. Point the `image` frontmatter field at the new path
 3. Confirm `imageAlt` describes the actual photo
 4. Delete `scripts/generate-placeholders.mjs` and the `images` npm script once nothing depends on them
@@ -295,7 +319,7 @@ Social images are separate and need no work: `src/pages/og/[...slug].png.ts` gen
 │   │   └── utils.ts
 │   ├── pages/
 │   ├── styles/global.css       Design tokens (@theme) and base layer
-│   ├── consts.ts               Site config, nav, disclosures, phases
+│   ├── consts.ts               Site config, nav, funding note, phases
 │   └── content.config.ts       Collection schemas
 └── astro.config.mjs
 ```
@@ -306,7 +330,7 @@ Social images are separate and need no work: `src/pages/og/[...slug].png.ts` gen
 
 Every page carries a unique `<title>` (15–60 chars) and meta description (70–165), an absolute canonical, a per-page OG image, and a single JSON-LD `@graph`. All of it is asserted by `npm run check:site`.
 
-Structured data: `Organization` and `WebSite` sitewide; `Recipe` on recipes; `FAQPage` on `/faq/`, on each guide with FAQs, and on the home page; `BreadcrumbList` on every nested page; `Article` on guides, roundups and stories; `ContactPage` on `/contact/`.
+Structured data: `Organization` and `WebSite` sitewide; `Recipe` on recipes; `FAQPage` on `/faq/`, on each guide with FAQs, and on the home page; `BreadcrumbList` on every nested page; `Article` on guides and roundups; `ContactPage` on `/contact/`.
 
 `sitemap-index.xml` is generated at build with tuned priorities, excluding `/thank-you/` and `/404`. `/thank-you/` is additionally `noindex` in both the page head and the `_headers` file — it exists as a conversion destination for GA4 goals, not for search.
 
@@ -314,7 +338,9 @@ No global `lastmod` is emitted. Stamping every URL with the build time would cla
 
 `robots.txt` deliberately does **not** block `/og/`. Facebook, LinkedIn and X all honour robots.txt when fetching `og:image`, so disallowing that path would silently break the social preview on every page; the images are kept out of image search with an `X-Robots-Tag: noindex` header instead. `check:site` fails the build if that `Disallow` ever comes back.
 
-A combined RSS feed is served at `/rss.xml` covering recipes, guides, roundups and stories, and is advertised via `<link rel="alternate">` on every page.
+A combined RSS feed is served at `/rss.xml` covering recipes, guides and roundups, and is advertised via `<link rel="alternate">` on every page.
+
+`check:site` also resolves **every internal link** against the build output, so deleting a route and leaving a link behind fails CI rather than shipping a 404.
 
 ---
 
