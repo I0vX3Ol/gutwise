@@ -6,11 +6,15 @@
  * whole block disappears cleanly when the variables are unset — which is what
  * happens on preview branches and local dev.
  *
- * GA4 boots with Google Consent Mode v2 defaulting every storage type to
- * "denied". Nothing is written to cookies until the visitor actively accepts in
- * the banner, which is what makes the GDPR posture defensible rather than
- * decorative. Cloudflare Web Analytics sets no cookies and collects no personal
- * data, so it loads without consent (and is documented that way in the policy).
+ * GA4 is not merely consent-*mode* gated, it is consent-*loaded*: gtag.js is
+ * never fetched until the visitor actively accepts. Consent Mode alone still
+ * sends cookieless pings to Google before any choice is made, which is hard to
+ * defend under GDPR; not loading the tag at all is unambiguous. Consent Mode
+ * defaults are still set, so the tag starts from "denied" even once loaded.
+ *
+ * Cloudflare Web Analytics sets no cookies, uses no client-side state and
+ * collects no personal data, so it loads without consent — and the privacy
+ * policy says so explicitly rather than burying it.
  */
 const ga4Id = import.meta.env.PUBLIC_GA4_ID;
 const cfToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
@@ -28,11 +32,11 @@ const cfToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
 				interface Window {
 					dataLayer: unknown[];
 					gtag: (...args: unknown[]) => void;
+					/** Called by the consent banner the moment the visitor accepts. */
+					gutwiseLoadAnalytics: () => void;
 				}
 			}
 
-			// Consent Mode must be configured before gtag.js loads, so the queue is
-			// primed here and the tag is injected afterwards.
 			const el = document.querySelector('meta[name="gutwise:ga4"]');
 			const id = el && el.getAttribute('content');
 
@@ -48,28 +52,40 @@ const cfToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
 				}
 				window.gtag = gtag;
 
-				const granted = localStorage.getItem('gutwise:consent') === 'granted';
-
+				// Consent Mode defaults are queued before the tag exists, so even
+				// once it loads it starts from denied and upgrades explicitly.
 				gtag('consent', 'default', {
 					ad_storage: 'denied',
 					ad_user_data: 'denied',
 					ad_personalization: 'denied',
-					analytics_storage: granted ? 'granted' : 'denied',
+					analytics_storage: 'denied',
 					functionality_storage: 'granted',
 					security_storage: 'granted',
 				});
 
-				gtag('js', new Date());
-				gtag('config', id, {
-					anonymize_ip: true,
-					// The banner, not the pageview, decides whether anything persists.
-					send_page_view: true,
-				});
+				let loaded = false;
 
-				const s = document.createElement('script');
-				s.async = true;
-				s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
-				document.head.appendChild(s);
+				window.gutwiseLoadAnalytics = () => {
+					if (loaded) return;
+					loaded = true;
+
+					gtag('consent', 'update', { analytics_storage: 'granted' });
+					gtag('js', new Date());
+					gtag('config', id, { anonymize_ip: true, send_page_view: true });
+
+					const s = document.createElement('script');
+					s.async = true;
+					s.src =
+						'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+					document.head.appendChild(s);
+				};
+
+				// Returning visitors who already accepted get the tag immediately.
+				// Everyone else gets nothing until they press Accept — no tag fetch,
+				// no cookieless ping, nothing.
+				if (localStorage.getItem('gutwise:consent') === 'granted') {
+					window.gutwiseLoadAnalytics();
+				}
 			}
 		</script>
 	)

@@ -32,7 +32,9 @@ export default defineConfig({
 			filter: (page) =>
 				!page.includes('/thank-you/') && !page.includes('/404'),
 			changefreq: 'weekly',
-			lastmod: new Date(),
+			// No global `lastmod`. Stamping every URL with the build time would
+			// claim the whole site changed on every deploy, which is exactly how a
+			// lastmod signal gets discounted. Better to omit it than to lie.
 			serialize(item) {
 				// Recipes and guides are the money pages; bias crawl priority.
 				// Only `priority` is tuned per-URL — `changefreq` is set once above,

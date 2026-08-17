@@ -5,10 +5,17 @@ import Icon from './Icon.astro';
 /**
  * Lead-magnet capture.
  *
- * Posts directly to the ConvertKit/Mailchimp endpoint set in
- * PUBLIC_NEWSLETTER_ACTION — no custom backend, no database, nothing stored on
- * our side. When the variable is unset the form degrades to a mailto: link so
- * the page is never broken in dev or on a fresh deploy.
+ * Posts to /api/subscribe, which validates the address, verifies Turnstile
+ * server-side, forwards to the email provider and then redirects to
+ * /thank-you/. Nothing is stored on our side — the subscriber record lives only
+ * with the provider, so there is still no database.
+ *
+ * It deliberately does *not* post straight to the provider: a Turnstile token
+ * the provider cannot verify is decorative, and the provider's own confirmation
+ * page would replace /thank-you/, which is where the conversion goal fires.
+ *
+ * When no provider is configured the form degrades to a mailto: link, so the
+ * page is never broken in dev or on a fresh deploy.
  *
  * Accessibility: the label is real (not a placeholder), the error message is
  * wired via aria-describedby, and the error state is announced through
@@ -78,11 +85,23 @@ const formId = `${id}-form`;
 				<form
 					id={formId}
 					class="mx-auto mt-7 max-w-md text-left"
-					action={action}
+					action="/api/subscribe"
 					method="post"
 					data-newsletter
 					novalidate
 				>
+					{/* Hidden from humans and assistive tech alike; any value means a bot. */}
+					<div class="hidden" aria-hidden="true">
+						<label for={`${id}-website`}>Leave this field empty</label>
+						<input
+							type="text"
+							id={`${id}-website`}
+							name="website"
+							tabindex="-1"
+							autocomplete="off"
+						/>
+					</div>
+
 					<label
 						for={`${id}-email`}
 						class:list={[

@@ -23,6 +23,17 @@
  * Cloudflare Pages environment and are never present in client code.
  */
 
+import {
+	EMAIL_RE,
+	MAX_BODY_BYTES,
+	errorPage,
+	escapeHtml,
+	isFormPost,
+	redirect,
+	sanitize,
+	verifyTurnstile,
+} from '../../shared/form-utils';
+
 interface Env {
 	TURNSTILE_SECRET_KEY?: string;
 	CONTACT_FORWARD_ENDPOINT?: string;
@@ -40,100 +51,33 @@ const ALLOWED_TOPICS = new Set([
 	'other',
 ]);
 
-const LIMITS = {
-	name: 100,
-	email: 200,
-	message: 5000,
-	/** Hard cap on the raw request body, checked before parsing. */
-	body: 64 * 1024,
-} as const;
+const LIMITS = { name: 100, email: 200, message: 5000 } as const;
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-/** Escapes text before it is interpolated into the forwarded HTML email. */
-function escapeHtml(value: string): string {
-	return value
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;')
-		.replace(/'/g, '&#39;');
-}
-
-/**
- * Strips control characters that could forge headers in a downstream mailer,
- * while preserving the newlines and tabs that belong in a message body.
- */
-function sanitize(value: string): string {
-	// eslint-disable-next-line no-control-regex
-	return value.replace(/[^\P{Cc}\n\t]/gu, '').trim();
-}
-
-function redirect(url: string, origin: string): Response {
-	return Response.redirect(new URL(url, origin).href, 303);
-}
-
-function fail(message: string, status: number): Response {
-	return new Response(JSON.stringify({ ok: false, error: message }), {
-		status,
-		headers: {
-			'Content-Type': 'application/json; charset=utf-8',
-			// Nothing here should ever be cached or framed.
-			'Cache-Control': 'no-store',
-			'X-Content-Type-Options': 'nosniff',
-		},
-	});
-}
-
-async function verifyTurnstile(
-	token: string,
-	secret: string,
-	ip: string | null,
-): Promise<boolean> {
-	const body = new FormData();
-	body.append('secret', secret);
-	body.append('response', token);
-	if (ip) body.append('remoteip', ip);
-
-	try {
-		const res = await fetch(
-			'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-			{ method: 'POST', body },
-		);
-		if (!res.ok) return false;
-		const data = (await res.json()) as { success?: boolean };
-		return data.success === true;
-	} catch {
-		// A verification outage must fail closed, not open.
-		return false;
-	}
-}
+const BACK = '/contact/';
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
 	const { request, env } = context;
 	const origin = new URL(request.url).origin;
 
 	// --- 1. Method and content type -----------------------------------------
-	const contentType = request.headers.get('content-type') ?? '';
-	const isForm =
-		contentType.includes('application/x-www-form-urlencoded') ||
-		contentType.includes('multipart/form-data');
-
-	if (!isForm) {
-		return fail('Unsupported content type.', 415);
+	if (!isFormPost(request)) {
+		return errorPage('That submission was not in a format we recognise.', 415, BACK);
 	}
 
 	// --- 2. Size cap before parsing -----------------------------------------
-	const declaredLength = Number(request.headers.get('content-length') ?? '0');
-	if (declaredLength > LIMITS.body) {
-		return fail('Message too large.', 413);
+	if (Number(request.headers.get('content-length') ?? '0') > MAX_BODY_BYTES) {
+		return errorPage(
+			'That message was too large to send. Please shorten it and try again.',
+			413,
+			BACK,
+		);
 	}
 
 	let form: FormData;
 	try {
 		form = await request.formData();
 	} catch {
-		return fail('Malformed submission.', 400);
+		return errorPage('We could not read that submission.', 400, BACK);
 	}
 
 	// --- 3. Honeypot ---------------------------------------------------------
@@ -152,35 +96,37 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 		fields[key] = typeof raw === 'string' ? sanitize(raw) : '';
 	}
 
-	const errors: string[] = [];
-
 	if (!fields.name || fields.name.length > LIMITS.name) {
-		errors.push('name');
+		return errorPage('Please tell us your name, then try again.', 400, BACK);
 	}
 	if (
 		!fields.email ||
 		fields.email.length > LIMITS.email ||
 		!EMAIL_RE.test(fields.email)
 	) {
-		errors.push('email');
+		return errorPage(
+			'That email address does not look complete — please check it and try again.',
+			400,
+			BACK,
+		);
 	}
 	if (!fields.message || fields.message.length > LIMITS.message) {
-		errors.push('message');
+		return errorPage('Please write your message, then try again.', 400, BACK);
 	}
 
 	// Unknown topics are normalised rather than rejected — a tampered select
 	// should not be able to inject an arbitrary string downstream.
 	const topic = ALLOWED_TOPICS.has(fields.topic) ? fields.topic : 'other';
 
-	if (errors.length > 0) {
-		return fail(`Invalid or missing fields: ${errors.join(', ')}.`, 400);
-	}
-
 	// --- 5. Turnstile --------------------------------------------------------
 	if (env.TURNSTILE_SECRET_KEY) {
 		const token = form.get('cf-turnstile-response');
 		if (typeof token !== 'string' || token === '') {
-			return fail('Bot verification missing. Please reload and try again.', 400);
+			return errorPage(
+				'The bot check did not complete. Please reload the page and try again.',
+				400,
+				BACK,
+			);
 		}
 
 		const ok = await verifyTurnstile(
@@ -190,7 +136,11 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 		);
 
 		if (!ok) {
-			return fail('Bot verification failed. Please reload and try again.', 403);
+			return errorPage(
+				'The bot check did not pass. Please reload the page and try again.',
+				403,
+				BACK,
+			);
 		}
 	}
 
@@ -198,7 +148,11 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 	if (!env.CONTACT_FORWARD_ENDPOINT) {
 		// Misconfiguration should be loud in logs but vague to the visitor.
 		console.error('CONTACT_FORWARD_ENDPOINT is not configured.');
-		return fail('Contact form is not configured. Please email us directly.', 500);
+		return errorPage(
+			'Our contact form is not configured yet. Please email us directly.',
+			500,
+			BACK,
+		);
 	}
 
 	// Only the fields we validated are forwarded — nothing is passed through
@@ -228,11 +182,19 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
 		if (!res.ok) {
 			console.error(`Forwarding failed with status ${res.status}`);
-			return fail('We could not send your message. Please email us directly.', 502);
+			return errorPage(
+				'We could not send your message just now. Please email us directly.',
+				502,
+				BACK,
+			);
 		}
 	} catch (error) {
 		console.error('Forwarding threw:', error);
-		return fail('We could not send your message. Please email us directly.', 502);
+		return errorPage(
+			'We could not send your message just now. Please email us directly.',
+			502,
+			BACK,
+		);
 	}
 
 	// POST/redirect/GET so a refresh cannot resubmit, and so the conversion

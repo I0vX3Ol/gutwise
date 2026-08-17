@@ -153,14 +153,18 @@ writeFileSync(join(out, 'gutwise-logo.svg'), logo);
 // The favicon is the same mark, served from the site root.
 writeFileSync(join(root, 'public', 'favicon.svg'), logo);
 
-// iOS requires a raster touch icon; rasterise the same mark so the two can
-// never drift apart.
+// Raster icons, all rasterised from the same mark so they cannot drift apart:
+//  - 180px for the iOS home-screen icon
+//  - 48px for Google Search, which wants a favicon that is a multiple of 48
 const { Resvg } = await import('@resvg/resvg-js');
-const touchIcon = new Resvg(logo, { fitTo: { mode: 'width', value: 180 } })
-	.render()
-	.asPng();
-writeFileSync(join(root, 'public', 'apple-touch-icon.png'), touchIcon);
+
+const raster = (size) =>
+	new Resvg(logo, { fitTo: { mode: 'width', value: size } }).render().asPng();
+
+writeFileSync(join(root, 'public', 'apple-touch-icon.png'), raster(180));
+writeFileSync(join(root, 'public', 'favicon-48.png'), raster(48));
+writeFileSync(join(root, 'public', 'favicon-96.png'), raster(96));
 
 console.log(
-	`✓ Generated ${IMAGES.length + 1} placeholder images, favicon.svg and apple-touch-icon.png`,
+	`✓ Generated ${IMAGES.length + 1} placeholder images, favicon.svg and 3 raster icons`,
 );

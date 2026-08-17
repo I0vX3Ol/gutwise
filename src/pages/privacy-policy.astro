@@ -52,10 +52,13 @@ const lastUpdated = new Date('2026-06-20');
 
 			<h3>1. Your email address, if you give it to us</h3>
 			<p>
-				When you request the Starter Kit, your email address goes directly to our
-				email service provider. It is stored on their systems, not ours — this
-				site has no database. We use it to send the download and occasional
-				related content, and every email carries a one-click unsubscribe link.
+				When you request the Starter Kit, your email address is checked for
+				validity and passed straight through to our email service provider. It
+				is held in memory only for the moment that takes — this site has no
+				database, and nothing is written to disk on our side. The subscriber
+				record lives with the provider. We use it to send the download and
+				occasional related content, and every email carries a one-click
+				unsubscribe link.
 				<strong> Lawful basis: consent</strong>, which you can withdraw at any
 				time.
 			</p>
@@ -75,11 +78,13 @@ const lastUpdated = new Date('2026-06-20');
 			</p>
 			<ul>
 				<li>
-					<strong>Google Analytics 4</strong> — sets cookies and is{' '}
-					<strong>disabled until you press Accept</strong> on the cookie banner.
-					We run it with IP anonymisation and with Google Consent Mode defaulting
-					every storage type to denied. Decline, and nothing is stored on your
-					device. <strong>Lawful basis: consent.</strong>
+					<strong>Google Analytics 4</strong> — sets cookies, and{' '}
+					<strong>is not loaded at all until you press Accept</strong>. This is
+					stronger than the common approach: many sites load the Google tag
+					immediately and merely tell it not to store cookies, which still sends
+					data to Google before you have chosen. We do not fetch the tag until
+					you accept. If you decline, no Google code ever runs and nothing is
+					stored on your device. <strong>Lawful basis: consent.</strong>
 				</li>
 				<li>
 					<strong>Cloudflare Web Analytics</strong> — sets no cookies, uses no

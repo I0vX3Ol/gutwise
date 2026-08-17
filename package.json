@@ -11,15 +11,18 @@
     "dev": "astro dev",
     "build": "astro build && node scripts/generate-headers.mjs",
     "images": "node scripts/generate-placeholders.mjs",
+    "kit": "node scripts/generate-starter-kit.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
+    "check:functions": "tsc --noEmit -p functions/tsconfig.json",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:site": "node scripts/verify-site.mjs",
     "verify": "npm run build && npm run check:contrast && npm run check:site",
     "audit:deps": "npm audit --omit=dev --audit-level=high"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
@@ -34,6 +37,7 @@
     "@astrojs/check": "^0.9.10",
     "@cloudflare/workers-types": "^5.20260816.1",
     "node-html-parser": "^9.0.1",
+    "pdfkit": "^0.19.1",
     "typescript": "^5.9.3"
   }
 }

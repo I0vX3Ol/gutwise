@@ -95,14 +95,23 @@ const ogImage = new URL(ogPathFor(Astro.url.pathname), SITE.url).href;
 <meta name="twitter:image" content={ogImage} />
 <meta name="twitter:image:alt" content={`${title} — ${SITE.name}`} />
 
-<!-- Icons and theme -->
+<!-- Icons and theme. The PNG is a fallback for Google Search, which wants a
+     favicon sized to a multiple of 48px and does not always take the SVG. -->
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-48.png" type="image/png" sizes="48x48" />
+<link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
 <meta name="theme-color" content="#2F4A3C" />
 <meta name="color-scheme" content="light" />
 
 <link rel="sitemap" href="/sitemap-index.xml" />
+<link
+	rel="alternate"
+	type="application/rss+xml"
+	title={`${SITE.name} — new recipes and guides`}
+	href="/rss.xml"
+/>
 
 {schema && (
 	<script

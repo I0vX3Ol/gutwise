@@ -47,8 +47,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Type check
+      - name: Type check (site)
         run: npm run check
+
+      # functions/ is excluded from the app tsconfig because it targets the
+      # Workers runtime, so it needs its own pass or it goes unchecked entirely.
+      - name: Type check (Pages Functions)
+        run: npm run check:functions
 
       - name: Verify colour contrast (WCAG 2.1 AA)
         run: npm run check:contrast

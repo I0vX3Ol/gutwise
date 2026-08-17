@@ -56,6 +56,13 @@ export const LEAD_MAGNET = {
 	blurb:
 		'A 14-page PDF: the full safe-foods list, a two-week meal plan, a printable symptom tracker and a shopping checklist you can take to the store.',
 	cta: 'Get the Free Starter Kit',
+	/**
+	 * Built by scripts/generate-starter-kit.mjs, which hard-fails if the document
+	 * is not exactly the 14 pages advertised above.
+	 */
+	file: '/downloads/gutwise-low-fodmap-starter-kit.pdf',
+	fileSize: '36 KB',
+	pages: 14,
 } as const;
 
 /**

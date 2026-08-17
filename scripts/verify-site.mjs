@@ -260,17 +260,58 @@ for (const file of files) {
 }
 
 // ------------------------------------------------------------------ Site files
-for (const required of ['robots.txt', 'sitemap-index.xml', 'favicon.svg', '_headers']) {
+for (const required of [
+	'robots.txt',
+	'sitemap-index.xml',
+	'favicon.svg',
+	'favicon-48.png',
+	'apple-touch-icon.png',
+	'site.webmanifest',
+	'rss.xml',
+	'_headers',
+]) {
 	if (!existsSync(join(dist, required))) {
 		fail('/', `missing ${required} in build output`);
 	}
 }
 
-// robots.txt must point at the sitemap.
+// robots.txt must point at the sitemap, and must NOT block the OG images —
+// Facebook, LinkedIn and X all honour robots.txt when fetching og:image, so a
+// Disallow there silently kills the social preview on every page.
 if (existsSync(join(dist, 'robots.txt'))) {
 	const robotsTxt = readFileSync(join(dist, 'robots.txt'), 'utf8');
 	if (!/^Sitemap:\s*https?:\/\//m.test(robotsTxt)) {
 		fail('/robots.txt', 'no absolute Sitemap: directive');
+	}
+	if (/^\s*Disallow:\s*\/og\//m.test(robotsTxt)) {
+		fail('/robots.txt', 'Disallow: /og/ would block social scrapers from og:image');
+	}
+}
+
+// The lead magnet must exist and be the length every CTA advertises.
+const kitPath = join(dist, 'downloads', 'gutwise-low-fodmap-starter-kit.pdf');
+if (!existsSync(kitPath)) {
+	fail('/', 'lead magnet PDF missing — every CTA on the site promises it');
+} else {
+	const pdf = readFileSync(kitPath, 'latin1');
+	const counts = [
+		...pdf.matchAll(/\/Type\s*\/Pages[\s\S]{0,300}?\/Count\s+(\d+)/g),
+	].map((m) => Number(m[1]));
+	const pages = counts.length ? Math.max(...counts) : 0;
+	if (pages !== 14) {
+		fail('/', `lead magnet is ${pages} pages; the site advertises 14`);
+	}
+}
+
+// The feed must be well-formed enough to parse and carry entries.
+if (existsSync(join(dist, 'rss.xml'))) {
+	const feed = readFileSync(join(dist, 'rss.xml'), 'utf8');
+	const itemCount = (feed.match(/<item>/g) ?? []).length;
+	if (itemCount < 10) {
+		fail('/rss.xml', `only ${itemCount} items in the feed; expected all content`);
+	}
+	if (!feed.includes('<link>https://')) {
+		fail('/rss.xml', 'feed links are not absolute');
 	}
 }
 

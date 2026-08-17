@@ -62,6 +62,18 @@ const nextSteps = [
 				is heading to your inbox now. If you sent us a message instead, we have
 				it — {SITE.responseTimePromise.toLowerCase()}
 			</p>
+
+			{/* Direct download as well as the email. Making someone wait on an inbox
+			    for something they just asked for is a needless drop-off point. */}
+			<p class="mt-8">
+				<a href={LEAD_MAGNET.file} download class="btn btn-primary">
+					<Icon name="book" size={18} />
+					Download the PDF now
+				</a>
+			</p>
+			<p class="mt-3 text-sm text-ink-muted">
+				PDF · {LEAD_MAGNET.pages} pages · {LEAD_MAGNET.fileSize}
+			</p>
 		</div>
 	</section>
 

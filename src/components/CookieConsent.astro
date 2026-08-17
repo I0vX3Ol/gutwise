@@ -78,9 +78,19 @@ const hasAnalytics = Boolean(import.meta.env.PUBLIC_GA4_ID);
 					localStorage.setItem(KEY, value);
 					banner.hidden = true;
 
-					// Tell Consent Mode about the change without a page reload.
-					const gtag = (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag;
-					gtag?.('consent', 'update', { analytics_storage: value });
+					const w = window as unknown as {
+						gutwiseLoadAnalytics?: () => void;
+						gtag?: (...a: unknown[]) => void;
+					};
+
+					if (value === 'granted') {
+						// gtag.js has not been fetched yet — this is what loads it.
+						w.gutwiseLoadAnalytics?.();
+					} else {
+						// Nothing was loaded, but record the choice explicitly in case a
+						// tag is present from a previous grant in this same page view.
+						w.gtag?.('consent', 'update', { analytics_storage: 'denied' });
+					}
 				};
 
 				accept.addEventListener('click', () => resolve('granted'));
