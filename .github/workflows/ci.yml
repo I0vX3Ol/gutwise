@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # Secrets are read at run time, so a freshly added token is only picked up by
+  # a new run. This lets the deploy be triggered without inventing a commit.
+  workflow_dispatch:
   # Weekly run so a newly disclosed CVE in a dependency surfaces without
   # waiting for the next commit.
   schedule:
@@ -58,8 +61,19 @@ jobs:
       - name: Verify colour contrast (WCAG 2.1 AA)
         run: npm run check:contrast
 
+      # These are all inlined into the client bundle and public by design, so
+      # they are repository *variables*, not secrets — visible and editable
+      # without a token. Every one of them is optional: unset, the site drops
+      # the GA4 snippet, the cookie banner, the Turnstile widget and the
+      # newsletter form rather than rendering anything broken.
       - name: Build
         run: npm run build
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          PUBLIC_GA4_ID: ${{ vars.PUBLIC_GA4_ID }}
+          PUBLIC_CF_BEACON_TOKEN: ${{ vars.PUBLIC_CF_BEACON_TOKEN }}
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+          PUBLIC_NEWSLETTER_ACTION: ${{ vars.PUBLIC_NEWSLETTER_ACTION }}
 
       - name: Verify built site (SEO, a11y, structured data)
         run: npm run check:site
@@ -91,3 +105,105 @@ jobs:
       # Informational only — dev-only advisories should not block a content edit.
       - name: npm audit (all, informational)
         run: npm audit || true
+
+  deploy:
+    name: Deploy to Cloudflare Pages
+    # A scheduled CVE sweep and a pull request both stop at "verified" — only a
+    # push to main, or a deliberate manual run, is a release.
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    needs: [secrets, build, audit]
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://gutwise.nexudel.com
+    steps:
+      # The `secrets` context is not available to a job-level `if:`, so the gate
+      # has to be a step. A missing token warns rather than fails: until the
+      # credentials exist, "verified but not released" is the honest outcome,
+      # and a permanently red main branch would train everyone to ignore it.
+      - name: Check for Cloudflare credentials
+        id: creds
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -n "$CF_TOKEN" ] && [ -n "$CF_ACCOUNT" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo "::warning title=Deploy skipped::CLOUDFLARE_API_TOKEN and/or CLOUDFLARE_ACCOUNT_ID are not set on this repository. The build was verified but not released. See README → Deploying to Cloudflare Pages."
+          fi
+
+      # Deploy the exact bytes that passed the contrast and site checks. A fresh
+      # build here could differ from the verified one and nobody would know.
+      - name: Download the verified build
+        if: steps.creds.outputs.ready == 'true'
+        uses: actions/download-artifact@v7
+        with:
+          name: dist
+          path: dist
+
+      - name: Create the Pages project if it does not exist
+        if: steps.creds.outputs.ready == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -uo pipefail
+          OUT=$(npx --yes wrangler@4 pages project create gutwise \
+                  --production-branch main 2>&1) && CODE=0 || CODE=$?
+          if [ "$CODE" -ne 0 ]; then
+            # 8000007 is Cloudflare's "a project with this name already exists",
+            # which is the expected result on every run after the first.
+            if printf '%s' "$OUT" | grep -qiE 'already exists|8000007'; then
+              echo "Pages project 'gutwise' already exists — continuing."
+            else
+              printf '%s\n' "$OUT" >&2
+              exit "$CODE"
+            fi
+          fi
+
+      - name: Deploy
+        id: deploy
+        if: steps.creds.outputs.ready == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -uo pipefail
+          npx --yes wrangler@4 pages deploy dist \
+            --project-name gutwise \
+            --branch main \
+            --commit-dirty=true 2>&1 | tee deploy.log
+          # *.pages.dev subdomains are globally unique, so the project may not
+          # land on gutwise.pages.dev if that name is already taken elsewhere.
+          # Read the hostname wrangler actually published to rather than guess.
+          URL=$(grep -oE 'https://[a-z0-9.-]+\.pages\.dev' deploy.log | tail -n 1)
+          if [ -z "$URL" ]; then
+            echo "::error title=No deployment URL::wrangler did not print a *.pages.dev URL; cannot verify the deploy."
+            exit 1
+          fi
+          echo "url=${URL}" >> "$GITHUB_OUTPUT"
+          echo "Deployed to ${URL}"
+
+      # Proves the deploy actually serves rather than trusting wrangler's exit
+      # code. Retries because a brand-new *.pages.dev hostname takes a moment to
+      # resolve on the very first deploy.
+      - name: Smoke test the deployment
+        if: steps.creds.outputs.ready == 'true'
+        run: |
+          set -u
+          URL="${{ steps.deploy.outputs.url }}/"
+          for i in $(seq 1 12); do
+            CODE=$(curl -sS -o /dev/null -w '%{http_code}' -m 15 "$URL" || echo 000)
+            if [ "$CODE" = "200" ]; then
+              echo "$URL returned 200 after ${i} attempt(s)."
+              exit 0
+            fi
+            echo "Attempt ${i}: $URL returned ${CODE}; retrying in 10s."
+            sleep 10
+          done
+          echo "::error title=Smoke test failed::$URL never returned 200 after 12 attempts."
+          exit 1

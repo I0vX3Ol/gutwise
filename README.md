@@ -70,36 +70,87 @@ The dev server runs at `http://localhost:4321`. No environment variables are nee
 
 ## Deploying to Cloudflare Pages
 
-### 1. Create the Pages project
+Deployment runs from GitHub Actions, not from Cloudflare's own Git
+integration. The `deploy` job in `.github/workflows/ci.yml` uploads the exact
+`dist/` artifact that already passed the contrast and site checks, so nothing
+reaches production without clearing the same gates — a Cloudflare-side build
+would bypass all of them. It also creates the Pages project on first run, so
+there is nothing to click in the dashboard to get started.
 
-In the Cloudflare dashboard: **Workers & Pages → Create → Pages → Connect to Git**, and select this repository.
+Do **not** additionally connect the repository under **Workers & Pages →
+Connect to Git**. That would build the site a second time, from a pipeline with
+no verification in it, and the two would race.
 
-| Setting | Value |
-| --- | --- |
-| Framework preset | Astro |
-| Build command | `npm run build` |
-| Build output directory | `dist` |
-| Node version | `22` (set `NODE_VERSION=22` if the default is older) |
+### 1. Give the workflow credentials
 
-The `functions/` directory at the repo root is picked up automatically — no extra configuration needed for the contact endpoint.
+Two repository secrets, and nothing else, stand between a green build and a
+live site. Set them from the terminal so the token is never pasted into a
+browser or left in a file:
+
+```bash
+gh secret set CLOUDFLARE_API_TOKEN --repo I0vX3Ol/gutwise
+```
+
+```bash
+gh secret set CLOUDFLARE_ACCOUNT_ID --repo I0vX3Ol/gutwise
+```
+
+Each command prompts for the value and reads it without echoing.
+
+The API token needs exactly two permissions, created at
+[dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens)
+as a **Custom token**:
+
+| Scope | Permission | Access |
+| --- | --- | --- |
+| Account | Cloudflare Pages | Edit |
+| Zone | DNS | Edit (scoped to `nexudel.com`) |
+
+The account ID is in the Cloudflare dashboard sidebar under **Workers & Pages**,
+and in the dashboard URL itself.
+
+Until both are set the deploy job does not fail — it emits a `Deploy skipped`
+warning on the run and stops. That keeps `main` honestly green ("verified, not
+released") instead of permanently red for a missing credential.
+
+Then trigger a release without needing a commit — secrets are read at run time,
+so an existing run will not pick up a newly added one:
+
+```bash
+gh workflow run CI --repo I0vX3Ol/gutwise --ref main
+```
 
 ### 2. Set environment variables
 
-**Settings → Environment variables.** Anything prefixed `PUBLIC_` is inlined into the client bundle and is world-readable; everything else must be marked **Encrypted**.
+Build-time values are **repository variables** (`vars`), not secrets: every one
+is prefixed `PUBLIC_` and inlined into the client bundle, so hiding them would
+be theatre. Set with `gh variable set NAME --repo I0vX3Ol/gutwise`. All are
+optional — unset, the site drops the GA4 snippet, the cookie banner, the
+Turnstile widget and the newsletter form rather than rendering anything broken.
 
-| Variable | Scope | Encrypted | Purpose |
-| --- | --- | --- | --- |
-| `SITE_URL` | Production | No | `https://gutwise.nexudel.com` — set per-environment so previews emit correct canonicals |
-| `PUBLIC_GA4_ID` | Production | No | GA4 measurement ID. Omit to drop the GA4 snippet and the cookie banner entirely |
-| `PUBLIC_CF_BEACON_TOKEN` | Production | No | Cloudflare Web Analytics token |
-| `PUBLIC_TURNSTILE_SITE_KEY` | Both | No | Turnstile site key (public by design) |
-| `TURNSTILE_SECRET_KEY` | Both | **Yes** | Turnstile secret — server-side verification only |
-| `PUBLIC_NEWSLETTER_ACTION` | Both | No | Provider endpoint. Setting it is what switches the signup form on |
-| `NEWSLETTER_ENDPOINT` | Both | **Yes** | Optional override, to keep the real endpoint out of the client bundle |
-| `NEWSLETTER_API_KEY` | Both | **Yes** | Optional, if your provider's endpoint requires a key |
-| `CONTACT_FORWARD_ENDPOINT` | Both | **Yes** | Where validated contact submissions are forwarded |
+| Variable | Purpose |
+| --- | --- |
+| `SITE_URL` | Canonical origin. Defaults to `https://gutwise.nexudel.com` |
+| `PUBLIC_GA4_ID` | GA4 measurement ID |
+| `PUBLIC_CF_BEACON_TOKEN` | Cloudflare Web Analytics token |
+| `PUBLIC_TURNSTILE_SITE_KEY` | Turnstile site key (public by design) |
+| `PUBLIC_NEWSLETTER_ACTION` | Provider endpoint. Setting it switches the signup form on |
 
-Never commit real values. `.env` is gitignored and `.env.example` is the template.
+Runtime values for the Pages Functions are a different thing entirely. They are
+read by the Workers runtime when a form is submitted, not at build time, so
+GitHub never sees them — set these in the Cloudflare dashboard under the Pages
+project's **Settings → Environment variables**, marked **Encrypted**:
+
+| Variable | Encrypted | Purpose |
+| --- | --- | --- |
+| `TURNSTILE_SECRET_KEY` | **Yes** | Turnstile secret — server-side verification only |
+| `CONTACT_FORWARD_ENDPOINT` | **Yes** | Where validated contact submissions are forwarded |
+| `NEWSLETTER_ENDPOINT` | **Yes** | Optional override, to keep the real endpoint out of the client bundle |
+| `NEWSLETTER_API_KEY` | **Yes** | Optional, if your provider's endpoint requires a key |
+
+Never commit real values. `.env` is gitignored and `.env.example` is the
+template, and it covers both sets — which is which is marked in the comments
+there.
 
 Both forms post to same-origin Pages Functions (`/api/subscribe`, `/api/contact`) rather than straight to a third party. That is what makes Turnstile meaningful — a token the email provider cannot verify gates nothing — and it is what keeps `/thank-you/` as the landing page your conversion goals fire on, instead of the provider's own confirmation screen.
 

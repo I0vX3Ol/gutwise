@@ -7,8 +7,13 @@ import tailwindcss from '@tailwindcss/vite';
  * The canonical origin. Overridable so Cloudflare Pages preview branches build
  * with correct absolute URLs (canonical, OG tags, sitemap) instead of pointing
  * every preview at production.
+ *
+ * Falls back on any falsy value, not just undefined: an unset GitHub Actions
+ * variable and a blank line in `.env` both arrive as an empty string, and `??`
+ * would let that through and silently produce relative canonicals and a broken
+ * sitemap on a build that otherwise looks green.
  */
-const site = process.env.SITE_URL ?? 'https://gutwise.nexudel.com';
+const site = process.env.SITE_URL || 'https://gutwise.nexudel.com';
 
 // https://astro.build/config
 export default defineConfig({
