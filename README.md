@@ -13,7 +13,8 @@ Nothing in this repository is fabricated. There are no invented testimonials and
 Two things still need a human before launch:
 
 - **Imagery.** Every image in `public/images/` is a generated abstract SVG placeholder. The `imageAlt` text in the content describes the *intended photograph*, so it will be correct once real photos replace the placeholders — but it does not describe the placeholders themselves. See [Replacing the imagery](#replacing-the-imagery).
-- **Medical content.** The recipes and guides reflect widely published Monash-aligned guidance, but nothing here has been reviewed by a registered dietitian. Have a qualified professional review the content before publishing health information at scale.
+- **Medical content.** The recipes, guides and food reference reflect widely published Monash-aligned guidance, but nothing here has been reviewed by a registered dietitian. Have a qualified professional review the content before publishing health information at scale.
+- **The food reference is compiled, not measured.** `src/data/foods.json` carries 80 entries, each rendered as its own page. The thresholds come from published guidance rather than our own laboratory testing, and Monash revises its figures as new data arrives. Every food page and the index say so and point at the Monash app as the authority. A dietitian review should cover this file specifically — it is the highest-traffic, highest-consequence content on the site, since people read it while deciding what to buy.
 
 There is still a guard rail for sample content: any content file marked `placeholder: true` in its frontmatter is printed by `npm run check:site` on **every build** until the flag is cleared. Nothing currently carries it.
 
@@ -316,6 +317,7 @@ src/content/
 ├── guides/      5 guides     — the three phases, the food list, eating out
 └── products/    1 roundup    — product picks with rationale, no paid links
 src/data/faqs.json            12 site-wide FAQ entries
+src/data/foods.json           80 foods — one page each, the long-tail surface
 ```
 
 Schemas live in `src/content.config.ts` and are strict by design — a meta description outside 70–165 characters, or an `imageAlt` under 10 characters, fails the build rather than shipping.

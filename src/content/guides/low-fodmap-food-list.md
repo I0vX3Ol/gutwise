@@ -120,6 +120,13 @@ Avoid: cashews and pistachios, which are high in GOS at almost any quantity.
 
 Peanut butter is safe at 50 g, with one caveat that catches people regularly: some reduced-fat, high-protein and "gut friendly" jars add **inulin or chicory root fibre**, which is concentrated fructan sold as a health benefit. What you want is a jar whose ingredients read: peanuts, salt.
 
+## Look up a single food
+
+This page is the map. When you need one specific answer — standing in a
+supermarket aisle holding a jar — the [food checker](/foods/) is faster: 80
+foods, searchable by name or regional alias, each with its verdict, its safe
+serving and the FODMAP group responsible.
+
 ## How to use this list
 
 Use it to orient yourself, not to adjudicate.

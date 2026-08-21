@@ -1,5 +1,6 @@
 import { getCollection } from 'astro:content';
 import { byRecency, publishedOnly, formatDuration } from './utils';
+import { FODMAP_LEVELS } from '../consts';
 
 /**
  * Per-page Open Graph images.
@@ -54,6 +55,12 @@ const STATIC_ENTRIES: OgEntry[] = [
 		kicker: 'Independently chosen, honestly ranked',
 	},
 	{
+		slug: 'foods',
+		eyebrow: 'Food reference',
+		title: 'Is it low FODMAP? Search the food checker',
+		kicker: 'Verdicts, serving sizes and the group responsible',
+	},
+	{
 		slug: 'faq',
 		eyebrow: 'Frequently asked questions',
 		title: 'Straight answers to the questions people ask first',
@@ -99,10 +106,11 @@ const STATIC_ENTRIES: OgEntry[] = [
 
 /** Every OG image the build should produce. */
 export async function ogEntries(): Promise<OgEntry[]> {
-	const [recipes, guides, products] = await Promise.all([
+	const [recipes, guides, products, foods] = await Promise.all([
 		getCollection('recipes'),
 		getCollection('guides'),
 		getCollection('products'),
+		getCollection('foods'),
 	]);
 
 	const recipeEntries = publishedOnly(recipes)
@@ -132,10 +140,24 @@ export async function ogEntries(): Promise<OgEntry[]> {
 			kicker: `${p.data.picks.length} recommendations, independently chosen`,
 		}));
 
+	// The food pages are the site's long-tail search surface, so each one gets
+	// its own card rather than falling back to the generic image. The kicker is
+	// the serving size, since that is the part worth seeing before the click.
+	const foodEntries = foods.map((f) => ({
+		slug: `foods/${f.id}`,
+		eyebrow: FODMAP_LEVELS[f.data.verdict].label,
+		title: `Is ${f.data.name.toLowerCase()} low FODMAP?`,
+		kicker:
+			f.data.safeServing.length > 58
+				? `${f.data.safeServing.slice(0, 55).trimEnd()}…`
+				: f.data.safeServing,
+	}));
+
 	return [
 		...STATIC_ENTRIES,
 		...recipeEntries,
 		...guideEntries,
 		...productEntries,
+		...foodEntries,
 	];
 }

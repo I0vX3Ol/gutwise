@@ -1,0 +1,264 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import FodmapTag from '../../components/FodmapTag.astro';
+import EmailSignup from '../../components/EmailSignup.astro';
+import { FOOD_CATEGORIES, FODMAP_LEVELS } from '../../consts';
+import { breadcrumbSchema } from '../../lib/schema';
+
+const foods = (await getCollection('foods')).sort((a, b) =>
+	a.data.name.localeCompare(b.data.name),
+);
+
+const crumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Food checker', href: '/foods/' },
+];
+
+/** Only offer a category filter for categories that actually have entries. */
+const availableCategories = FOOD_CATEGORIES.filter((c) =>
+	foods.some((f) => f.data.category === c.slug),
+);
+
+const counts = {
+	safe: foods.filter((f) => f.data.verdict === 'safe').length,
+	moderate: foods.filter((f) => f.data.verdict === 'moderate').length,
+	high: foods.filter((f) => f.data.verdict === 'high').length,
+};
+---
+
+<BaseLayout
+	title="Low-FODMAP Food Checker"
+	description={`Search ${foods.length} foods to see whether each is low FODMAP, the exact serving that keeps it safe, and which FODMAP group is responsible. Check before you buy.`}
+	schemaNodes={[breadcrumbSchema(crumbs)]}
+>
+	<PageHeader
+		eyebrow="Food reference"
+		title="Is it low FODMAP?"
+		intro={`Search ${foods.length} foods for the verdict, the serving size that keeps it safe, and which FODMAP group is responsible. Portion decides almost everything on this diet, so every entry gives you the number rather than just a colour.`}
+		crumbs={crumbs}
+	/>
+
+	<div class="mx-auto max-w-6xl px-5 py-12">
+		<!-- Search first: most people arrive already knowing the food they want. -->
+		<div class="mx-auto max-w-2xl">
+			<label for="food-search" class="block text-sm font-semibold text-sage-deep">
+				Search for a food
+			</label>
+			<input
+				type="search"
+				id="food-search"
+				name="food-search"
+				autocomplete="off"
+				placeholder="garlic, oat milk, avocado, capsicum…"
+				class="mt-2 w-full rounded-card border border-sage/40 bg-white px-4 py-3 text-lg text-ink placeholder:text-ink-muted/70 focus:border-sage-deep focus:outline-none focus:ring-2 focus:ring-sage-deep/30"
+			/>
+			<p class="mt-2 text-sm text-ink-muted">
+				Searches names and common alternatives — "capsicum" finds bell pepper,
+				"scallion" finds spring onion.
+			</p>
+		</div>
+
+		<div class="mt-10 lg:grid lg:grid-cols-[240px_1fr] lg:gap-10">
+			<form id="food-filters" class="mb-8 lg:mb-0">
+				<div class="flex items-center justify-between gap-3">
+					<h2 class="font-display text-lg font-semibold text-sage-deep">Filter</h2>
+					<button
+						type="reset"
+						class="text-sm font-semibold text-trust underline underline-offset-4"
+					>
+						Clear all
+					</button>
+				</div>
+
+				<fieldset class="mt-5 border-t border-cream-border pt-4">
+					<legend class="text-sm font-semibold uppercase tracking-wide text-sage">
+						Verdict
+					</legend>
+					<div class="mt-3 space-y-2.5">
+						{
+							(['safe', 'moderate', 'high'] as const).map((level) => (
+								<label class="flex items-start gap-2.5 text-sm">
+									<input
+										type="checkbox"
+										name="verdict"
+										value={level}
+										class="mt-1 h-4 w-4 shrink-0 rounded border-sage/50 text-sage-deep focus:ring-2 focus:ring-sage-deep/40"
+									/>
+									<span>
+										<span class="font-medium text-ink">{FODMAP_LEVELS[level].label}</span>
+										<span class="text-ink-muted"> ({counts[level]})</span>
+									</span>
+								</label>
+							))
+						}
+					</div>
+				</fieldset>
+
+				<fieldset class="mt-6 border-t border-cream-border pt-4">
+					<legend class="text-sm font-semibold uppercase tracking-wide text-sage">
+						Category
+					</legend>
+					<div class="mt-3 space-y-2.5">
+						{
+							availableCategories.map((cat) => (
+								<label class="flex items-start gap-2.5 text-sm">
+									<input
+										type="checkbox"
+										name="category"
+										value={cat.slug}
+										class="mt-1 h-4 w-4 shrink-0 rounded border-sage/50 text-sage-deep focus:ring-2 focus:ring-sage-deep/40"
+									/>
+									<span class="font-medium text-ink">{cat.label}</span>
+								</label>
+							))
+						}
+					</div>
+				</fieldset>
+			</form>
+
+			<div>
+				<p
+					id="food-count"
+					class="mb-4 text-sm text-ink-muted"
+					role="status"
+					aria-live="polite"
+				>
+					Showing all {foods.length} foods
+				</p>
+
+				<ul id="food-grid" class="grid gap-3 sm:grid-cols-2">
+					{
+						foods.map((food) => (
+							<li
+								data-food
+								data-name={food.data.name.toLowerCase()}
+								data-aliases={food.data.aliases.join(' ').toLowerCase()}
+								data-verdict={food.data.verdict}
+								data-category={food.data.category}
+							>
+								<a
+									href={`/foods/${food.id}/`}
+									class="flex h-full flex-col rounded-card border border-cream-border bg-white p-4 transition hover:border-sage/60 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep"
+								>
+									<div class="flex items-start justify-between gap-3">
+										<span class="font-display text-lg font-semibold text-sage-deep">
+											{food.data.name}
+										</span>
+										<FodmapTag level={food.data.verdict} />
+									</div>
+									<span class="mt-2 text-sm text-ink-muted">{food.data.safeServing}</span>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+
+				<div
+					id="food-empty"
+					hidden
+					class="rounded-card border border-cream-border bg-cream-sunken p-8 text-center"
+				>
+					<h2 class="font-display text-xl font-semibold text-sage-deep">
+						No foods match that
+					</h2>
+					<p class="mx-auto mt-2 max-w-md text-ink-muted">
+						Not every food has been laboratory-tested, and this reference covers
+						the ones people ask about most. If yours is missing, the Monash app
+						is the place to check.
+					</p>
+					<button type="button" id="food-empty-reset" class="btn btn-primary mt-5">
+						Clear the filters
+					</button>
+				</div>
+
+				<!-- The honesty note. This reference is compiled, not measured. -->
+				<div class="mt-10 rounded-card border border-cream-border bg-sage-wash p-5">
+					<h2 class="font-display text-base font-semibold text-sage-deep">
+						Where these numbers come from
+					</h2>
+					<p class="mt-2 text-sm leading-relaxed text-ink">
+						This reference is compiled from published Monash-aligned guidance. It
+						is not laboratory data of our own, and it is a snapshot of a moving
+						target — Monash retests foods and revises its figures, and several
+						have changed category over the years. Ripeness, processing and
+						growing conditions shift the numbers within a single food too. For
+						the elimination phase, the <a
+							href="https://www.monashfodmap.com/ibs-central/i-have-ibs/get-the-app/"
+							rel="noopener"
+							class="font-semibold text-trust underline underline-offset-2"
+							>Monash app</a
+						> is the authority and is worth buying. If a food is not listed anywhere,
+						the honest answer is that nobody has measured it — which is not the same
+						as it being safe.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<EmailSignup id="foods-signup" class="mt-14" />
+	</div>
+</BaseLayout>
+
+<script>
+	const form = document.getElementById('food-filters') as HTMLFormElement | null;
+	const search = document.getElementById('food-search') as HTMLInputElement | null;
+	const grid = document.getElementById('food-grid');
+	const count = document.getElementById('food-count');
+	const empty = document.getElementById('food-empty');
+	const emptyReset = document.getElementById('food-empty-reset');
+
+	if (form && grid && count && empty) {
+		const items = Array.from(grid.querySelectorAll<HTMLElement>('[data-food]'));
+		const total = items.length;
+
+		const apply = () => {
+			const data = new FormData(form);
+			const verdicts = data.getAll('verdict').map(String);
+			const categories = data.getAll('category').map(String);
+			const q = (search?.value ?? '').trim().toLowerCase();
+
+			let visible = 0;
+
+			for (const item of items) {
+				const verdictOk =
+					verdicts.length === 0 || verdicts.includes(item.dataset.verdict ?? '');
+				const categoryOk =
+					categories.length === 0 ||
+					categories.includes(item.dataset.category ?? '');
+				// Match the display name or any alias, so regional names still find it.
+				const haystack = `${item.dataset.name ?? ''} ${item.dataset.aliases ?? ''}`;
+				const searchOk = q === '' || haystack.includes(q);
+
+				const show = verdictOk && categoryOk && searchOk;
+				item.hidden = !show;
+				if (show) visible++;
+			}
+
+			const filtered = verdicts.length > 0 || categories.length > 0 || q !== '';
+			count.textContent = filtered
+				? `Showing ${visible} of ${total} foods`
+				: `Showing all ${total} foods`;
+
+			empty.hidden = visible > 0;
+			grid.hidden = visible === 0;
+		};
+
+		form.addEventListener('change', apply);
+		search?.addEventListener('input', apply);
+		form.addEventListener('reset', () => {
+			// Reset fires before the controls actually clear, so the re-filter has
+			// to be deferred. A macrotask, not requestAnimationFrame: rAF is tied to
+			// painting and is throttled or paused entirely in a background tab, which
+			// left 'Clear all' showing a stale list until the next interaction.
+			if (search) search.value = '';
+			setTimeout(apply, 0);
+		});
+		emptyReset?.addEventListener('click', () => {
+			form.reset();
+			if (search) search.value = '';
+			setTimeout(apply, 0);
+		});
+	}
+</script>

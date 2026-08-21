@@ -1,0 +1,226 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import FodmapTag from '../../components/FodmapTag.astro';
+import Callout from '../../components/Callout.astro';
+import RecipeCard from '../../components/RecipeCard.astro';
+import EmailSignup from '../../components/EmailSignup.astro';
+import { FODMAP_GROUPS, FOOD_CATEGORIES } from '../../consts';
+import { breadcrumbSchema, faqSchema } from '../../lib/schema';
+
+export const getStaticPaths = (async () => {
+	const foods = await getCollection('foods');
+	return foods.map((food) => ({
+		params: { slug: food.id },
+		props: { food },
+	}));
+}) satisfies GetStaticPaths;
+
+const { food } = Astro.props;
+const d = food.data;
+
+const categoryLabel =
+	FOOD_CATEGORIES.find((c) => c.slug === d.category)?.label ?? d.category;
+
+/**
+ * Recipes are referenced by slug in the data file. Resolve them rather than
+ * trusting the string: a renamed recipe would otherwise render a dead link,
+ * and a food page that links nowhere is worse than one that links to nothing.
+ */
+const linked = (
+	await Promise.all(
+		d.recipes.map(async (slug) => {
+			try {
+				return await getEntry('recipes', slug);
+			} catch {
+				return undefined;
+			}
+		}),
+	)
+).filter((r): r is NonNullable<typeof r> => Boolean(r));
+
+const crumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Food checker', href: '/foods/' },
+	{ label: d.name, href: `/foods/${food.id}/` },
+];
+
+/**
+ * The page answers a question people literally type, so it emits FAQPage
+ * schema using that exact phrasing. The answer is self-contained — it has to
+ * stand on its own if a search engine surfaces it without the page.
+ */
+const question = `Is ${d.name.toLowerCase()} low FODMAP?`;
+/**
+ * Several high-FODMAP entries carry the generic "no safe serving" string, which
+ * would otherwise restate the sentence before it. Others — celery, bottled
+ * sauces, beans — have a genuinely informative serving even though the verdict
+ * is high, and those keep it.
+ */
+const NO_SAFE_SERVING = 'No safe serving during elimination';
+
+const verdictSentence =
+	d.verdict === 'safe'
+		? `${d.name} is low FODMAP. Safe serving: ${d.safeServing}.`
+		: d.verdict === 'moderate'
+			? `${d.name} is low FODMAP only up to a point. Safe serving: ${d.safeServing}. Beyond that it becomes a problem.`
+			: d.safeServing === NO_SAFE_SERVING
+				? `${d.name} is high FODMAP and should be avoided during the elimination phase.`
+				: `${d.name} is high FODMAP at normal portions. ${d.safeServing}.`;
+
+const groupSentence = d.groups.length
+	? ` The FODMAP group responsible is ${d.groups
+			.map((g) => FODMAP_GROUPS[g].label.toLowerCase())
+			.join(' and ')}.`
+	: '';
+
+const answer = `${verdictSentence}${groupSentence} ${d.detail}`;
+
+const pageTitle = `Is ${d.name} Low FODMAP?`;
+
+/**
+ * The meta description carries the verdict, the group and as much of the
+ * reasoning as fits. Boilerplate ("serving sizes and more!") left the safe
+ * foods at ~104 characters, well under the length that earns a click, and
+ * these pages exist to be found in search.
+ */
+const descFull = `${verdictSentence}${groupSentence} ${d.detail}`;
+const description =
+	descFull.length <= 164
+		? descFull
+		: `${descFull
+				.slice(0, 164)
+				.replace(/\s+\S*$/, '')
+				.replace(/[\s,;:.—-]+$/, '')}…`;
+---
+
+<BaseLayout
+	title={pageTitle}
+	description={description}
+	schemaNodes={[
+		breadcrumbSchema(crumbs),
+		faqSchema([{ question, answer }]),
+	]}
+>
+	<PageHeader eyebrow={categoryLabel} title={pageTitle} crumbs={crumbs} />
+
+	<article class="mx-auto max-w-3xl px-5 py-12">
+		<!-- The verdict, above everything else. Someone standing in a shop needs
+		     the answer before the reasoning. -->
+		<div class="rounded-card border border-cream-border bg-white p-6">
+			<div class="flex flex-wrap items-center gap-3">
+				<FodmapTag level={d.verdict} variant="full" />
+			</div>
+
+			<p class="mt-5 text-sm font-semibold uppercase tracking-wide text-sage">
+				Safe serving
+			</p>
+			<p class="mt-1 font-display text-2xl font-semibold text-sage-deep">
+				{d.safeServing}
+			</p>
+
+			{
+				d.groups.length > 0 && (
+					<>
+						<p class="mt-5 text-sm font-semibold uppercase tracking-wide text-sage">
+							FODMAP group responsible
+						</p>
+						<ul class="mt-2 space-y-2">
+							{d.groups.map((g) => (
+								<li class="text-ink">
+									<span class="font-semibold text-sage-deep">
+										{FODMAP_GROUPS[g].label}
+									</span>
+									<span class="text-ink-muted"> — {FODMAP_GROUPS[g].family}. </span>
+									<span class="text-ink-muted">{FODMAP_GROUPS[g].note}</span>
+								</li>
+							))}
+						</ul>
+					</>
+				)
+			}
+		</div>
+
+		<div class="prose prose-gutwise mt-8 max-w-none">
+			<h2>Why</h2>
+			<p>{d.detail}</p>
+		</div>
+
+		{
+			d.swaps.length > 0 && (
+				<section class="mt-10" aria-labelledby="swaps-heading">
+					<h2
+						id="swaps-heading"
+						class="font-display text-2xl font-semibold text-sage-deep"
+					>
+						What to use instead
+					</h2>
+					<ul class="mt-4 space-y-3">
+						{d.swaps.map((swap) => (
+							<li class="rounded-card border border-cream-border bg-sage-wash p-4">
+								<p class="font-semibold text-sage-deep">{swap.name}</p>
+								<p class="mt-1 text-sm leading-relaxed text-ink">{swap.note}</p>
+							</li>
+						))}
+					</ul>
+				</section>
+			)
+		}
+
+		{
+			d.verdict !== 'safe' && (
+				<Callout variant="caution" title="Portion is the whole story" class="mt-10">
+					Almost nothing on this diet is unconditionally safe or unsafe. The
+					figure above is the point at which {d.name.toLowerCase()} stops being
+					low FODMAP, and FODMAPs stack — several foods each just inside their
+					own limit can add up to a meal that causes symptoms even though nothing
+					on the plate was wrong on its own.
+				</Callout>
+			)
+		}
+
+		{
+			linked.length > 0 && (
+				<section class="mt-12" aria-labelledby="recipes-heading">
+					<h2
+						id="recipes-heading"
+						class="font-display text-2xl font-semibold text-sage-deep"
+					>
+						Recipes using {d.name.toLowerCase()}
+					</h2>
+					<div class="mt-5 grid gap-5 sm:grid-cols-2">
+						{linked.map((recipe) => (
+							<RecipeCard recipe={recipe} />
+						))}
+					</div>
+				</section>
+			)
+		}
+
+		<div class="mt-12 rounded-card border border-cream-border bg-cream-sunken p-5">
+			<p class="text-sm leading-relaxed text-ink">
+				This entry is compiled from published Monash-aligned guidance rather than
+				our own laboratory testing, and thresholds are revised as new data
+				arrives. For the elimination phase the <a
+					href="https://www.monashfodmap.com/ibs-central/i-have-ibs/get-the-app/"
+					rel="noopener"
+					class="font-semibold text-trust underline underline-offset-2"
+					>Monash app</a
+				> is the authority. See <a
+					href="/guides/low-fodmap-food-list/"
+					class="font-semibold text-trust underline underline-offset-2"
+					>the full food list</a
+				> for how the categories fit together, or
+				<a
+					href="/foods/"
+					class="font-semibold text-trust underline underline-offset-2"
+					>check another food</a
+				>.
+			</p>
+		</div>
+
+		<EmailSignup id="food-signup" class="mt-12" />
+	</article>
+</BaseLayout>

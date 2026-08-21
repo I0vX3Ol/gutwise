@@ -1,0 +1,1498 @@
+[
+  {
+    "id": "garlic",
+    "name": "Garlic",
+    "aliases": [
+      "garlic cloves",
+      "minced garlic",
+      "garlic powder"
+    ],
+    "category": "vegetables",
+    "verdict": "high",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "Garlic is the single highest-fructan food most people eat daily, and there is no portion small enough to be considered safe during elimination. It is also the hardest to avoid, because it appears as powder, granules, paste and unnamed 'natural flavouring' in stock, sauces, crisps, marinades and nearly every prepared savoury product.",
+    "swaps": [
+      {
+        "name": "Garlic-infused oil",
+        "note": "Fructans are water-soluble and do not migrate into oil, so you get the flavour without the trigger. Buy it rather than making it — home-infusing raw garlic in oil carries a genuine botulism risk."
+      },
+      {
+        "name": "Asafoetida (hing)",
+        "note": "A pinch bloomed in oil reads convincingly of allium. Choose a compounded version without wheat flour."
+      }
+    ],
+    "recipes": [
+      "tomato-basil-pasta-garlic-oil",
+      "crispy-tofu-green-bean-stir-fry"
+    ]
+  },
+  {
+    "id": "onion",
+    "name": "Onion",
+    "aliases": [
+      "brown onion",
+      "red onion",
+      "shallot",
+      "onion powder"
+    ],
+    "category": "vegetables",
+    "verdict": "high",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "All onions — brown, white, red, shallots and onion powder — are high in fructans at any culinary quantity. Cooking does not reduce them and neither does removing the pieces afterwards, because the fructans leach into the surrounding liquid. This is why a soup with the onion fished out is still a problem.",
+    "swaps": [
+      {
+        "name": "Green tops of spring onions",
+        "note": "The green portion is low FODMAP while the white bulb is not. Chop generously."
+      },
+      {
+        "name": "Leek leaves",
+        "note": "The dark green leaves are safe at 54 g; the white bulb is not."
+      }
+    ],
+    "recipes": [
+      "chicken-rice-noodle-soup"
+    ]
+  },
+  {
+    "id": "spring-onion",
+    "name": "Spring onion",
+    "aliases": [
+      "scallion",
+      "green onion"
+    ],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "Green tops unrestricted; white bulb should be discarded",
+    "detail": "A single vegetable that is safe at one end and not at the other. The dark green tops contain almost no fructans and can be used freely. The white bulb behaves like an onion and should be cut off and thrown away, not merely used sparingly.",
+    "swaps": [],
+    "recipes": [
+      "sheet-pan-salmon-bok-choy",
+      "chicken-rice-noodle-soup"
+    ]
+  },
+  {
+    "id": "leek",
+    "name": "Leek",
+    "aliases": [],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "Green leaves 54 g; white bulb high FODMAP",
+    "detail": "Same split as spring onion. The dark green leaves are low FODMAP at 54 g and give you a genuine allium note; the pale bulb is high in fructans and is the part most recipes tell you to use.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "cauliflower",
+    "name": "Cauliflower",
+    "aliases": [
+      "cauliflower rice"
+    ],
+    "category": "vegetables",
+    "verdict": "high",
+    "groups": [
+      "mannitol"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "High in mannitol even at small portions, which makes cauliflower rice and cauliflower-crust products a common trap — they are marketed as healthy low-carb swaps and are among the worse choices available during elimination.",
+    "swaps": [
+      {
+        "name": "Plain rice or polenta",
+        "note": "Both are FODMAP-free at any portion."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "mushrooms",
+    "name": "Mushrooms",
+    "aliases": [
+      "button mushrooms",
+      "portobello"
+    ],
+    "category": "vegetables",
+    "verdict": "high",
+    "groups": [
+      "mannitol"
+    ],
+    "safeServing": "Common mushrooms: none. Oyster mushrooms: 75 g",
+    "detail": "Common button, portobello and field mushrooms are high in mannitol. Oyster mushrooms are the exception and are low FODMAP at 75 g, as are canned champignons that have been drained, since mannitol is water-soluble and leaches into the brine.",
+    "swaps": [
+      {
+        "name": "Oyster mushrooms",
+        "note": "Low FODMAP at 75 g and the closest thing to a like-for-like swap."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "asparagus",
+    "name": "Asparagus",
+    "aliases": [],
+    "category": "vegetables",
+    "verdict": "high",
+    "groups": [
+      "fructose",
+      "fructans"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "High in both excess fructose and fructans, which is an unusual combination and part of why asparagus is one of the more reliably symptomatic vegetables.",
+    "swaps": [
+      {
+        "name": "Green beans",
+        "note": "Low FODMAP at 75 g and behave similarly on a plate."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "carrot",
+    "name": "Carrot",
+    "aliases": [
+      "baby carrots"
+    ],
+    "category": "vegetables",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted",
+    "detail": "One of a small number of vegetables with no tested FODMAP ceiling at all. Carrot can be used freely in any quantity throughout every phase, which makes it useful for adding bulk to a dish when something else is portion-limited.",
+    "swaps": [],
+    "recipes": [
+      "ginger-carrot-soup",
+      "chicken-rice-noodle-soup"
+    ]
+  },
+  {
+    "id": "potato",
+    "name": "Potato",
+    "aliases": [
+      "white potato",
+      "baby potatoes"
+    ],
+    "category": "vegetables",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted",
+    "detail": "FODMAP-free at any portion. Potato is the most useful starch in the protocol precisely because it imposes no arithmetic — unlike sweet potato, which does.",
+    "swaps": [],
+    "recipes": [
+      "lemon-herb-chicken-roasted-potatoes",
+      "chickpea-roast-vegetable-traybake"
+    ]
+  },
+  {
+    "id": "sweet-potato",
+    "name": "Sweet potato",
+    "aliases": [
+      "kumara",
+      "yam"
+    ],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "mannitol"
+    ],
+    "safeServing": "75 g, about half a small one",
+    "detail": "A textbook example of portion deciding everything: low FODMAP at 75 g and high at 150 g, on mannitol. Most restaurant and home servings are well past the line, which is why sweet potato has a reputation for causing symptoms in people who believe it is a safe food.",
+    "swaps": [
+      {
+        "name": "Ordinary potato",
+        "note": "No ceiling, and roasts identically."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "courgette",
+    "name": "Courgette (zucchini)",
+    "aliases": [
+      "zucchini"
+    ],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "65 g, roughly one third of a medium one",
+    "detail": "Low FODMAP at 65 g and moderate above that on fructans. The threshold is lower than most people assume, and a whole courgette in one portion is over it.",
+    "swaps": [],
+    "recipes": [
+      "chickpea-roast-vegetable-traybake"
+    ]
+  },
+  {
+    "id": "bell-pepper",
+    "name": "Bell pepper",
+    "aliases": [
+      "capsicum",
+      "red pepper"
+    ],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "75 g, about half a medium pepper",
+    "detail": "Red bell pepper is low FODMAP at 75 g. Green capsicum has a similar threshold. Both are useful for colour and sweetness in dishes that have lost their onion base.",
+    "swaps": [],
+    "recipes": [
+      "crispy-tofu-green-bean-stir-fry",
+      "chickpea-roast-vegetable-traybake"
+    ]
+  },
+  {
+    "id": "green-beans",
+    "name": "Green beans",
+    "aliases": [
+      "string beans",
+      "french beans"
+    ],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "sorbitol"
+    ],
+    "safeServing": "75 g, about 15 beans",
+    "detail": "Low FODMAP at roughly fifteen beans and moderate beyond that on sorbitol. Worth counting rather than eyeballing, because a normal-looking side portion is often double the threshold.",
+    "swaps": [],
+    "recipes": [
+      "crispy-tofu-green-bean-stir-fry"
+    ]
+  },
+  {
+    "id": "bok-choy",
+    "name": "Bok choy",
+    "aliases": [
+      "pak choi"
+    ],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "75 g cooked, about 1 cup",
+    "detail": "Common bok choy is low FODMAP at 1 cup cooked. The name gets applied loosely at supermarkets, and wombok, choy sum and savoy cabbage all have different thresholds — check what you actually bought.",
+    "swaps": [],
+    "recipes": [
+      "sheet-pan-salmon-bok-choy",
+      "chicken-rice-noodle-soup"
+    ]
+  },
+  {
+    "id": "spinach",
+    "name": "Spinach",
+    "aliases": [
+      "baby spinach"
+    ],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "75 g raw per serve",
+    "detail": "Baby spinach is low FODMAP at 75 g. The practical difficulty is that it wilts to almost nothing, so a safe portion looks like a trivial amount on the plate. Weigh it raw.",
+    "swaps": [],
+    "recipes": [
+      "spinach-feta-baked-eggs"
+    ]
+  },
+  {
+    "id": "tomato",
+    "name": "Tomato",
+    "aliases": [
+      "cherry tomatoes",
+      "canned tomatoes"
+    ],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "fructose"
+    ],
+    "safeServing": "1 medium common tomato; cherry 45 g; canned 92 g",
+    "detail": "Common tomatoes are low FODMAP at one medium. Cherry tomatoes are more concentrated at 45 g, and canned tomatoes at 92 g — roughly a quarter of a standard tin, which is considerably less than most sauce recipes assume per person.",
+    "swaps": [],
+    "recipes": [
+      "tomato-basil-pasta-garlic-oil",
+      "spinach-feta-baked-eggs"
+    ]
+  },
+  {
+    "id": "avocado",
+    "name": "Avocado",
+    "aliases": [],
+    "category": "fruit",
+    "verdict": "moderate",
+    "groups": [
+      "sorbitol"
+    ],
+    "safeServing": "30 g, about one eighth",
+    "detail": "Low FODMAP only at about an eighth of an avocado and high at half, on sorbitol. This is one of the most commonly overshot foods on the whole list, because an eighth is far less than anyone serves.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "celery",
+    "name": "Celery",
+    "aliases": [],
+    "category": "vegetables",
+    "verdict": "high",
+    "groups": [
+      "mannitol"
+    ],
+    "safeServing": "10 g, about one tenth of a stalk",
+    "detail": "The threshold is so low as to be impractical — a tenth of a stick. Treat celery as unavailable during elimination rather than trying to portion it, and be aware it is a standard component of shop-bought stock.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "broccoli",
+    "name": "Broccoli",
+    "aliases": [],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "75 g of heads; stalks are higher",
+    "detail": "Broccoli heads are low FODMAP at 75 g. The stalks carry more fructans than the florets, so a dish built from chopped whole stems reaches the limit sooner than one made from the tops.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "corn",
+    "name": "Sweetcorn",
+    "aliases": [
+      "corn on the cob",
+      "canned corn"
+    ],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "sorbitol",
+      "fructans"
+    ],
+    "safeServing": "Half a cob, about 38 g",
+    "detail": "Low FODMAP at half a cob. Note that corn the vegetable and corn products are different questions — polenta, cornflour and corn tortillas are all FODMAP-free, while the kernels are portion-limited.",
+    "swaps": [
+      {
+        "name": "Polenta or cornmeal",
+        "note": "Milled corn has no ceiling."
+      }
+    ],
+    "recipes": [
+      "rosemary-polenta-chips"
+    ]
+  },
+  {
+    "id": "cabbage",
+    "name": "Cabbage",
+    "aliases": [
+      "white cabbage",
+      "savoy cabbage"
+    ],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "sorbitol",
+      "fructans"
+    ],
+    "safeServing": "Common cabbage 75 g; savoy 35 g",
+    "detail": "Common green and white cabbage is low FODMAP at 75 g. Savoy is roughly half that. Red cabbage sits near common cabbage. The varieties genuinely differ, so the type on the label matters.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "brussels-sprouts",
+    "name": "Brussels sprouts",
+    "aliases": [],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "Around 38 g, about two sprouts",
+    "detail": "Low FODMAP at roughly two sprouts, which is not a serving anybody eats. Practically speaking this is a reintroduction food rather than an elimination one.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "cucumber",
+    "name": "Cucumber",
+    "aliases": [],
+    "category": "vegetables",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted",
+    "detail": "No FODMAP ceiling at any portion. Along with carrot, lettuce and potato, cucumber is one of the genuinely free vegetables, which makes it useful for bulking out a salad or a lunchbox when the more interesting ingredients are all portion-limited.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "lettuce",
+    "name": "Lettuce",
+    "aliases": [
+      "cos",
+      "romaine",
+      "iceberg"
+    ],
+    "category": "vegetables",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted",
+    "detail": "All common lettuce varieties are FODMAP-free. The risk in a salad is never the leaves — it is the dressing, the croutons and the onion.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "butternut-squash",
+    "name": "Butternut squash",
+    "aliases": [
+      "butternut pumpkin"
+    ],
+    "category": "vegetables",
+    "verdict": "moderate",
+    "groups": [
+      "mannitol"
+    ],
+    "safeServing": "30 g, about 2 tablespoons cooked",
+    "detail": "A surprisingly low threshold at 30 g on mannitol, well below a normal roast-vegetable portion. Canned pumpkin is more generous at around 60 g.",
+    "swaps": [
+      {
+        "name": "Carrot or pumpkin",
+        "note": "Carrot is unrestricted and roasts to a similar sweetness."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "apple",
+    "name": "Apple",
+    "aliases": [
+      "apple juice"
+    ],
+    "category": "fruit",
+    "verdict": "high",
+    "groups": [
+      "fructose",
+      "sorbitol"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "High in both excess fructose and sorbitol, which is why apple is one of the most reliable symptom triggers on the list. Apple juice and apple purée concentrate the problem rather than dilute it.",
+    "swaps": [
+      {
+        "name": "Orange or firm banana",
+        "note": "Both are low FODMAP at one medium."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "pear",
+    "name": "Pear",
+    "aliases": [],
+    "category": "fruit",
+    "verdict": "high",
+    "groups": [
+      "fructose",
+      "sorbitol"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "Same profile as apple — excess fructose plus sorbitol — and often worse. Pear juice concentrate is a common sweetener in 'no added sugar' products, which is worth knowing when reading labels.",
+    "swaps": [
+      {
+        "name": "Kiwi",
+        "note": "Low FODMAP at two small fruit."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "mango",
+    "name": "Mango",
+    "aliases": [],
+    "category": "fruit",
+    "verdict": "high",
+    "groups": [
+      "fructose"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "High in excess fructose. Dried mango concentrates it further, and mango is a frequent hidden component of tropical juice blends and smoothies.",
+    "swaps": [
+      {
+        "name": "Pineapple",
+        "note": "Low FODMAP at 140 g and fills a similar role."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "watermelon",
+    "name": "Watermelon",
+    "aliases": [],
+    "category": "fruit",
+    "verdict": "high",
+    "groups": [
+      "fructose",
+      "fructans",
+      "mannitol"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "One of very few foods high in three FODMAP groups at once — excess fructose, fructans and mannitol. It reliably causes symptoms and is worth treating as a hard no.",
+    "swaps": [
+      {
+        "name": "Cantaloupe melon",
+        "note": "Low FODMAP at 90 g, and the one melon that survives elimination. Honeydew is similar."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "banana",
+    "name": "Banana",
+    "aliases": [],
+    "category": "fruit",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "Firm/unripe: 1 medium. Ripe: about one third",
+    "detail": "Ripeness changes the answer entirely. A firm, barely yellow banana is low FODMAP at one medium. As it ripens, starch converts to fructans, and a brown-speckled banana is low FODMAP at only about a third. Same fruit, different food.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "strawberry",
+    "name": "Strawberries",
+    "aliases": [],
+    "category": "fruit",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "65 g, about 5 medium berries",
+    "detail": "Comfortably low FODMAP at a normal serving and one of the most generous fruits available during elimination. Worth knowing that strawberries stay safe where most other soft fruit does not, which makes them the default berry for breakfasts and desserts on this diet.",
+    "swaps": [],
+    "recipes": [
+      "strawberry-maple-overnight-oats"
+    ]
+  },
+  {
+    "id": "blueberry",
+    "name": "Blueberries",
+    "aliases": [],
+    "category": "fruit",
+    "verdict": "moderate",
+    "groups": [
+      "fructose"
+    ],
+    "safeServing": "40 g, about 20 berries",
+    "detail": "Low FODMAP at roughly twenty berries. That is much less than a handful and considerably less than a bowl, so blueberries are worth counting rather than pouring.",
+    "swaps": [],
+    "recipes": [
+      "blueberry-buckwheat-pancakes"
+    ]
+  },
+  {
+    "id": "orange",
+    "name": "Orange",
+    "aliases": [
+      "mandarin",
+      "satsuma"
+    ],
+    "category": "fruit",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "1 medium orange; 2 mandarins",
+    "detail": "Citrus is among the safest fruit on the protocol. Whole fruit is preferable to juice, which removes the fibre and makes it easy to consume several fruits' worth in one glass.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "grapes",
+    "name": "Grapes",
+    "aliases": [],
+    "category": "fruit",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "150 g, about 32 grapes",
+    "detail": "One of the more generous thresholds in the fruit category, which makes grapes a genuinely useful snack during elimination.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "cherries",
+    "name": "Cherries",
+    "aliases": [],
+    "category": "fruit",
+    "verdict": "high",
+    "groups": [
+      "fructose",
+      "sorbitol"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "High in excess fructose and sorbitol. Cherries are also very easy to eat in quantity without noticing, which compounds the problem.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "stone-fruit",
+    "name": "Peaches, plums and nectarines",
+    "aliases": [
+      "peach",
+      "plum",
+      "nectarine",
+      "apricot"
+    ],
+    "category": "fruit",
+    "verdict": "high",
+    "groups": [
+      "sorbitol"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "The stone fruits are high in sorbitol as a group. Apricots are the same. Dried versions — prunes especially — are considerably more concentrated and are used medicinally as laxatives for exactly this reason.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "dried-fruit",
+    "name": "Dried fruit",
+    "aliases": [
+      "raisins",
+      "sultanas",
+      "dates",
+      "prunes"
+    ],
+    "category": "fruit",
+    "verdict": "high",
+    "groups": [
+      "fructans",
+      "fructose"
+    ],
+    "safeServing": "Raisins about 13 g (1 tbsp); most others none",
+    "detail": "Drying removes water and concentrates everything left behind, so a small handful of dried fruit is several servings of the fresh original. Dates and prunes are high at almost any quantity.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "raspberry",
+    "name": "Raspberries",
+    "aliases": [],
+    "category": "fruit",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "60 g, about 30 berries",
+    "detail": "Low FODMAP at around thirty berries, which makes raspberries noticeably more generous than blueberries and a reasonable everyday fruit during elimination. Blackberries, despite looking like a close relative, are high in sorbitol and are not interchangeable.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "kiwi",
+    "name": "Kiwi",
+    "aliases": [
+      "kiwifruit"
+    ],
+    "category": "fruit",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "2 small fruit",
+    "detail": "Low FODMAP at two fruit and frequently recommended for its effect on bowel regularity, which is a common secondary complaint in IBS.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "pineapple",
+    "name": "Pineapple",
+    "aliases": [],
+    "category": "fruit",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "140 g fresh, about 1 cup of chunks",
+    "detail": "A generous threshold for fresh pineapple, which makes it one of the few tropical fruits that survives elimination — mango, watermelon and most dried tropical fruit do not. Dried pineapple is a different matter, as with all dried fruit, because drying concentrates what is left behind.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "lemon-lime",
+    "name": "Lemon and lime",
+    "aliases": [
+      "lemon juice",
+      "lime juice"
+    ],
+    "category": "fruit",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted at culinary quantities",
+    "detail": "Both are low FODMAP at any amount you would realistically use. Acid is one of the most valuable tools available once garlic and onion are gone, because it does some of the same work of making food taste finished.",
+    "swaps": [],
+    "recipes": [
+      "lemon-polenta-cake",
+      "lemon-herb-chicken-roasted-potatoes"
+    ]
+  },
+  {
+    "id": "wheat-bread",
+    "name": "Wheat bread",
+    "aliases": [
+      "white bread",
+      "wholemeal bread"
+    ],
+    "category": "grains",
+    "verdict": "high",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "It is the fructans in wheat that are the problem here, not the gluten. This distinction matters: the low-FODMAP diet is not a gluten-free diet, and they overlap only by coincidence.",
+    "swaps": [
+      {
+        "name": "Genuine spelt sourdough",
+        "note": "Low FODMAP at 2 slices — long fermentation breaks down the fructans before you eat them. If yeast is on the ingredients list, it is not real sourdough."
+      },
+      {
+        "name": "Certified gluten-free bread",
+        "note": "Safe at 2 slices, but check for added inulin or chicory root."
+      }
+    ],
+    "recipes": [
+      "spinach-feta-baked-eggs"
+    ]
+  },
+  {
+    "id": "sourdough",
+    "name": "Sourdough bread",
+    "aliases": [
+      "spelt sourdough"
+    ],
+    "category": "grains",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "2 slices of genuine spelt sourdough",
+    "detail": "Genuine long-fermented sourdough is low FODMAP at two slices, because the starter consumes most of the fructans before baking. A great deal of supermarket sourdough is ordinary yeasted bread with added acidity for flavour, produced on a timescale that ferments nothing.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "pasta",
+    "name": "Wheat pasta",
+    "aliases": [
+      "spaghetti",
+      "penne"
+    ],
+    "category": "grains",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "Around 1/2 cup cooked (74 g)",
+    "detail": "Wheat pasta is low FODMAP at roughly half a cup cooked, which is a starter portion rather than a dinner. Gluten-free pasta made from rice or corn has no such ceiling and is the more practical choice during elimination.",
+    "swaps": [
+      {
+        "name": "Rice or corn pasta",
+        "note": "No meaningful ceiling, and now widely available."
+      }
+    ],
+    "recipes": [
+      "tomato-basil-pasta-garlic-oil"
+    ]
+  },
+  {
+    "id": "rice",
+    "name": "Rice",
+    "aliases": [
+      "white rice",
+      "basmati",
+      "jasmine rice",
+      "brown rice"
+    ],
+    "category": "grains",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted",
+    "detail": "All common rice varieties are FODMAP-free at any portion. Rice is the most dependable staple in the protocol and the reason so many low-FODMAP dinners end up served over it.",
+    "swaps": [],
+    "recipes": [
+      "sheet-pan-salmon-bok-choy",
+      "crispy-tofu-green-bean-stir-fry"
+    ]
+  },
+  {
+    "id": "oats",
+    "name": "Oats",
+    "aliases": [
+      "rolled oats",
+      "porridge oats"
+    ],
+    "category": "grains",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "1/2 cup dry rolled oats (52 g)",
+    "detail": "Low FODMAP at half a cup dry, which is a normal bowl of porridge. Quick oats are more processed and the threshold is slightly lower. Granola is a separate question entirely, since it is usually built on dried fruit, honey and cashews.",
+    "swaps": [],
+    "recipes": [
+      "strawberry-maple-overnight-oats",
+      "peanut-butter-oat-energy-bites"
+    ]
+  },
+  {
+    "id": "quinoa",
+    "name": "Quinoa",
+    "aliases": [],
+    "category": "grains",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "1 cup cooked",
+    "detail": "Low FODMAP at a full cup cooked, which makes quinoa one of the few higher-protein grains available without arithmetic during elimination.",
+    "swaps": [],
+    "recipes": [
+      "mediterranean-quinoa-lunch-bowl"
+    ]
+  },
+  {
+    "id": "barley-rye",
+    "name": "Barley and rye",
+    "aliases": [
+      "barley",
+      "rye",
+      "rye bread"
+    ],
+    "category": "grains",
+    "verdict": "high",
+    "groups": [
+      "fructans",
+      "gos"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "Both are high in fructans, and barley additionally in GOS. Barley turns up in soups, stews, malt and beer; rye in bread and crispbread. Pearl barley in a soup is a large dose in one bowl.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "buckwheat",
+    "name": "Buckwheat",
+    "aliases": [
+      "buckwheat flour"
+    ],
+    "category": "grains",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "100 g of flour",
+    "detail": "Despite the name, buckwheat is not wheat and is not a cereal at all — it is a seed from a plant related to rhubarb. It contains no gluten and is low FODMAP at a threshold you would struggle to reach in one sitting.",
+    "swaps": [],
+    "recipes": [
+      "blueberry-buckwheat-pancakes"
+    ]
+  },
+  {
+    "id": "polenta",
+    "name": "Polenta and cornmeal",
+    "aliases": [
+      "cornmeal",
+      "grits"
+    ],
+    "category": "grains",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted",
+    "detail": "Milled corn with no FODMAP ceiling. One of the more underused options during elimination — it works as a porridge, a set slab for chips, or the base of a cake.",
+    "swaps": [],
+    "recipes": [
+      "rosemary-polenta-chips",
+      "lemon-polenta-cake"
+    ]
+  },
+  {
+    "id": "chicken",
+    "name": "Chicken, beef, pork and lamb",
+    "aliases": [
+      "chicken",
+      "beef",
+      "pork",
+      "lamb",
+      "meat"
+    ],
+    "category": "protein",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted when plain",
+    "detail": "Plain meat contains no FODMAPs whatsoever and has no portion limit. The entire risk sits in what has been done to it — marinades, brines, sausages, meatballs, breadcrumbs and anything described as seasoned are where onion and garlic get in.",
+    "swaps": [],
+    "recipes": [
+      "lemon-herb-chicken-roasted-potatoes",
+      "chicken-rice-noodle-soup"
+    ]
+  },
+  {
+    "id": "eggs",
+    "name": "Eggs",
+    "aliases": [],
+    "category": "protein",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted",
+    "detail": "Completely FODMAP-free, which makes eggs the most reliable protein in the protocol and the reason they dominate low-FODMAP breakfasts.",
+    "swaps": [],
+    "recipes": [
+      "spinach-feta-baked-eggs"
+    ]
+  },
+  {
+    "id": "fish",
+    "name": "Fish and shellfish",
+    "aliases": [
+      "salmon",
+      "prawns",
+      "tuna"
+    ],
+    "category": "protein",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted when plain",
+    "detail": "No FODMAPs in plain fish or shellfish at any portion. As with meat, the risk is in coatings, marinades and sauces rather than the protein itself.",
+    "swaps": [],
+    "recipes": [
+      "sheet-pan-salmon-bok-choy"
+    ]
+  },
+  {
+    "id": "tofu",
+    "name": "Tofu",
+    "aliases": [
+      "firm tofu",
+      "silken tofu"
+    ],
+    "category": "protein",
+    "verdict": "moderate",
+    "groups": [
+      "gos"
+    ],
+    "safeServing": "Firm tofu 170 g; silken tofu is high FODMAP",
+    "detail": "Firm tofu is low FODMAP at 170 g because pressing drains the water-soluble GOS away with the whey. Silken tofu is set in its container and never pressed, so nothing drains and it stays high. Two products with the same name on adjacent shelves, on opposite sides of the line.",
+    "swaps": [],
+    "recipes": [
+      "crispy-tofu-green-bean-stir-fry"
+    ]
+  },
+  {
+    "id": "chickpeas",
+    "name": "Chickpeas",
+    "aliases": [
+      "garbanzo beans",
+      "hummus"
+    ],
+    "category": "protein",
+    "verdict": "moderate",
+    "groups": [
+      "gos"
+    ],
+    "safeServing": "1/4 cup (42 g) canned and drained",
+    "detail": "Canned and well-rinsed chickpeas are low FODMAP at a quarter cup — about two heaped tablespoons. Dried chickpeas cooked at home are higher, because nothing has leached into a canning liquid you then throw away. Hummus is high at any normal portion, and usually contains garlic as well.",
+    "swaps": [],
+    "recipes": [
+      "chickpea-roast-vegetable-traybake"
+    ]
+  },
+  {
+    "id": "lentils",
+    "name": "Lentils",
+    "aliases": [
+      "red lentils",
+      "green lentils"
+    ],
+    "category": "protein",
+    "verdict": "moderate",
+    "groups": [
+      "gos"
+    ],
+    "safeServing": "1/2 cup (46 g) canned and drained",
+    "detail": "Canned lentils are low FODMAP at half a cup drained, which is more generous than chickpeas. Home-boiled dried lentils are substantially higher for the same reason — the GOS stay in the pot rather than in a can you drain.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "beans",
+    "name": "Kidney and baked beans",
+    "aliases": [
+      "kidney beans",
+      "baked beans",
+      "black beans"
+    ],
+    "category": "protein",
+    "verdict": "high",
+    "groups": [
+      "gos",
+      "fructans"
+    ],
+    "safeServing": "Kidney and baked beans: none. Canned black beans: about 1/4 cup",
+    "detail": "Kidney beans and baked beans are high in GOS at almost any portion, and baked beans add a sauce that usually contains onion. Canned black beans are the most tolerable of the group at around a quarter cup drained.",
+    "swaps": [
+      {
+        "name": "Canned lentils",
+        "note": "Low FODMAP at 1/2 cup drained and closer to a usable portion."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "cows-milk",
+    "name": "Cow's milk",
+    "aliases": [
+      "milk",
+      "full fat milk",
+      "skim milk"
+    ],
+    "category": "dairy",
+    "verdict": "high",
+    "groups": [
+      "lactose"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "The FODMAP in dairy is lactose, so the rule throughout this category is simply: the less lactose, the safer. Ordinary cow, goat and sheep milk are all high. Note that lactose intolerance and IBS are different conditions that frequently coexist.",
+    "swaps": [
+      {
+        "name": "Lactose-free milk",
+        "note": "Real dairy with the lactose already broken down. Behaves identically in cooking."
+      },
+      {
+        "name": "Almond milk",
+        "note": "Low FODMAP at 250 ml."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "lactose-free-milk",
+    "name": "Lactose-free milk",
+    "aliases": [],
+    "category": "dairy",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted",
+    "detail": "Ordinary cow's milk with the lactose already split into glucose and galactose. It is not a milk substitute — it is milk, and it behaves identically in cooking and baking.",
+    "swaps": [],
+    "recipes": [
+      "blueberry-buckwheat-pancakes"
+    ]
+  },
+  {
+    "id": "hard-cheese",
+    "name": "Cheddar, parmesan and hard cheese",
+    "aliases": [
+      "cheddar",
+      "parmesan",
+      "hard cheese"
+    ],
+    "category": "dairy",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "40 g, a generous slice or a heaped grating",
+    "detail": "Aged hard cheeses are effectively lactose-free — the lactose is consumed during ageing — so they are safe at a normal portion. This surprises people who have cut dairy entirely and did not need to.",
+    "swaps": [],
+    "recipes": [
+      "rosemary-polenta-chips"
+    ]
+  },
+  {
+    "id": "feta",
+    "name": "Feta and mozzarella",
+    "aliases": [
+      "feta",
+      "mozzarella"
+    ],
+    "category": "dairy",
+    "verdict": "moderate",
+    "groups": [
+      "lactose"
+    ],
+    "safeServing": "40 g, a generous crumbling",
+    "detail": "Low FODMAP at 40 g, which is a generous crumbling but not a whole block. Both are useful for adding the savoury sharpness that garlic normally provides.",
+    "swaps": [],
+    "recipes": [
+      "spinach-feta-baked-eggs",
+      "chickpea-roast-vegetable-traybake"
+    ]
+  },
+  {
+    "id": "yoghurt",
+    "name": "Yoghurt",
+    "aliases": [
+      "greek yoghurt",
+      "natural yoghurt"
+    ],
+    "category": "dairy",
+    "verdict": "high",
+    "groups": [
+      "lactose"
+    ],
+    "safeServing": "Lactose-free yoghurt unrestricted; regular yoghurt none",
+    "detail": "Ordinary yoghurt is high in lactose. Lactose-free versions are widely available and are the straightforward answer. Coconut yoghurt is usually fine but check for added inulin.",
+    "swaps": [
+      {
+        "name": "Lactose-free yoghurt",
+        "note": "Same product, lactose already split."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "butter",
+    "name": "Butter",
+    "aliases": [],
+    "category": "dairy",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted",
+    "detail": "Almost pure fat, with only a trace of lactose left after churning, so butter is safe at any normal cooking quantity. This catches out people who have cut all dairy on the assumption that lactose scales with how dairy something tastes.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "oat-milk",
+    "name": "Oat milk",
+    "aliases": [],
+    "category": "dairy",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "125 ml, half a normal glass",
+    "detail": "Low FODMAP at 125 ml, which is half a normal glass and less than most people put on cereal or in a latte. Oat milk's reputation as the gentle plant milk does not survive contact with the threshold.",
+    "swaps": [
+      {
+        "name": "Almond or lactose-free milk",
+        "note": "Both comfortable at 250 ml."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "soy-milk",
+    "name": "Soy milk",
+    "aliases": [],
+    "category": "dairy",
+    "verdict": "moderate",
+    "groups": [
+      "gos"
+    ],
+    "safeServing": "From soy protein: 250 ml. From whole soybeans: none",
+    "detail": "Which soy milk you bought decides the answer. Soy milk made from soy protein is low FODMAP at a normal glass; soy milk made from whole soybeans is high in GOS. The label rarely makes this obvious — look at the ingredients rather than the front of the carton.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "almonds",
+    "name": "Almonds",
+    "aliases": [
+      "almond meal",
+      "ground almonds"
+    ],
+    "category": "nuts-seeds",
+    "verdict": "moderate",
+    "groups": [
+      "gos"
+    ],
+    "safeServing": "10 nuts, or 24 g of almond meal",
+    "detail": "Low FODMAP at about ten nuts. Almond meal carries the same limit by weight, which is why an almond-flour cake needs to be cut into small slices rather than generous ones.",
+    "swaps": [],
+    "recipes": [
+      "lemon-polenta-cake"
+    ]
+  },
+  {
+    "id": "cashews",
+    "name": "Cashews and pistachios",
+    "aliases": [
+      "cashews",
+      "pistachios"
+    ],
+    "category": "nuts-seeds",
+    "verdict": "high",
+    "groups": [
+      "gos",
+      "fructans"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "The two nuts that are genuinely high at almost any quantity. Cashews in particular are the base of many vegan cheeses, creamy sauces and dairy-free desserts, which makes them easy to eat without realising.",
+    "swaps": [
+      {
+        "name": "Macadamias or peanuts",
+        "note": "Both comfortable at a normal handful."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "peanuts",
+    "name": "Peanuts and peanut butter",
+    "aliases": [
+      "peanut butter"
+    ],
+    "category": "nuts-seeds",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "32 nuts, or 50 g of peanut butter",
+    "detail": "Peanuts are botanically legumes but do not carry a meaningful GOS load, and are safe at a generous portion. The catch is what gets added: some reduced-fat and 'high protein' peanut butters add inulin or chicory root fibre, which is concentrated fructan sold as a health benefit. You want a jar whose ingredients read: peanuts, salt.",
+    "swaps": [],
+    "recipes": [
+      "peanut-butter-oat-energy-bites",
+      "dark-chocolate-peanut-cookies"
+    ]
+  },
+  {
+    "id": "walnuts",
+    "name": "Walnuts, pecans and macadamias",
+    "aliases": [
+      "walnuts",
+      "pecans",
+      "macadamias"
+    ],
+    "category": "nuts-seeds",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "About 30 g, a small handful",
+    "detail": "The reliably safe nuts, all comfortable at a small handful. Useful for adding fat, protein and texture to breakfasts and salads without any arithmetic — a genuine relief in a category where cashews and pistachios are out entirely and almonds are capped at ten.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "honey",
+    "name": "Honey",
+    "aliases": [],
+    "category": "sweeteners",
+    "verdict": "high",
+    "groups": [
+      "fructose"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "Honey contains substantially more fructose than glucose, and it is that imbalance rather than the sugar itself that causes the problem — without enough glucose to carry it across the gut wall, the excess fructose stays in the bowel.",
+    "swaps": [
+      {
+        "name": "Maple syrup",
+        "note": "Low FODMAP at 2 tablespoons."
+      },
+      {
+        "name": "Ordinary sugar",
+        "note": "Glucose and fructose in equal measure, so it causes no such problem."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "sugar",
+    "name": "Table sugar",
+    "aliases": [
+      "sucrose",
+      "caster sugar",
+      "brown sugar"
+    ],
+    "category": "sweeteners",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted at normal amounts",
+    "detail": "Sucrose is glucose and fructose in equal measure, and the glucose carries the fructose across the gut wall, so ordinary sugar causes no FODMAP problem. This surprises people who assume any sugar must be worse than honey.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "maple-syrup",
+    "name": "Maple syrup",
+    "aliases": [],
+    "category": "sweeteners",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "2 tablespoons",
+    "detail": "The most useful liquid sweetener in the protocol and the standard replacement for honey, which is high in excess fructose. Two tablespoons is a real serving rather than a token one, so maple syrup works on porridge, pancakes and in glazes without needing to be rationed.",
+    "swaps": [],
+    "recipes": [
+      "strawberry-maple-overnight-oats"
+    ]
+  },
+  {
+    "id": "polyols",
+    "name": "Sugar-free sweeteners",
+    "aliases": [
+      "sorbitol",
+      "xylitol",
+      "maltitol",
+      "mannitol",
+      "sugar free gum"
+    ],
+    "category": "sweeteners",
+    "verdict": "high",
+    "groups": [
+      "sorbitol",
+      "mannitol"
+    ],
+    "safeServing": "No safe serving during elimination",
+    "detail": "Anything ending in -ol is a polyol and is among the most reliable symptom triggers on the entire list. They appear in sugar-free gum, mints, protein bars and 'diet' products, where nobody is looking for them. Check the ingredients of anything marketed as sugar-free.",
+    "swaps": [
+      {
+        "name": "Stevia or ordinary sugar",
+        "note": "Both are low FODMAP."
+      }
+    ],
+    "recipes": []
+  },
+  {
+    "id": "dark-chocolate",
+    "name": "Dark chocolate",
+    "aliases": [
+      "chocolate",
+      "milk chocolate"
+    ],
+    "category": "sweeteners",
+    "verdict": "moderate",
+    "groups": [
+      "lactose",
+      "fructans"
+    ],
+    "safeServing": "Dark 30 g; milk 20 g; white 20 g",
+    "detail": "Dark chocolate is the most generous at 30 g. Milk and white chocolate are lower because the lactose counts. All three are portions worth knowing rather than guessing, since chocolate is easy to keep reaching for.",
+    "swaps": [],
+    "recipes": [
+      "dark-chocolate-peanut-cookies"
+    ]
+  },
+  {
+    "id": "stock",
+    "name": "Stock and bouillon",
+    "aliases": [
+      "stock cube",
+      "broth",
+      "bouillon"
+    ],
+    "category": "condiments",
+    "verdict": "high",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "Certified low-FODMAP stock only",
+    "detail": "Nearly every commercial stock, cube, powder and liquid concentrate is built on onion and garlic, usually as the second and third ingredients. This is the most common hidden source of FODMAPs in otherwise careful cooking, and it matters most in soup, where a bowl is 250 ml of concentrated onion water.",
+    "swaps": [
+      {
+        "name": "Certified low-FODMAP stock",
+        "note": "Massel and Fody both make one."
+      },
+      {
+        "name": "Homemade stock",
+        "note": "A carcass, carrot, bay and peppercorns. Freeze it flat."
+      }
+    ],
+    "recipes": [
+      "chicken-rice-noodle-soup",
+      "rosemary-polenta-chips"
+    ]
+  },
+  {
+    "id": "soy-sauce",
+    "name": "Soy sauce",
+    "aliases": [
+      "tamari"
+    ],
+    "category": "condiments",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "2 tablespoons",
+    "detail": "Low FODMAP at 2 tablespoons despite being made from wheat — the fermentation and the small portion together keep it clear. Tamari is the gluten-free version if you need one.",
+    "swaps": [],
+    "recipes": [
+      "sheet-pan-salmon-bok-choy",
+      "crispy-tofu-green-bean-stir-fry"
+    ]
+  },
+  {
+    "id": "garlic-infused-oil",
+    "name": "Garlic-infused oil",
+    "aliases": [
+      "garlic oil"
+    ],
+    "category": "condiments",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Unrestricted",
+    "detail": "The most important single product in low-FODMAP cooking. Fructans are water-soluble and do not migrate into oil, so infusing separates the flavour from the trigger almost perfectly. Buy it rather than making it — storing raw garlic in oil creates a low-oxygen environment that can support Clostridium botulinum, which is a genuine risk rather than a cautious footnote.",
+    "swaps": [],
+    "recipes": [
+      "tomato-basil-pasta-garlic-oil",
+      "spinach-feta-baked-eggs"
+    ]
+  },
+  {
+    "id": "stir-fry-sauce",
+    "name": "Bottled sauces",
+    "aliases": [
+      "hoisin",
+      "oyster sauce",
+      "teriyaki",
+      "stir fry sauce",
+      "ketchup"
+    ],
+    "category": "condiments",
+    "verdict": "high",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "Ketchup about 13 g; most others none",
+    "detail": "Hoisin, oyster sauce, black bean, char siu and virtually every supermarket stir-fry and teriyaki sauce lead with garlic, onion or both. This is the most common way an otherwise safe home-cooked meal goes wrong. Ketchup is the exception at about one sachet.",
+    "swaps": [
+      {
+        "name": "Soy, maple, rice vinegar, sesame oil and ginger",
+        "note": "Whisked together in forty seconds, and better anyway."
+      }
+    ],
+    "recipes": [
+      "crispy-tofu-green-bean-stir-fry"
+    ]
+  },
+  {
+    "id": "coffee",
+    "name": "Coffee",
+    "aliases": [
+      "espresso"
+    ],
+    "category": "drinks",
+    "verdict": "safe",
+    "groups": [],
+    "safeServing": "Black coffee unrestricted; watch the milk",
+    "detail": "Coffee itself contains no FODMAPs. The milk is usually the issue — a standard latte is a large dose of lactose, and an oat milk one is past the 125 ml oat threshold. Caffeine is separately a gut stimulant, which is a different mechanism from FODMAPs but a real consideration in IBS.",
+    "swaps": [],
+    "recipes": []
+  },
+  {
+    "id": "tea",
+    "name": "Tea",
+    "aliases": [
+      "black tea",
+      "chamomile",
+      "peppermint tea"
+    ],
+    "category": "drinks",
+    "verdict": "moderate",
+    "groups": [
+      "fructans"
+    ],
+    "safeServing": "Weak black tea and peppermint fine; chamomile is high",
+    "detail": "Black and green tea are low FODMAP when brewed normally; strong or long-steeped brews climb. Peppermint tea is safe and often actively helpful. Chamomile, fennel and oolong are high in fructans, which catches people who switched to herbal tea believing it gentler.",
+    "swaps": [
+      {
+        "name": "Peppermint tea",
+        "note": "Low FODMAP and well tolerated."
+      }
+    ],
+    "recipes": []
+  }
+]

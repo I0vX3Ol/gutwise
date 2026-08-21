@@ -22,6 +22,7 @@ export const SITE = {
 
 export const NAV_LINKS = [
 	{ href: '/recipes/', label: 'Recipes' },
+	{ href: '/foods/', label: 'Food Checker' },
 	{ href: '/guides/', label: 'Guides' },
 	{ href: '/product-recommendations/', label: 'Product Picks' },
 	{ href: '/faq/', label: 'FAQ' },
@@ -30,6 +31,7 @@ export const NAV_LINKS = [
 export const FOOTER_LINKS = {
 	Explore: [
 		{ href: '/recipes/', label: 'All recipes' },
+		{ href: '/foods/', label: 'Food checker' },
 		{ href: '/guides/', label: 'Guides' },
 		{ href: '/product-recommendations/', label: 'Product picks' },
 		{ href: '/rss.xml', label: 'Subscribe by RSS' },
@@ -145,3 +147,61 @@ export const FODMAP_LEVELS = {
 } as const;
 
 export type FodmapLevel = keyof typeof FODMAP_LEVELS;
+
+/**
+ * The six FODMAP groups, named on every food-reference entry.
+ *
+ * Naming the group is what makes the reference teachable rather than a lookup
+ * table: someone who learns that apples, pears and mango all fail on excess
+ * fructose can predict the next fruit without checking, and knows which
+ * challenge in reintroduction will tell them the most.
+ */
+export const FODMAP_GROUPS = {
+	fructans: {
+		label: 'Fructans',
+		family: 'Oligosaccharides',
+		note: 'Wheat, onion, garlic. The most common trigger and the hardest to avoid.',
+	},
+	gos: {
+		label: 'GOS',
+		family: 'Oligosaccharides',
+		note: 'Galacto-oligosaccharides — legumes, pulses and some nuts.',
+	},
+	lactose: {
+		label: 'Lactose',
+		family: 'Disaccharides',
+		note: 'Milk sugar. Reduced or absent in aged cheese and lactose-free dairy.',
+	},
+	fructose: {
+		label: 'Excess fructose',
+		family: 'Monosaccharides',
+		note: 'A problem only when fructose outweighs glucose, as in honey and apple.',
+	},
+	sorbitol: {
+		label: 'Sorbitol',
+		family: 'Polyols',
+		note: 'Stone fruit, avocado, and most sugar-free products.',
+	},
+	mannitol: {
+		label: 'Mannitol',
+		family: 'Polyols',
+		note: 'Cauliflower, mushrooms, celery, sweet potato.',
+	},
+} as const;
+
+export type FodmapGroup = keyof typeof FODMAP_GROUPS;
+
+/** Sections of the food reference, in the order a supermarket is walked. */
+export const FOOD_CATEGORIES = [
+	{ slug: 'vegetables', label: 'Vegetables' },
+	{ slug: 'fruit', label: 'Fruit' },
+	{ slug: 'grains', label: 'Grains and starches' },
+	{ slug: 'protein', label: 'Protein' },
+	{ slug: 'dairy', label: 'Dairy and alternatives' },
+	{ slug: 'nuts-seeds', label: 'Nuts and seeds' },
+	{ slug: 'sweeteners', label: 'Sweeteners' },
+	{ slug: 'condiments', label: 'Sauces and condiments' },
+	{ slug: 'drinks', label: 'Drinks' },
+] as const;
+
+export type FoodCategory = (typeof FOOD_CATEGORIES)[number]['slug'];

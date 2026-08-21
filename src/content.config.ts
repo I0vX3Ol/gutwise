@@ -154,6 +154,67 @@ const products = defineCollection({
 	}),
 });
 
+const foodCategoryEnum = z.enum([
+	'vegetables',
+	'fruit',
+	'grains',
+	'protein',
+	'dairy',
+	'nuts-seeds',
+	'sweeteners',
+	'drinks',
+	'condiments',
+]);
+
+/** The six FODMAP groups. Naming the responsible group is what turns a
+ *  verdict into information the reader can generalise from. */
+const fodmapGroupEnum = z.enum([
+	'fructans',
+	'gos',
+	'lactose',
+	'fructose',
+	'sorbitol',
+	'mannitol',
+]);
+
+/**
+ * The food reference. A data collection because it is consumed three ways:
+ * a filterable index, a page per food, and cross-links from recipes.
+ *
+ * The schema is deliberately strict. This is the part of the site most likely
+ * to be read by someone standing in a supermarket deciding what to buy, so an
+ * entry that cannot say which FODMAP group is responsible, or that has no
+ * stated serving, is not information — it is a guess with a colour on it, and
+ * it fails the build rather than shipping.
+ */
+const foods = defineCollection({
+	loader: file('./src/data/foods.json'),
+	schema: z
+		.object({
+			id: z.string(),
+			name: z.string().min(2),
+			/** Search synonyms. "capsicum" must find bell pepper. */
+			aliases: z.array(z.string()).default([]),
+			category: foodCategoryEnum,
+			verdict: fodmapLevel,
+			groups: z.array(fodmapGroupEnum).default([]),
+			/** The green-light portion, in the reader's units. */
+			safeServing: z.string().min(5),
+			/** Why — the reasoning, not just the number. */
+			detail: z.string().min(120),
+			swaps: z
+				.array(z.object({ name: z.string(), note: z.string().min(20) }))
+				.default([]),
+			/** Slugs of recipes using this food, for the reference -> recipe mesh. */
+			recipes: z.array(z.string()).default([]),
+		})
+		.refine((d) => d.verdict === 'safe' || d.groups.length > 0, {
+			message:
+				'A moderate or high food must name the FODMAP group responsible — otherwise the entry tells the reader nothing they can generalise from.',
+			path: ['groups'],
+		}),
+});
+
 /**
  * Site-wide FAQ. A data collection rather than markdown — these are consumed
  * both as rendered accordion items and as FAQPage structured data.
@@ -169,4 +230,4 @@ const faqs = defineCollection({
 	}),
 });
 
-export const collections = { recipes, guides, products, faqs };
+export const collections = { recipes, guides, products, faqs, foods };

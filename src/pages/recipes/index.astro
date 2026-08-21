@@ -214,8 +214,11 @@ const availableMealTypes = MEAL_TYPES.filter((type) =>
 
 		form.addEventListener('change', apply);
 		form.addEventListener('reset', () => {
-			// Reset fires before the controls actually clear.
-			requestAnimationFrame(apply);
+			// Reset fires before the controls actually clear, so the re-filter has
+			// to be deferred. A macrotask, not requestAnimationFrame: rAF is tied to
+			// painting and is throttled or paused entirely in a background tab, which
+			// left 'Clear all' showing a stale list until the next interaction.
+			setTimeout(apply, 0);
 		});
 		emptyReset?.addEventListener('click', () => form.reset());
 	}
