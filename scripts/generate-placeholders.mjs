@@ -118,18 +118,24 @@ const IMAGES = [
 	{ path: 'recipes/energy-bites.svg', scene: 'bowl', accent: C.amber },
 	{ path: 'recipes/salmon-bok-choy.svg', scene: 'bowl', accent: C.clay },
 	{ path: 'recipes/quinoa-bowl.svg', scene: 'bowl', accent: C.sageMid },
+	{ path: 'recipes/spinach-feta-eggs.svg', scene: 'bowl', accent: C.sageMid },
+	{ path: 'recipes/buckwheat-pancakes.svg', scene: 'bowl', accent: C.clay },
+	{ path: 'recipes/chocolate-peanut-cookies.svg', scene: 'bowl', accent: C.clay },
+	{ path: 'recipes/lemon-polenta-cake.svg', scene: 'bowl', accent: C.amber },
+	{ path: 'recipes/tofu-green-beans.svg', scene: 'bowl', accent: C.sageMid },
+	{ path: 'recipes/chicken-noodle-soup.svg', scene: 'bowl', accent: C.amber },
+	{ path: 'recipes/polenta-chips.svg', scene: 'bowl', accent: C.amber },
+	{ path: 'recipes/chickpea-traybake.svg', scene: 'bowl', accent: C.clay },
 
 	// Guides
 	{ path: 'guides/what-is-low-fodmap.svg', scene: 'document', accent: C.sage },
 	{ path: 'guides/elimination-phase.svg', scene: 'document', accent: C.amber },
 	{ path: 'guides/reintroduction.svg', scene: 'document', accent: C.sageMid },
+	{ path: 'guides/food-list.svg', scene: 'document', accent: C.sageMid },
+	{ path: 'guides/eating-out.svg', scene: 'document', accent: C.clay },
 
 	// Products
 	{ path: 'products/pantry-starter.svg', scene: 'document', accent: C.clay },
-
-	// Stories
-	{ path: 'stories/maria.svg', scene: 'bowl', accent: C.sageMid },
-	{ path: 'stories/james.svg', scene: 'bowl', accent: C.sage },
 
 	// Generic fallback referenced by the content schema default
 	{ path: 'og-default.svg', scene: 'document', accent: C.sage },

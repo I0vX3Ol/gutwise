@@ -312,8 +312,8 @@ The lighter sages are retained for decoration; anything bearing text uses the da
 
 ```
 src/content/
-├── recipes/     6 recipes    — portion limits, per-ingredient FODMAP flags
-├── guides/      3 guides     — one per protocol phase, with per-guide FAQs
+├── recipes/    15 recipes    — portion limits, per-ingredient FODMAP flags
+├── guides/      5 guides     — the three phases, the food list, eating out
 └── products/    1 roundup    — product picks with rationale, no paid links
 src/data/faqs.json            12 site-wide FAQ entries
 ```

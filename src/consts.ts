@@ -36,6 +36,7 @@ export const FOOTER_LINKS = {
 	],
 	Start: [
 		{ href: '/guides/what-is-the-low-fodmap-diet/', label: 'What is low-FODMAP?' },
+		{ href: '/guides/low-fodmap-food-list/', label: 'The food list' },
 		{ href: '/guides/elimination-phase-explained/', label: 'Elimination phase' },
 		{ href: '/guides/reintroduction-protocol/', label: 'Reintroduction protocol' },
 		{ href: '/faq/', label: 'Common questions' },
