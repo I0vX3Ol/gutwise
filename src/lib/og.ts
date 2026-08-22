@@ -146,7 +146,7 @@ export async function ogEntries(): Promise<OgEntry[]> {
 	const foodEntries = foods.map((f) => ({
 		slug: `foods/${f.id}`,
 		eyebrow: FODMAP_LEVELS[f.data.verdict].label,
-		title: `Is ${f.data.name.toLowerCase()} low FODMAP?`,
+		title: `${f.data.plural ? 'Are' : 'Is'} ${f.data.name.toLowerCase()} low FODMAP?`,
 		kicker:
 			f.data.safeServing.length > 58
 				? `${f.data.safeServing.slice(0, 55).trimEnd()}…`

@@ -195,6 +195,13 @@ const foods = defineCollection({
 			name: z.string().min(2),
 			/** Search synonyms. "capsicum" must find bell pepper. */
 			aliases: z.array(z.string()).default([]),
+			/**
+			 * Grammatical number of `name`, so the page can say "Are grapes low
+			 * FODMAP?" rather than "Is grapes". Declared rather than guessed from
+			 * spelling — "hummus" and "asparagus" end in s and are singular, while
+			 * any name joined with "and" is plural regardless of its parts.
+			 */
+			plural: z.boolean().default(false),
 			category: foodCategoryEnum,
 			verdict: fodmapLevel,
 			groups: z.array(fodmapGroupEnum).default([]),

@@ -52,7 +52,16 @@ const crumbs = [
  * schema using that exact phrasing. The answer is self-contained — it has to
  * stand on its own if a search engine surfaces it without the page.
  */
-const question = `Is ${d.name.toLowerCase()} low FODMAP?`;
+const isAre = d.plural ? 'are' : 'is';
+const IsAre = d.plural ? 'Are' : 'Is';
+/**
+ * "mushrooms stop" vs "avocado stops". Built as one string rather than two
+ * adjacent {} expressions in the markup — Astro collapses the whitespace
+ * between adjacent expressions, which silently rendered "mushroomsstop".
+ */
+const stopsPhrase = `${d.name.toLowerCase()} ${d.plural ? 'stop' : 'stops'}`;
+
+const question = `${IsAre} ${d.name.toLowerCase()} low FODMAP?`;
 /**
  * Several high-FODMAP entries carry the generic "no safe serving" string, which
  * would otherwise restate the sentence before it. Others — celery, bottled
@@ -63,12 +72,12 @@ const NO_SAFE_SERVING = 'No safe serving during elimination';
 
 const verdictSentence =
 	d.verdict === 'safe'
-		? `${d.name} is low FODMAP. Safe serving: ${d.safeServing}.`
+		? `${d.name} ${isAre} low FODMAP. Safe serving: ${d.safeServing}.`
 		: d.verdict === 'moderate'
-			? `${d.name} is low FODMAP only up to a point. Safe serving: ${d.safeServing}. Beyond that it becomes a problem.`
+			? `${d.name} ${isAre} low FODMAP only up to a point. Safe serving: ${d.safeServing}. Beyond that it becomes a problem.`
 			: d.safeServing === NO_SAFE_SERVING
-				? `${d.name} is high FODMAP and should be avoided during the elimination phase.`
-				: `${d.name} is high FODMAP at normal portions. ${d.safeServing}.`;
+				? `${d.name} ${isAre} high FODMAP and should be avoided during the elimination phase.`
+				: `${d.name} ${isAre} high FODMAP at normal portions. ${d.safeServing}.`;
 
 const groupSentence = d.groups.length
 	? ` The FODMAP group responsible is ${d.groups
@@ -78,7 +87,7 @@ const groupSentence = d.groups.length
 
 const answer = `${verdictSentence}${groupSentence} ${d.detail}`;
 
-const pageTitle = `Is ${d.name} Low FODMAP?`;
+const pageTitle = `${IsAre} ${d.name} Low FODMAP?`;
 
 /**
  * The meta description carries the verdict, the group and as much of the
@@ -173,8 +182,7 @@ const description =
 			d.verdict !== 'safe' && (
 				<Callout variant="caution" title="Portion is the whole story" class="mt-10">
 					Almost nothing on this diet is unconditionally safe or unsafe. The
-					figure above is the point at which {d.name.toLowerCase()} stops being
-					low FODMAP, and FODMAPs stack — several foods each just inside their
+					figure above is the point at which {stopsPhrase} being low FODMAP, and FODMAPs stack — several foods each just inside their
 					own limit can add up to a meal that causes symptoms even though nothing
 					on the plate was wrong on its own.
 				</Callout>
