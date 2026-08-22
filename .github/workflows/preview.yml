@@ -1,0 +1,80 @@
+name: Preview
+
+# A GitHub Pages copy of the site, so the build is visible and reviewable
+# without waiting on Cloudflare credentials. This is NOT the production site —
+# scripts/build-preview.mjs forces noindex and locks robots.txt, because two
+# indexable copies of the same content would compete with each other.
+#
+# Production remains Cloudflare Pages, deployed from ci.yml.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two Pages deploys race. Not cancel-in-progress: a half-finished
+# deploy that gets cancelled can leave the site serving a partial build.
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    name: Build and publish preview
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Built with the production SITE_URL on purpose, so canonical tags point
+      # at gutwise.nexudel.com rather than at this preview. Combined with the
+      # forced noindex, that keeps the preview from ever competing in search.
+      - name: Build
+        run: npm run build
+
+      # The site is built for the root of a domain; Pages serves it from
+      # /<repo>/. This rewrites every root-relative URL, forces noindex, and
+      # writes .nojekyll — without which Jekyll silently drops /_astro/ and the
+      # site loads with no CSS or JavaScript at all.
+      - name: Rewrite for the /gutwise sub-path
+        run: node scripts/build-preview.mjs "/${{ github.event.repository.name }}"
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+      - id: deploy
+        uses: actions/deploy-pages@v5
+
+      - name: Smoke test the published preview
+        run: |
+          set -u
+          URL="${{ steps.deploy.outputs.page_url }}"
+          echo "Published to ${URL}"
+          for i in $(seq 1 10); do
+            CODE=$(curl -sS -o /dev/null -w '%{http_code}' -m 15 "$URL" || echo 000)
+            if [ "$CODE" = "200" ]; then
+              echo "${URL} returned 200 after ${i} attempt(s)."
+              exit 0
+            fi
+            echo "Attempt ${i}: ${CODE}; retrying in 10s."
+            sleep 10
+          done
+          echo "::error title=Preview smoke test failed::${URL} never returned 200."
+          exit 1
