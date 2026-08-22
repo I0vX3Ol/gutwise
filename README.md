@@ -69,6 +69,45 @@ The dev server runs at `http://localhost:4321`. No environment variables are nee
 
 ---
 
+## The preview site
+
+A GitHub Pages copy is published from `.github/workflows/preview.yml` on every
+push to `main`, so the site is reviewable without waiting on Cloudflare
+credentials:
+
+**https://i0vx3ol.github.io/gutwise/**
+
+It is a preview, not a second production site, and is built to stay that way.
+`scripts/build-preview.mjs` forces every page to `noindex`, replaces
+`robots.txt` with a blanket disallow, and leaves canonical tags pointing at
+`gutwise.nexudel.com` — two indexable copies of the same content would compete
+with each other in search. A banner on every page says what it is.
+
+Two things do not work there, both by nature rather than by oversight:
+
+- **The forms.** `/api/subscribe` and `/api/contact` are Cloudflare Pages
+  Functions. GitHub Pages serves static files only, so those endpoints 404.
+- **The security headers.** `dist/_headers` is a Cloudflare mechanism; the CSP,
+  HSTS and frame protections it applies are absent on GitHub Pages.
+
+Both work correctly on Cloudflare, which is what production runs on.
+
+### How the sub-path rewrite works
+
+The site is built for the root of a domain, and Pages serves it from `/gutwise/`.
+Astro's `base` option only prefixes the assets Astro emits itself, not the
+hand-written links in the templates, so using it *and* rewriting would
+double-prefix the bundle. Instead the built output is rewritten in one uniform,
+idempotent pass covering page links, `/_astro/` assets, font URLs inside the
+stylesheet, and the webmanifest.
+
+The `.nojekyll` file that script writes is load-bearing. GitHub Pages runs
+Jekyll over the artifact by default, and Jekyll drops any path beginning with an
+underscore — without it the entire `/_astro/` bundle silently disappears and the
+site serves with no CSS or JavaScript at all.
+
+---
+
 ## Deploying to Cloudflare Pages
 
 Deployment runs from GitHub Actions, not from Cloudflare's own Git
