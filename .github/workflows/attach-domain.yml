@@ -1,0 +1,115 @@
+name: Attach custom domain
+
+# Attaching a custom domain to a Pages project needs two things: the domain
+# registered against the project, and a CNAME pointing at <project>.pages.dev.
+# The dashboard does both when you click through it. The API does only the
+# first, which is why gutwise.nexudel.com sat at "pending" — the record was
+# never created.
+#
+# This does both, from CI, so nobody has to get the record settings right by
+# hand. It is manual-dispatch only; it never runs on a push.
+#
+# Requires CLOUDFLARE_API_TOKEN to carry Zone -> DNS -> Edit in addition to
+# Account -> Cloudflare Pages -> Edit. If it does not, the DNS step fails with
+# a clear message rather than half-completing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      hostname:
+        description: 'Full hostname, e.g. gutwise.nexudel.com'
+        required: true
+        default: 'gutwise.nexudel.com'
+      project:
+        description: 'Cloudflare Pages project name'
+        required: true
+        default: 'gutwise'
+
+permissions:
+  contents: read
+
+jobs:
+  attach:
+    name: Attach ${{ inputs.hostname }}
+    runs-on: ubuntu-latest
+    env:
+      CF_API: https://api.cloudflare.com/client/v4
+      TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      HOST: ${{ inputs.hostname }}
+      PROJECT: ${{ inputs.project }}
+    steps:
+      - name: Resolve the zone
+        run: |
+          set -euo pipefail
+          # The zone is the registrable domain — the last two labels of the host.
+          ZONE_NAME=$(echo "$HOST" | awk -F. '{print $(NF-1)"."$NF}')
+          ZONE_ID=$(curl -sS -H "Authorization: Bearer $TOKEN" \
+            "$CF_API/zones?name=$ZONE_NAME" | jq -r '.result[0].id // empty')
+          if [ -z "$ZONE_ID" ]; then
+            echo "::error title=Zone not found::No zone '$ZONE_NAME' visible to this token."
+            exit 1
+          fi
+          echo "ZONE_NAME=$ZONE_NAME" >> "$GITHUB_ENV"
+          echo "ZONE_ID=$ZONE_ID" >> "$GITHUB_ENV"
+          echo "Zone $ZONE_NAME -> $ZONE_ID"
+
+      - name: Register the domain against the Pages project
+        run: |
+          set -euo pipefail
+          # Idempotent: an already-registered domain returns an error we accept.
+          RESP=$(curl -sS -X POST -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            --data "{\"name\":\"$HOST\"}" \
+            "$CF_API/accounts/$ACCOUNT/pages/projects/$PROJECT/domains")
+          if [ "$(echo "$RESP" | jq -r '.success')" = "true" ]; then
+            echo "Registered $HOST against project $PROJECT."
+          elif echo "$RESP" | jq -e '.errors[]?|select(.message|test("already";"i"))' >/dev/null; then
+            echo "$HOST already registered against $PROJECT — continuing."
+          else
+            echo "$RESP" | jq -r '.errors[]? | "  \(.code): \(.message)"'
+            echo "::error title=Could not register domain::See errors above."
+            exit 1
+          fi
+
+      - name: Create the CNAME
+        run: |
+          set -euo pipefail
+          EXISTING=$(curl -sS -H "Authorization: Bearer $TOKEN" \
+            "$CF_API/zones/$ZONE_ID/dns_records?name=$HOST&type=CNAME")
+          if [ "$(echo "$EXISTING" | jq -r '.success')" != "true" ]; then
+            echo "$EXISTING" | jq -r '.errors[]? | "  \(.code): \(.message)"'
+            echo "::error title=No DNS permission::The token needs Zone -> DNS -> Edit on $ZONE_NAME."
+            exit 1
+          fi
+
+          # Proxied is required: it is what puts TLS, the WAF and rate limiting
+          # at the edge. An unproxied record serves the site without any of it.
+          BODY="{\"type\":\"CNAME\",\"name\":\"$HOST\",\"content\":\"$PROJECT.pages.dev\",\"proxied\":true,\"ttl\":1}"
+          ID=$(echo "$EXISTING" | jq -r '.result[0].id // empty')
+          if [ -n "$ID" ]; then
+            RESP=$(curl -sS -X PUT -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+              --data "$BODY" "$CF_API/zones/$ZONE_ID/dns_records/$ID")
+            echo "Updated the existing CNAME."
+          else
+            RESP=$(curl -sS -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+              --data "$BODY" "$CF_API/zones/$ZONE_ID/dns_records")
+            echo "Created the CNAME."
+          fi
+          [ "$(echo "$RESP" | jq -r '.success')" = "true" ] || {
+            echo "$RESP" | jq -r '.errors[]? | "  \(.code): \(.message)"'; exit 1; }
+
+      - name: Wait for it to serve
+        run: |
+          set -u
+          for i in $(seq 1 20); do
+            CODE=$(curl -sS -o /dev/null -w '%{http_code}' -m 15 "https://$HOST/" || echo 000)
+            if [ "$CODE" = "200" ]; then
+              echo "https://$HOST/ returned 200 after ${i} attempt(s)."
+              exit 0
+            fi
+            echo "Attempt ${i}: ${CODE} — certificate may still be issuing; retrying in 15s."
+            sleep 15
+          done
+          echo "::error title=Domain not serving::https://$HOST/ never returned 200. The record exists; the certificate may still be provisioning — re-run in a few minutes."
+          exit 1
