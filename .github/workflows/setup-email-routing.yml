@@ -1,0 +1,136 @@
+name: Set up email routing
+
+# hello@gutwise.nexudel.com is printed on the contact page, used as the mailto
+# fallback for the Starter Kit, and published in the Organization schema — but
+# nexudel.com has never had an MX record, so every one of those messages bounced
+# silently. This turns on Cloudflare Email Routing for the zone and forwards that
+# address to a real inbox.
+#
+# Manual-dispatch only. The destination is an input rather than a hardcoded
+# address so nobody's personal email ends up committed to the repository.
+#
+# Requires CLOUDFLARE_API_TOKEN to carry Zone -> Email Routing -> Edit and
+# Account -> Email Routing Addresses -> Edit, on top of the Zone -> DNS -> Edit
+# it already needs. Each step fails with a named error rather than half-applying.
+#
+# Cloudflare will email the destination a verification link. Forwarding does not
+# start until somebody clicks it — this workflow cannot do that step.
+
+on:
+  workflow_dispatch:
+    inputs:
+      destination:
+        description: 'Inbox to forward to, e.g. you@gmail.com'
+        required: true
+      forward_address:
+        description: 'Address to forward from'
+        required: true
+        default: 'hello@gutwise.nexudel.com'
+
+permissions:
+  contents: read
+
+jobs:
+  route:
+    name: Route ${{ inputs.forward_address }}
+    runs-on: ubuntu-latest
+    env:
+      CF_API: https://api.cloudflare.com/client/v4
+      TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      DEST: ${{ inputs.destination }}
+      FROM: ${{ inputs.forward_address }}
+    steps:
+      - name: Resolve the zone
+        run: |
+          set -euo pipefail
+          ZONE_NAME=$(echo "$FROM" | awk -F@ '{print $2}' | awk -F. '{print $(NF-1)"."$NF}')
+          ZONE_ID=$(curl -sS -H "Authorization: Bearer $TOKEN" \
+            "$CF_API/zones?name=$ZONE_NAME" | jq -r '.result[0].id // empty')
+          if [ -z "$ZONE_ID" ]; then
+            echo "::error title=Zone not found::No zone '$ZONE_NAME' visible to this token."
+            exit 1
+          fi
+          echo "ZONE_NAME=$ZONE_NAME" >> "$GITHUB_ENV"
+          echo "ZONE_ID=$ZONE_ID" >> "$GITHUB_ENV"
+          echo "Zone $ZONE_NAME -> $ZONE_ID"
+
+      - name: Enable Email Routing
+        run: |
+          set -euo pipefail
+          STATUS=$(curl -sS -H "Authorization: Bearer $TOKEN" \
+            "$CF_API/zones/$ZONE_ID/email/routing" | jq -r '.result.enabled // empty')
+          if [ "$STATUS" = "true" ]; then
+            echo "Email Routing already enabled on $ZONE_NAME."
+            exit 0
+          fi
+          # Enabling also provisions the MX and SPF records for the zone.
+          RESP=$(curl -sS -X POST -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" --data '{}' \
+            "$CF_API/zones/$ZONE_ID/email/routing/enable")
+          if [ "$(echo "$RESP" | jq -r '.success')" != "true" ]; then
+            echo "$RESP" | jq -r '.errors[]? | "  \(.code): \(.message)"'
+            echo "::error title=Could not enable Email Routing::The token likely needs Zone -> Email Routing -> Edit."
+            exit 1
+          fi
+          echo "Enabled Email Routing on $ZONE_NAME."
+
+      - name: Register the destination inbox
+        run: |
+          set -euo pipefail
+          RESP=$(curl -sS -X POST -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            --data "{\"email\":\"$DEST\"}" \
+            "$CF_API/accounts/$ACCOUNT/email/routing/addresses")
+          if [ "$(echo "$RESP" | jq -r '.success')" = "true" ]; then
+            echo "Destination registered. Cloudflare has sent it a verification email."
+          elif echo "$RESP" | jq -e '.errors[]?|select(.message|test("already";"i"))' >/dev/null; then
+            echo "Destination already registered — continuing."
+          else
+            echo "$RESP" | jq -r '.errors[]? | "  \(.code): \(.message)"'
+            echo "::error title=Could not register destination::The token likely needs Account -> Email Routing Addresses -> Edit."
+            exit 1
+          fi
+
+      - name: Forward the address
+        run: |
+          set -euo pipefail
+          # Idempotent: replace any existing rule for this address rather than
+          # stacking duplicates that would each deliver their own copy.
+          EXISTING=$(curl -sS -H "Authorization: Bearer $TOKEN" \
+            "$CF_API/zones/$ZONE_ID/email/routing/rules?per_page=50" \
+            | jq -r --arg f "$FROM" '.result[]? | select(.matchers[]?.value == $f) | .tag' | head -1)
+          BODY=$(jq -nc --arg f "$FROM" --arg d "$DEST" \
+            '{name:("Forward " + $f), enabled:true,
+              matchers:[{type:"literal", field:"to", value:$f}],
+              actions:[{type:"forward", value:[$d]}]}')
+          if [ -n "$EXISTING" ]; then
+            RESP=$(curl -sS -X PUT -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+              --data "$BODY" "$CF_API/zones/$ZONE_ID/email/routing/rules/$EXISTING")
+            echo "Updated the existing rule for $FROM."
+          else
+            RESP=$(curl -sS -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+              --data "$BODY" "$CF_API/zones/$ZONE_ID/email/routing/rules")
+            echo "Created a rule forwarding $FROM."
+          fi
+          [ "$(echo "$RESP" | jq -r '.success')" = "true" ] || {
+            echo "$RESP" | jq -r '.errors[]? | "  \(.code): \(.message)"'
+            echo "::error title=Could not create the routing rule::See errors above."; exit 1; }
+
+      - name: Confirm the MX records exist
+        run: |
+          set -euo pipefail
+          MX=$(dig +short MX "$ZONE_NAME" | sort)
+          if [ -z "$MX" ]; then
+            echo "::error title=No MX record::Email Routing reports enabled but $ZONE_NAME still publishes no MX. Check the zone in the dashboard."
+            exit 1
+          fi
+          echo "$ZONE_NAME MX:"; echo "$MX" | sed 's/^/  /'
+          VERIFIED=$(curl -sS -H "Authorization: Bearer $TOKEN" \
+            "$CF_API/accounts/$ACCOUNT/email/routing/addresses" \
+            | jq -r --arg d "$DEST" '.result[]? | select(.email == $d) | .verified // "null"')
+          if [ "$VERIFIED" = "null" ] || [ -z "$VERIFIED" ]; then
+            echo "::warning title=Destination not verified yet::$DEST must click the link Cloudflare emailed before forwarding starts."
+          else
+            echo "Destination $DEST is verified — forwarding is live."
+          fi
