@@ -2,7 +2,7 @@
 title: 'Strawberry and Maple Overnight Oats'
 description: 'A five-minute low-FODMAP breakfast you make the night before. Lactose-free, portion-tested for the elimination phase — see the recipe and serving limits.'
 summary: 'Made in a jar the night before, eaten cold at your desk. The most-requested breakfast from readers in their first fortnight of elimination.'
-image: '/images/recipes/overnight-oats.svg'
+image: '/images/recipes/overnight-oats.png'
 imageAlt: 'A glass jar layered with creamy oats, sliced strawberries and a drizzle of maple syrup, on a pale wooden surface'
 publishDate: 2026-01-21
 updatedDate: 2026-04-18

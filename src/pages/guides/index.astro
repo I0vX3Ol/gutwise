@@ -6,7 +6,7 @@ import ContentCard from '../../components/ContentCard.astro';
 import EmailSignup from '../../components/EmailSignup.astro';
 import Icon from '../../components/Icon.astro';
 import { PHASES } from '../../consts';
-import { publishedOnly, phaseLabel } from '../../lib/utils';
+import { publishedOnly, phaseLabel, imageAltFor } from '../../lib/utils';
 import { breadcrumbSchema } from '../../lib/schema';
 
 const guides = publishedOnly(await getCollection('guides')).sort(
@@ -45,7 +45,7 @@ const crumbs = [
 							title={guide.data.title}
 							summary={guide.data.summary}
 							image={guide.data.image}
-							imageAlt={guide.data.imageAlt}
+							imageAlt={imageAltFor(guide.data)}
 							eyebrow={guide.data.phase ? phaseLabel(guide.data.phase) : 'Start here'}
 							meta={[`${guide.data.readingMinutes} min read`]}
 							eager={i === 0}

@@ -2,7 +2,7 @@
 title: 'The Low-FODMAP Pantry: 7 Things Worth Buying First'
 description: 'The short list of products that genuinely make the elimination phase easier — and the ones you can skip. Independently chosen, honestly ranked. Read more.'
 summary: 'Most low-FODMAP shopping lists are padded with expensive things you do not need. This is the short version: what earns its place in week one, and what does not.'
-image: '/images/products/pantry-starter.svg'
+image: '/images/products/pantry-starter.png'
 imageAlt: 'A pantry shelf arranged with infused oil, stock, oats, rice and lactose-free milk in soft natural light'
 publishDate: 2026-03-24
 updatedDate: 2026-06-18

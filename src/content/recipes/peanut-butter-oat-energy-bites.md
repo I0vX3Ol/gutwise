@@ -2,7 +2,7 @@
 title: 'Peanut Butter and Oat Energy Bites'
 description: 'No-bake low-FODMAP snack bites with peanut butter, oats and dark chocolate. Portion-tested at three per serving — get the recipe and storage tips.'
 summary: 'A handbag snack that is not a compromise. No baking, five minutes of work, and it solves the mid-afternoon gap that otherwise ends in a vending machine.'
-image: '/images/recipes/energy-bites.svg'
+image: '/images/recipes/energy-bites.png'
 imageAlt: 'A dozen rolled oat and peanut butter bites studded with dark chocolate on a sheet of baking paper'
 publishDate: 2026-03-03
 updatedDate: 2026-05-14

@@ -2,7 +2,7 @@
 title: 'The Elimination Phase, Week by Week'
 description: 'What to eat, what to expect and what to track across the 2–6 week low-FODMAP elimination phase, plus the mistakes that quietly derail it. Read the guide.'
 summary: 'A week-by-week walkthrough of the strictest phase — including the hidden ingredients that cause most apparent failures, and when to stop.'
-image: '/images/guides/elimination-phase.svg'
+image: '/images/guides/elimination-phase.png'
 imageAlt: 'A calendar-style illustration marking a six week elimination period with a symptom tracking chart alongside'
 publishDate: 2026-01-28
 updatedDate: 2026-06-10

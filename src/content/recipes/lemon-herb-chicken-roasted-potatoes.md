@@ -2,7 +2,7 @@
 title: 'Lemon Herb Chicken with Roasted Potatoes'
 description: 'A one-pan low-FODMAP dinner with garlic-infused oil, lemon and rosemary. Ready in 45 minutes and safe for the elimination phase — get the recipe.'
 summary: 'The dinner we recommend to everyone in week one. One pan, six ingredients, no allium, and it tastes like a normal roast rather than a restricted one.'
-image: '/images/recipes/lemon-herb-chicken.svg'
+image: '/images/recipes/lemon-herb-chicken.png'
 imageAlt: 'Golden roasted chicken thighs and crisp potato wedges on a sheet pan, scattered with rosemary and lemon slices'
 publishDate: 2026-01-14
 updatedDate: 2026-05-02

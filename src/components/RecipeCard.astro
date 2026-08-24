@@ -1,7 +1,12 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import Icon from './Icon.astro';
-import { formatDuration, phaseLabel, sortPhases } from '../lib/utils';
+import {
+	formatDuration,
+	imageAltFor,
+	phaseLabel,
+	sortPhases,
+} from '../lib/utils';
 
 interface Props {
 	recipe: CollectionEntry<'recipes'>;
@@ -23,7 +28,7 @@ const href = `/recipes/${recipe.id}/`;
 >
 	<img
 		src={data.image}
-		alt={data.imageAlt}
+		alt={imageAltFor(data)}
 		width="640"
 		height="400"
 		loading={eager ? 'eager' : 'lazy'}

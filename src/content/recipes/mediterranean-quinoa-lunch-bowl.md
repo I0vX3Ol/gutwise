@@ -2,7 +2,7 @@
 title: 'Mediterranean Quinoa Lunch Bowl'
 description: 'A make-ahead low-FODMAP lunch bowl with quinoa, feta, cucumber and olives. Packs for four days — see the recipe and tested portion limits.'
 summary: 'Built on a Sunday, eaten Monday to Thursday. The recipe that solves the packed-lunch problem without another sad plain-rice container.'
-image: '/images/recipes/quinoa-bowl.svg'
+image: '/images/recipes/quinoa-bowl.png'
 imageAlt: 'A packed lunch bowl of fluffy quinoa with cucumber, cherry tomatoes, olives, feta and fresh parsley'
 publishDate: 2026-04-07
 updatedDate: 2026-05-22

@@ -29,7 +29,7 @@ export function organizationSchema() {
 		foundingDate: SITE.founded,
 		logo: {
 			'@type': 'ImageObject',
-			url: abs('/images/gutwise-logo.svg'),
+			url: abs('/images/gutwise-logo.png'),
 			width: 512,
 			height: 512,
 		},

@@ -3,7 +3,7 @@ title: 'How to Eat Out on the Low-FODMAP Diet'
 seoTitle: 'Eating Out on a Low-FODMAP Diet'
 description: 'A practical guide to restaurants, travel and social meals on the low-FODMAP diet — which cuisines work, what to ask for, and what to do when it goes wrong.'
 summary: 'The elimination phase is hardest in restaurants, at other people’s houses and on the road. None of those are reasons to abandon it.'
-image: '/images/guides/eating-out.svg'
+image: '/images/guides/eating-out.png'
 imageAlt: 'An illustrated restaurant table setting with a menu, showing dishes marked as suitable and unsuitable'
 publishDate: 2026-08-21
 phase: 'elimination'

@@ -7,7 +7,7 @@ import EmailSignup from '../components/EmailSignup.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
 import Icon from '../components/Icon.astro';
 import { PHASES, LEAD_MAGNET } from '../consts';
-import { byRecency, publishedOnly } from '../lib/utils';
+import { byRecency, imageAltFor, publishedOnly } from '../lib/utils';
 import { faqSchema } from '../lib/schema';
 
 const recipes = publishedOnly(await getCollection('recipes'));
@@ -163,7 +163,7 @@ const phaseGuides = [
 							title={guide.data.title}
 							summary={guide.data.summary}
 							image={guide.data.image}
-							imageAlt={guide.data.imageAlt}
+							imageAlt={imageAltFor(guide.data)}
 							eyebrow="Guide"
 							meta={[`${guide.data.readingMinutes} min read`]}
 						/>

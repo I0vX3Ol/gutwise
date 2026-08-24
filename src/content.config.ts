@@ -21,8 +21,15 @@ const seo = {
 	description: z.string().min(70).max(165),
 	/** Short dek shown on index cards — not the meta description. */
 	summary: z.string().min(40).max(200),
-	image: z.string().default('/images/og-default.svg'),
+	image: z.string().default('/images/og-default.png'),
+	/** Describes the photograph the brand direction calls for — see below. */
 	imageAlt: z.string().min(10),
+	/**
+	 * True while `image` is a generated stand-in rather than real photography.
+	 * The stand-ins carry no information, so the rendered alt describes them
+	 * honestly instead. Flip to false in the commit that lands the real photo.
+	 */
+	imageIsPlaceholder: z.boolean().default(true),
 	publishDate: z.coerce.date(),
 	updatedDate: z.coerce.date().optional(),
 	draft: z.boolean().default(false),
@@ -109,7 +116,7 @@ const guides = defineCollection({
 		faqs: z.array(faqItem).default([]),
 		/** Named sources shown in a "How we know this" block. */
 		sources: z
-			.array(z.object({ label: z.string(), url: z.string().url() }))
+			.array(z.object({ label: z.string(), url: z.url() }))
 			.default([]),
 		relatedRecipes: z.array(z.string()).default([]),
 		relatedGuides: z.array(z.string()).default([]),
@@ -140,7 +147,7 @@ const products = defineCollection({
 					 * must be marked rel="nofollow sponsored" and disclosed above the
 					 * fold before the first paid link.
 					 */
-					url: z.string().url().optional(),
+					url: z.url().optional(),
 					/** e.g. "Monash certified", "FODMAP Friendly certified". */
 					certification: z.string().optional(),
 					fodmap: fodmapLevel.default('safe'),

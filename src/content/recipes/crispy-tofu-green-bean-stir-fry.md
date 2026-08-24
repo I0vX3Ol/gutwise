@@ -2,7 +2,7 @@
 title: 'Crispy Tofu and Green Bean Stir-Fry'
 description: 'A 25-minute vegetarian low-FODMAP dinner with crisp firm tofu, green beans and ginger. No garlic, no onion, no bottled sauce — and the bean limit per serve.'
 summary: 'A proper vegetarian main that is not just a side dish with more of it. The trick is drying the tofu properly before it ever meets the pan.'
-image: '/images/recipes/tofu-green-beans.svg'
+image: '/images/recipes/tofu-green-beans.png'
 imageAlt: 'Golden cubes of crisp tofu tossed with blistered green beans and red pepper strips in a wok, scattered with sesame seeds'
 publishDate: 2026-08-21
 phases: ['elimination', 'reintroduction', 'maintenance']

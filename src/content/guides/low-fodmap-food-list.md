@@ -3,7 +3,7 @@ title: 'The Low-FODMAP Food List: What to Eat and Avoid'
 seoTitle: 'Low-FODMAP Food List with Portions'
 description: 'A complete low-FODMAP food list organised by category, with the portion limits that decide whether a food is safe. Print it, or read why portions matter most.'
 summary: 'Most food lists give you two columns and no numbers. Almost every real-world mistake happens because the number was missing.'
-image: '/images/guides/food-list.svg'
+image: '/images/guides/food-list.png'
 imageAlt: 'An illustrated reference sheet showing food categories sorted into safe and restricted columns'
 publishDate: 2026-08-21
 order: 4

@@ -2,7 +2,7 @@
 title: 'Blueberry Buckwheat Pancakes'
 description: 'Fluffy gluten-free low-FODMAP pancakes with buckwheat and blueberries. No wheat, no lactose, no honey — with the exact blueberry limit per serve.'
 summary: 'A weekend breakfast that does not feel like a compromise. Buckwheat carries real flavour, and the batter rests while the pan heats.'
-image: '/images/recipes/buckwheat-pancakes.svg'
+image: '/images/recipes/buckwheat-pancakes.png'
 imageAlt: 'A stack of golden buckwheat pancakes studded with blueberries, drizzled with maple syrup on a pale plate'
 publishDate: 2026-08-21
 phases: ['elimination', 'reintroduction', 'maintenance']

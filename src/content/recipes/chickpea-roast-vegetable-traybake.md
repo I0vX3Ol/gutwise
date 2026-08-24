@@ -3,7 +3,7 @@ title: 'Chickpea and Roast Vegetable Traybake'
 seoTitle: 'Chickpea Traybake for After the Diet'
 description: 'A one-tray chickpea and roast vegetable dinner for the reintroduction and maintenance phases. Deliberately above the elimination GOS limit — and it says so.'
 summary: 'A recipe for after you have passed your GOS challenge. Most low-FODMAP cooking is written for the strictest phase; this one is not.'
-image: '/images/recipes/chickpea-traybake.svg'
+image: '/images/recipes/chickpea-traybake.png'
 imageAlt: 'A roasting tray of golden chickpeas, courgette, red pepper and potato wedges scattered with rosemary, feta and lemon'
 publishDate: 2026-08-21
 phases: ['reintroduction', 'maintenance']

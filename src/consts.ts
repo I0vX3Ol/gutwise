@@ -86,6 +86,15 @@ export const MEDICAL_DISCLAIMER =
 	'GutWise publishes educational information, not medical advice. The low-FODMAP diet is an elimination protocol designed to be followed short-term with support from a registered dietitian. Always speak to a qualified healthcare professional before changing your diet, particularly if you have not yet been formally diagnosed.';
 
 /**
+ * Rendered as the alt text for any lead image that is still one of the
+ * generated stand-ins. Deliberately describes the stand-in rather than the
+ * photograph it replaces: `imageAlt` in the frontmatter is the brief for the
+ * shoot, and announcing a dish that is not in the picture would be false.
+ */
+export const PLACEHOLDER_IMAGE_ALT =
+	'An abstract illustration in the GutWise palette, standing in for a photograph of this dish.';
+
+/**
  * The three protocol phases. Used for recipe filtering, badges and guide
  * cross-linking. `order` drives sort; `slug` is the filter query value.
  */

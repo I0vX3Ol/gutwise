@@ -2,7 +2,7 @@
 title: 'What Is the Low-FODMAP Diet? A Plain-English Guide'
 description: 'What FODMAPs are, why they trigger IBS symptoms, and how the three-phase diet actually works. Start here before you cut a single food — read the guide.'
 summary: 'The orientation guide. What the acronym means, what the evidence supports, and — most importantly — what this diet is not meant to be.'
-image: '/images/guides/what-is-low-fodmap.svg'
+image: '/images/guides/what-is-low-fodmap.png'
 imageAlt: 'An illustrated diagram showing the three phases of the low-FODMAP diet arranged as a left-to-right path'
 publishDate: 2026-01-08
 updatedDate: 2026-06-02

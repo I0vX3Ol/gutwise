@@ -2,7 +2,7 @@
 title: 'Ginger Chicken and Rice Noodle Soup'
 description: 'A restorative low-FODMAP chicken noodle soup with ginger and bok choy. Built on onion-free stock, ready in 30 minutes, with every portion limit stated.'
 summary: 'The soup you want on a bad gut day. Nothing in it is hard to digest, and the stock is the only part that needs any care at all.'
-image: '/images/recipes/chicken-noodle-soup.svg'
+image: '/images/recipes/chicken-noodle-soup.png'
 imageAlt: 'A deep bowl of clear golden broth with rice noodles, poached chicken, bok choy and sliced ginger, topped with spring onion greens'
 publishDate: 2026-08-21
 phases: ['elimination', 'reintroduction', 'maintenance']
