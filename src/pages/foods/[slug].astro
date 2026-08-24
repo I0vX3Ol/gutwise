@@ -70,14 +70,25 @@ const question = `${IsAre} ${d.name.toLowerCase()} low FODMAP?`;
  */
 const NO_SAFE_SERVING = 'No safe serving during elimination';
 
-const verdictSentence =
+const verdictBase =
 	d.verdict === 'safe'
 		? `${d.name} ${isAre} low FODMAP. Safe serving: ${d.safeServing}.`
 		: d.verdict === 'moderate'
-			? `${d.name} ${isAre} low FODMAP only up to a point. Safe serving: ${d.safeServing}. Beyond that it becomes a problem.`
+			? `${d.name} ${isAre} low FODMAP only up to a point. Safe serving: ${d.safeServing}.`
 			: d.safeServing === NO_SAFE_SERVING
 				? `${d.name} ${isAre} high FODMAP and should be avoided during the elimination phase.`
 				: `${d.name} ${isAre} high FODMAP at normal portions. ${d.safeServing}.`;
+
+/**
+ * Restates the verdict, so it earns its place on the page but not in a meta
+ * description competing for 164 characters. Kept out of `descFull` below: a
+ * handful of foods carry serving strings long enough ("Dark 30 g; milk 20 g;
+ * white 20 g") that this clause alone pushed the group sentence past the limit.
+ */
+const beyondClause =
+	d.verdict === 'moderate' ? ' Beyond that it becomes a problem.' : '';
+
+const verdictSentence = `${verdictBase}${beyondClause}`;
 
 const groupSentence = d.groups.length
 	? ` The FODMAP group responsible is ${d.groups
@@ -94,15 +105,54 @@ const pageTitle = `${IsAre} ${d.name} Low FODMAP?`;
  * reasoning as fits. Boilerplate ("serving sizes and more!") left the safe
  * foods at ~104 characters, well under the length that earns a click, and
  * these pages exist to be found in search.
+ *
+ * It ends on a sentence boundary. Clipping on a word boundary fit more
+ * characters but amputated the one sentence the page exists to deliver — every
+ * food rendered "…The FODMAP group responsible is…" and stopped there, cutting
+ * the answer out of the search snippet on all 126 of them.
  */
-const descFull = `${verdictSentence}${groupSentence} ${d.detail}`;
+const descFull = `${verdictBase}${groupSentence} ${d.detail}`;
+
+/** Longest run of whole sentences that fits. Empty if even the first overruns. */
+function fitSentences(text: string, max: number): string {
+	// Lookbehind on the terminator so "0.5 cup" is not treated as two sentences.
+	let out = '';
+	for (const sentence of text.split(/(?<=[.!?])\s+/)) {
+		const next = out ? `${out} ${sentence}` : sentence;
+		if (next.length > max) break;
+		out = next;
+	}
+	return out;
+}
+
+/** Last resort: hard clip at a word boundary, for a runaway first sentence. */
+function clip(text: string, max: number): string {
+	return `${text
+		.slice(0, max)
+		.replace(/\s+\S*$/, '')
+		.replace(/[\s,;:.—-]+$/, '')}…`;
+}
+
+const fitted = fitSentences(descFull, 164);
+const remainder = descFull.slice(fitted.length).trim();
+
+/** The verdict and the group sentence. Never clipped — this is the answer. */
+const answerCore = `${verdictBase}${groupSentence}`;
+
+/**
+ * Whole sentences alone often land near 100 characters, well short of the
+ * 150-160 a snippet can actually show, so when there is more to say we pad back
+ * out and clip. `clip` returns a prefix of `descFull`, so a padded result that
+ * is at least as long as `answerCore` still contains the whole answer; when it
+ * would not, the shorter run of complete sentences wins instead.
+ */
+const padded = remainder ? clip(`${fitted} ${remainder}`, 164) : '';
 const description =
-	descFull.length <= 164
-		? descFull
-		: `${descFull
-				.slice(0, 164)
-				.replace(/\s+\S*$/, '')
-				.replace(/[\s,;:.—-]+$/, '')}…`;
+	fitted.length >= 150 || !padded
+		? fitted
+		: padded.length >= answerCore.length
+			? padded
+			: fitted;
 ---
 
 <BaseLayout
