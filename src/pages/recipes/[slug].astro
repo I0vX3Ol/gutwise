@@ -13,6 +13,7 @@ import { FODMAP_LEVELS } from '../../consts';
 import {
 	formatDate,
 	formatDuration,
+	imageAltFor,
 	isoDate,
 	phaseLabel,
 	sortPhases,
@@ -138,7 +139,7 @@ const levelsPresent = [...new Set(data.ingredients.map((i) => i.fodmap))].sort(
 
 					<img
 						src={data.image}
-						alt={data.imageAlt}
+						alt={imageAltFor(data)}
 						width="720"
 						height="480"
 						fetchpriority="high"

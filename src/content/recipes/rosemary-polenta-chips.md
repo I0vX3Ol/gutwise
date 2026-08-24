@@ -2,7 +2,7 @@
 title: 'Crisp Rosemary Polenta Chips'
 description: 'Oven-baked polenta chips with rosemary and parmesan — naturally gluten-free and low FODMAP. Make the base a day ahead and crisp them in 25 minutes.'
 summary: 'Crisp outside, soft in the middle, and safe in a category where almost nothing else is. The waiting is all unattended.'
-image: '/images/recipes/polenta-chips.svg'
+image: '/images/recipes/polenta-chips.png'
 imageAlt: 'Thick golden batons of baked polenta scattered with rosemary and grated parmesan on a baking tray'
 publishDate: 2026-08-21
 phases: ['elimination', 'reintroduction', 'maintenance']

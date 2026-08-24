@@ -2,7 +2,7 @@
 title: 'Ginger and Carrot Soup with Turmeric'
 description: 'A gentle low-FODMAP soup for flare days, built on carrot, ginger and infused oil. Freezes well and needs one pot — get the recipe and portion notes.'
 summary: 'The recipe readers make when symptoms flare and cooking feels like too much. One pot, soft on the gut, and it freezes into single portions.'
-image: '/images/recipes/ginger-carrot-soup.svg'
+image: '/images/recipes/ginger-carrot-soup.png'
 imageAlt: 'A bowl of vivid orange carrot soup swirled with cream, topped with sliced spring onion greens and cracked pepper'
 publishDate: 2026-02-18
 updatedDate: 2026-04-30

@@ -2,7 +2,7 @@
 title: 'Tomato and Basil Pasta with Garlic-Infused Oil'
 description: 'A 20-minute low-FODMAP tomato pasta with no garlic or onion, using infused oil for real depth. Portion limits included — read the full recipe.'
 summary: 'Proof that pasta night survives the elimination phase. Twenty minutes, one pan of sauce, and nobody at the table can tell it is a restricted recipe.'
-image: '/images/recipes/tomato-basil-pasta.svg'
+image: '/images/recipes/tomato-basil-pasta.png'
 imageAlt: 'A bowl of gluten-free pasta coated in glossy tomato sauce, topped with torn basil leaves and grated parmesan'
 publishDate: 2026-02-04
 updatedDate: 2026-05-10

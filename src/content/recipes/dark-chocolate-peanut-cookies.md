@@ -3,7 +3,7 @@ title: 'Flourless Dark Chocolate Peanut Butter Cookies'
 seoTitle: 'Low-FODMAP Chocolate Peanut Cookies'
 description: 'Four-ingredient flourless cookies with peanut butter and dark chocolate. Naturally gluten-free and low FODMAP, with the chocolate limit stated per cookie.'
 summary: 'Four ingredients, one bowl, no flour to substitute and nothing to get wrong. The dessert to have on hand when the craving arrives at 9pm.'
-image: '/images/recipes/chocolate-peanut-cookies.svg'
+image: '/images/recipes/chocolate-peanut-cookies.png'
 imageAlt: 'A tray of crackle-topped peanut butter cookies studded with dark chocolate chunks, cooling on baking paper'
 publishDate: 2026-08-21
 phases: ['elimination', 'reintroduction', 'maintenance']

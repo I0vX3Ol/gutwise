@@ -2,7 +2,7 @@
 title: 'Sheet-Pan Salmon with Bok Choy and Rice'
 description: 'A 25-minute low-FODMAP salmon dinner with ginger, sesame and bok choy. One pan, no allium, elimination-phase safe — read the recipe and serving sizes.'
 summary: 'A fast weeknight dinner with the flavour profile that elimination usually takes away. Ginger, sesame and soy do the work that garlic normally would.'
-image: '/images/recipes/salmon-bok-choy.svg'
+image: '/images/recipes/salmon-bok-choy.png'
 imageAlt: 'Two salmon fillets glazed and roasted alongside halved bok choy on a sheet pan, sprinkled with sesame seeds'
 publishDate: 2026-03-17
 updatedDate: 2026-05-20

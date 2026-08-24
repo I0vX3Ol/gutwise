@@ -2,7 +2,7 @@
 title: 'Baked Eggs with Spinach and Feta'
 description: 'A 20-minute low-FODMAP breakfast of baked eggs with spinach and feta. No onion, no garlic, genuinely savoury — with the portion limits that keep it safe.'
 summary: 'Elimination breakfasts collapse into oats within a fortnight. This is the savoury one that holds up, and the oven does almost all of it.'
-image: '/images/recipes/spinach-feta-eggs.svg'
+image: '/images/recipes/spinach-feta-eggs.png'
 imageAlt: 'Two eggs baked into a skillet of wilted spinach and crumbled feta, scattered with chilli flakes and served with toast'
 publishDate: 2026-08-21
 phases: ['elimination', 'reintroduction', 'maintenance']

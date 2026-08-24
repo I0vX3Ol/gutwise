@@ -1,4 +1,9 @@
-import { PHASES, MEAL_TYPES, type PhaseSlug } from '../consts';
+import {
+	PHASES,
+	MEAL_TYPES,
+	PLACEHOLDER_IMAGE_ALT,
+	type PhaseSlug,
+} from '../consts';
 
 /** Human date for display. Always paired with a <time datetime> attribute. */
 export function formatDate(date: Date): string {
@@ -71,4 +76,20 @@ export function publishedOnly<T extends { data: { draft: boolean } }>(
 ): T[] {
 	if (import.meta.env.DEV) return entries;
 	return entries.filter((e) => !e.data.draft);
+}
+
+/**
+ * The alt text to render for a piece of content's lead image.
+ *
+ * `imageAlt` describes the photograph the brand direction calls for, which
+ * doubles as the brief for shooting it. Until that photo exists the file on
+ * disk is an abstract stand-in, and announcing "a bowl of vivid orange carrot
+ * soup" to a screen reader would simply be untrue. While the stand-in is in
+ * place, describe the stand-in.
+ */
+export function imageAltFor(data: {
+	imageAlt: string;
+	imageIsPlaceholder?: boolean;
+}): string {
+	return data.imageIsPlaceholder ? PLACEHOLDER_IMAGE_ALT : data.imageAlt;
 }

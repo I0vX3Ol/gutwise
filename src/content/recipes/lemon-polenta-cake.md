@@ -2,7 +2,7 @@
 title: 'Lemon and Almond Polenta Cake'
 description: 'A naturally gluten-free low-FODMAP lemon cake made with polenta and almond meal. Keeps for days, travels well, and the almond limit is stated per slice.'
 summary: 'The cake to bring when you are the one with the diet and would rather not explain it. Nobody can tell it is missing anything.'
-image: '/images/recipes/lemon-polenta-cake.svg'
+image: '/images/recipes/lemon-polenta-cake.png'
 imageAlt: 'A golden polenta cake in a springform tin, soaked in lemon syrup and topped with thin curls of lemon zest'
 publishDate: 2026-08-21
 phases: ['elimination', 'reintroduction', 'maintenance']

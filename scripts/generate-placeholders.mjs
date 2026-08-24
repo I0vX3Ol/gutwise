@@ -141,10 +141,23 @@ const IMAGES = [
 	{ path: 'og-default.svg', scene: 'document', accent: C.sage },
 ];
 
+// Google will not accept an SVG as the `image` in Recipe or Article structured
+// data, so every content image needs a raster twin. The SVG stays the source of
+// truth — it is what this generator edits and what a designer would hand back.
+const { Resvg } = await import('@resvg/resvg-js');
+
+/** Render an SVG string to PNG at a fixed pixel width. */
+const rasterise = (svg, width) =>
+	new Resvg(svg, { fitTo: { mode: 'width', value: width } }).render().asPng();
+
 for (const image of IMAGES) {
 	const file = join(out, image.path);
 	mkdirSync(dirname(file), { recursive: true });
-	writeFileSync(file, build({ ...image, slug: image.path }));
+	const svg = build({ ...image, slug: image.path });
+	writeFileSync(file, svg);
+	// 1200px wide is what Google asks for on recipe imagery. The source is
+	// 640x400, so this lands at 1200x750 and preserves the layout's aspect ratio.
+	writeFileSync(file.replace(/\.svg$/, '.png'), rasterise(svg, 1200));
 }
 
 // The logo doubles as the schema.org Organization logo, so it is square.
@@ -155,6 +168,8 @@ const logo = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" widt
 </svg>
 `;
 writeFileSync(join(out, 'gutwise-logo.svg'), logo);
+// The schema.org Organization logo must be raster for the same reason.
+writeFileSync(join(out, 'gutwise-logo.png'), rasterise(logo, 512));
 
 // The favicon is the same mark, served from the site root.
 writeFileSync(join(root, 'public', 'favicon.svg'), logo);
@@ -162,15 +177,10 @@ writeFileSync(join(root, 'public', 'favicon.svg'), logo);
 // Raster icons, all rasterised from the same mark so they cannot drift apart:
 //  - 180px for the iOS home-screen icon
 //  - 48px for Google Search, which wants a favicon that is a multiple of 48
-const { Resvg } = await import('@resvg/resvg-js');
-
-const raster = (size) =>
-	new Resvg(logo, { fitTo: { mode: 'width', value: size } }).render().asPng();
-
-writeFileSync(join(root, 'public', 'apple-touch-icon.png'), raster(180));
-writeFileSync(join(root, 'public', 'favicon-48.png'), raster(48));
-writeFileSync(join(root, 'public', 'favicon-96.png'), raster(96));
+writeFileSync(join(root, 'public', 'apple-touch-icon.png'), rasterise(logo, 180));
+writeFileSync(join(root, 'public', 'favicon-48.png'), rasterise(logo, 48));
+writeFileSync(join(root, 'public', 'favicon-96.png'), rasterise(logo, 96));
 
 console.log(
-	`✓ Generated ${IMAGES.length + 1} placeholder images, favicon.svg and 3 raster icons`,
+	`✓ Generated ${IMAGES.length + 1} placeholders (SVG + PNG), favicon.svg and 3 raster icons`,
 );

@@ -2,7 +2,7 @@
 title: 'The Reintroduction Protocol, Step by Step'
 description: 'How to challenge each FODMAP group properly — test foods, doses, washout periods and how to read the results. The phase that decides your diet. Read on.'
 summary: 'The phase most people skip and should not. Which test food to use for each group, how to dose it across three days, and how to interpret what happens.'
-image: '/images/guides/reintroduction.svg'
+image: '/images/guides/reintroduction.png'
 imageAlt: 'An illustrated challenge schedule showing six FODMAP groups tested across successive three day blocks'
 publishDate: 2026-02-11
 updatedDate: 2026-06-14

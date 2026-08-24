@@ -6,7 +6,12 @@ import ContentCard from '../../components/ContentCard.astro';
 import FundingNote from '../../components/FundingNote.astro';
 import EmailSignup from '../../components/EmailSignup.astro';
 import Icon from '../../components/Icon.astro';
-import { byRecency, publishedOnly, formatDate } from '../../lib/utils';
+import {
+	byRecency,
+	publishedOnly,
+	formatDate,
+	imageAltFor,
+} from '../../lib/utils';
 import { breadcrumbSchema } from '../../lib/schema';
 
 const roundups = publishedOnly(await getCollection('products')).sort(byRecency);
@@ -41,7 +46,7 @@ const crumbs = [
 						title={roundup.data.title}
 						summary={roundup.data.summary}
 						image={roundup.data.image}
-						imageAlt={roundup.data.imageAlt}
+						imageAlt={imageAltFor(roundup.data)}
 						eyebrow="Buying guide"
 						meta={[
 							`${roundup.data.picks.length} picks`,
