@@ -1,0 +1,97 @@
+name: Add DNS TXT record
+
+# Adds or updates a TXT record on the nexudel.com zone.
+#
+# Written for Google Search Console domain verification. A *domain* property
+# (nexudel.com) is verified once by DNS and then covers every subdomain and both
+# protocols — govscout, procure, buildflow and gutwise in a single step —
+# whereas the HTML-tag method verifies one origin at a time and has to be
+# repeated per site.
+#
+# Manual dispatch only, and idempotent: re-running with the same name replaces
+# the record rather than stacking duplicates.
+#
+# Requires CLOUDFLARE_API_TOKEN to carry Zone -> DNS -> Edit, which it already
+# does — the same scope attach-domain.yml uses to create the Pages CNAME.
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Record name. Use the bare domain for a Search Console domain property.'
+        required: true
+        default: 'nexudel.com'
+      content:
+        description: 'TXT value, e.g. google-site-verification=XXXXXXXX'
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  txt:
+    name: TXT ${{ inputs.name }}
+    runs-on: ubuntu-latest
+    env:
+      CF_API: https://api.cloudflare.com/client/v4
+      TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      RECORD: ${{ inputs.name }}
+      VALUE: ${{ inputs.content }}
+    steps:
+      - name: Resolve the zone
+        run: |
+          set -euo pipefail
+          ZONE_NAME=$(echo "$RECORD" | awk -F. '{print $(NF-1)"."$NF}')
+          ZONE_ID=$(curl -sS -H "Authorization: Bearer $TOKEN" \
+            "$CF_API/zones?name=$ZONE_NAME" | jq -r '.result[0].id // empty')
+          if [ -z "$ZONE_ID" ]; then
+            echo "::error title=Zone not found::No zone '$ZONE_NAME' visible to this token."
+            exit 1
+          fi
+          echo "ZONE_ID=$ZONE_ID" >> "$GITHUB_ENV"
+          echo "Zone $ZONE_NAME -> $ZONE_ID"
+
+      - name: Upsert the TXT record
+        run: |
+          set -euo pipefail
+          # Match on name *and* value so an unrelated TXT on the same name —
+          # an SPF record, say — is never overwritten.
+          EXISTING=$(curl -sS -H "Authorization: Bearer $TOKEN" \
+            "$CF_API/zones/$ZONE_ID/dns_records?type=TXT&name=$RECORD")
+          if [ "$(echo "$EXISTING" | jq -r '.success')" != "true" ]; then
+            echo "$EXISTING" | jq -r '.errors[]? | "  \(.code): \(.message)"'
+            echo "::error title=No DNS permission::The token needs Zone -> DNS -> Edit."
+            exit 1
+          fi
+
+          ID=$(echo "$EXISTING" | jq -r --arg v "$VALUE" \
+            '.result[] | select(.content == $v) | .id' | head -1)
+          BODY=$(jq -nc --arg n "$RECORD" --arg c "$VALUE" \
+            '{type:"TXT", name:$n, content:$c, ttl:1}')
+
+          if [ -n "$ID" ]; then
+            echo "An identical record already exists — nothing to change."
+            exit 0
+          fi
+
+          RESP=$(curl -sS -X POST -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            --data "$BODY" "$CF_API/zones/$ZONE_ID/dns_records")
+          [ "$(echo "$RESP" | jq -r '.success')" = "true" ] || {
+            echo "$RESP" | jq -r '.errors[]? | "  \(.code): \(.message)"'
+            echo "::error title=Could not create the TXT record::See errors above."; exit 1; }
+          echo "Created TXT $RECORD."
+
+      - name: Show what resolvers can see
+        run: |
+          set -u
+          # Public resolvers may hold a negative cache for up to the zone's SOA
+          # minimum (1800s here), so an empty answer right after creation is
+          # normal and not a failure.
+          for i in 1 2 3; do
+            OUT=$(dig +short TXT "$RECORD" @1.1.1.1 || true)
+            if [ -n "$OUT" ]; then echo "$OUT"; exit 0; fi
+            echo "Attempt $i: not visible yet; waiting 20s."
+            sleep 20
+          done
+          echo "::notice title=Not visible yet::The record was created. Give resolvers a few minutes before verifying in Search Console."
