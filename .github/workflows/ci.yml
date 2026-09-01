@@ -140,7 +140,7 @@ jobs:
       # build here could differ from the verified one and nobody would know.
       - name: Download the verified build
         if: steps.creds.outputs.ready == 'true'
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist
