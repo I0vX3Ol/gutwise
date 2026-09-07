@@ -37,7 +37,7 @@
     "@astrojs/check": "^0.9.10",
     "@cloudflare/workers-types": "^5.20260816.1",
     "node-html-parser": "^9.0.1",
-    "pdfkit": "^0.19.1",
+    "pdfkit": "^0.20.2",
     "typescript": "^5.9.3"
   }
 }
