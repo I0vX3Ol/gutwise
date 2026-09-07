@@ -30,13 +30,13 @@
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.2",
-    "satori": "^0.29.0",
+    "satori": "^0.33.4",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "@cloudflare/workers-types": "^5.20260816.1",
-    "node-html-parser": "^9.0.1",
+    "@cloudflare/workers-types": "^5.20260904.1",
+    "node-html-parser": "^9.0.3",
     "pdfkit": "^0.19.1",
     "typescript": "^5.9.3"
   }
